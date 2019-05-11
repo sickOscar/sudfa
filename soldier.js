@@ -10,10 +10,11 @@ function Soldier(game, options) {
     let attack = 0;
     let magicPower = 0;
     let maxHealth = 0;
+    let status = 'OK';
     
     switch (options.type) {
         case 'dev':
-            health = maxHealth = 10;
+            health = maxHealth = 12;
             attack = 3;
             break;
         case 'pm':
@@ -22,9 +23,9 @@ function Soldier(game, options) {
             healPower = 4;
             break;
         case 'mktg':
-            health = maxHealth =  5;
+            health = maxHealth =  6;
             attack = 1;
-            healPower = 4;
+            // healPower = 1;
             magicPower = 2;
             break;
         default:
@@ -32,19 +33,19 @@ function Soldier(game, options) {
     }
 
     const hit = (target) => {
-        doAction('hit', target)
+        doAction.call(this, 'hit', target)
     }
 
     const heal = (target) => {
-        doAction('heal', target)
+        doAction.call(this, 'heal', target)
     }
 
     const cast = () => {
-        doAction('cast')
+        doAction.call(this, 'cast')
     }
 
     const canHeal = () => {
-        return type === 'pm' || type === 'mktg';
+        return type === 'pm';
     }
 
     const canCast = () => {
@@ -52,7 +53,11 @@ function Soldier(game, options) {
     }
 
     const doAction = (actionType, target) => {
-        if (game.currentPlayer.actionsDone > game.currentPlayer.iteration) {
+
+        let success = false;
+        let message = '';
+
+        if (game.currentPlayer.actionDone) {
             throw new Error('You can do only one action per turn');
         }
 
@@ -61,8 +66,12 @@ function Soldier(game, options) {
             const aliveOpponents = game.getAliveTroops(game.opponentPlayer.team);
             const t = aliveOpponents.find(soldier => soldier.getId() === target.getId());
 
-            console.log(name + ' attack opponent', t.getName())
+            
             t.setHealth(t.getHealth() - attack);
+            
+            message = `${name} attacks ${t.getName()} - ${attack} damage`
+            console.log(message)
+            success = true;
         }
 
         // HEAL 
@@ -72,15 +81,19 @@ function Soldier(game, options) {
                 const t = aliveCompanions.find(soldier => soldier.getId() === target.getId());
     
                 if (!t) {
-                    console.log('Trying to heal: invalid target');
+                    message = `${name} trying to heal: invalid target`;
+                    success = false;
                 } else {
-                    console.log(`${name} heals companion ${t.getName()}`)
+                    message = `${name} heals companion ${t.getName()}`;
                     t.setHealth(Math.min( maxHealth,  t.getHealth() + healPower ))
+                    success = true;
                 }
 
             } else {
-                console.log(`${name} can't heal, sorry! You lost an action!`);
+                message `${name} can't heal, sorry! You lost an action!`;
+                success = false;
             }
+            console.log(message);
         }
 
         // CAST 
@@ -88,19 +101,27 @@ function Soldier(game, options) {
             if (canCast()) {
                 const aliveOpponents = game.getAliveTroops(game.opponentPlayer.team);
     
-                console.log(`${name} cast on all enemies`)
+                message = `${name} cast on all enemies`;
 
                 aliveOpponents.forEach(opponent => {
                     opponent.setHealth(opponent.getHealth() - magicPower)
                 })
-                
 
+                success = true;
             } else {
-                console.log(`${name} can't heal, sorry! You lost an action!`);
+                message = `${name} can't cast, sorry! You lost an action!`;
+                success = false;
             }
+            console.log(message);
         }
 
-        game.currentPlayer.actionsDone++;
+        game.currentPlayer.actionDone = {
+            actor: id,
+            type: actionType,
+            target: target ? target.getId() : null,
+            success,
+            message
+        };
     }
 
     // getters
@@ -110,11 +131,24 @@ function Soldier(game, options) {
     const getName = () => name;
     const getType = () => type;
     const getMotto = () => motto;
+    const getMaxHealth = () => maxHealth;
+    const getStatus = () => health <= 0 ? 'DEAD' : (status ? status : 'OK')
 
     // setters
     const setHealth = value => {
         health = Math.min(maxHealth, value);
     }
+
+    const info = () => ({
+        id,
+        name,
+        motto,
+        health,
+        attack,
+        maxHealth,
+        magicPower,
+        healPower
+    })
 
 
     return {
@@ -124,12 +158,15 @@ function Soldier(game, options) {
         canHeal,
         canCast,
         // getters
+        info,
         getMotto,
         getType,
         getHealth,
         getAttack,
         getName,
         getId,
+        getMaxHealth,
+        getStatus,
         // setters
         setHealth
     }

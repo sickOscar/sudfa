@@ -5,42 +5,38 @@ class Runner {
         this.game = game;
         
         this.team = {
-            name: 'DEVASTO', 
+            name: 'MARIO', 
             troop: [
                 game.Dev(),
+                game.Mktg(),
                 game.Pm(),
-                game.Mktg()
+                
             ]
         }
 
-        this.game.registerTeam(this.team);
-
     }
 
-    getMyMostDamaged() {
-        const myTeam = this.team.troop;
-        let weakest = {getHealth: () => 100};
-        for(let i = 0; i < myTeam.length; i++) {
-            if (myTeam[i].getHealth() > 0 && weakest.getHealth() > myTeam[i].getHealth()) {
-                weakest = myTeam[i]
-            }
-        } 
-        return weakest;
-    }
 
     run() {
 
+        // Your current soldier, which is acting in this turn
         const soldier = this.game.getCurrentSoldier();
+        // Reference to the enemy team
         const enemyTeam = this.game.getEnemyTeam();
-
-        console.log(`${this.team.name} | ${soldier.getName()} turn`);
+        // Reference to your team
+        const myTeam = this.game.getMyTeam();
         
-        const target = enemyTeam.getWeakestSoldier();
-
-        if (soldier.canHeal()) {
-            let t = this.getMyMostDamaged()
+        // Simple AI
+        if (soldier.canCast()) {
+            // If the soldier can cast, then cast on all enemies
+            soldier.cast();
+        } else if (soldier.canHeal()) {
+            // if the soldier can heal, then heal the most damaged of your team
+            const t = myTeam.getMostDamagedSoldier()
             soldier.heal(t);
         } else {
+            // make the soldier hit the most damaged enemy
+            const target = enemyTeam.getMostDamagedSoldier();
             soldier.hit(target);
         }
 

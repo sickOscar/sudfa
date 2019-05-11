@@ -1,4 +1,5 @@
 const Soldier = require('./soldier');
+const History = require('./history');
 
 class Game {
 
@@ -8,6 +9,12 @@ class Game {
 
         this.currentPlayer = null;
         this.opponentPlayer = null;
+
+        this.history = History.getInstance();
+    }
+
+    shouldTogglePlayers() {
+        return true;
     }
 
     togglePlayers() {
@@ -18,6 +25,56 @@ class Game {
 
     registerTeam(team) {
         this.teams.push(team);
+    }
+
+    setupPlayers(player1, player2) {
+        this.registerTeam(player1.team);
+        this.registerTeam(player2.team);
+
+        this.currentPlayer = player1;
+        this.opponentPlayer = player2;
+
+        this.currentPlayer.iteration = 0;
+        this.opponentPlayer.iteration = 0;
+
+        this.currentPlayer.actionDone = false;
+        this.opponentPlayer.actionDone = false;
+
+        this.history.setPlayers(player1, player2);
+    }
+
+    runTurn() {
+        console.log(`${this.currentPlayer.team.name} | turn`);
+
+        const currentSoldier = this.getCurrentSoldier();
+        if (currentSoldier.getHealth() <= 0) {
+            console.log(`${currentSoldier.getName()} | DEAD SOLDIER`)
+        } else {
+            this.currentPlayer.run();    
+        }
+
+        if (this.currentPlayer.actionDone) {
+            this.history.addTurn(this.currentPlayer.actionDone, this.getState());    
+        }
+
+        
+
+        // reset player
+        this.currentPlayer.actionDone = false;
+    }
+
+    getState() {
+        return {
+            teams: this.teams.map(team => {
+                return team.troop.reduce((final, soldier) => {
+                    final[soldier.getId()] = {
+                        health: soldier.getHealth(),
+                        status: soldier.getStatus()
+                    }
+                    return final;
+                }, {}) 
+            })
+        }
     }
 
     printState() {
@@ -32,7 +89,14 @@ class Game {
     printGameOver(player) {
         console.log('GAME OVER!!!!')
 
+        console.log('FINAL STATE');
+        this.printState();
+
         console.log('The Winner is', player.team.name);
+    }
+
+    getCurrentTroops() {
+        return this.currentPlayer.team.troop;
     }
 
     getAliveTroops(team) {
@@ -46,68 +110,94 @@ class Game {
     }
 
     getCurrentSoldier() {
-        const aliveSoldiers = this.getAliveTroops(this.currentPlayer.team);
+        const aliveSoldiers = this.getCurrentTroops();
         let soldierIndex = this.currentPlayer.iteration % aliveSoldiers.length;
         return this.mySoldierProxy(aliveSoldiers[soldierIndex]);
     }
 
     mySoldierProxy(soldier) {
         return {
-            hit: soldier.hit,
-            heal: soldier.heal,
-            cast: soldier.cast,
-            canHeal: soldier.canHeal,
-            canCast: soldier.canCast,
+            hit: soldier.hit.bind(soldier),
+            heal: soldier.heal.bind(soldier),
+            cast: soldier.cast.bind(soldier),
+            canHeal: soldier.canHeal.bind(soldier),
+            canCast: soldier.canCast.bind(soldier),
             // getters
-            getMotto: soldier.getMotto,
-            getType: soldier.getType,
-            getHealth: soldier.getHealth,
-            getAttack: soldier.getAttack,
-            getName: soldier.getName,
-            getId: soldier.getId
+            getMotto: soldier.getMotto.bind(soldier),
+            getType: soldier.getType.bind(soldier),
+            getHealth: soldier.getHealth.bind(soldier),
+            getAttack: soldier.getAttack.bind(soldier),
+            getName: soldier.getName.bind(soldier),
+            getId: soldier.getId.bind(soldier),
+            getMaxHealth: soldier.getMaxHealth.bind(soldier),
+            getStatus: soldier.getStatus.bind(soldier)
         }
     }
 
     opponentSoldierProxy(soldier) {
         return {
-            getType: soldier.getType,
-            getId: soldier.getId,
-            getHealth: soldier.getHealth,
-            getAttack: soldier.getAttack
+            getType: soldier.getType.bind(soldier),
+            getId: soldier.getId.bind(soldier),
+            getHealth: soldier.getHealth.bind(soldier),
+            getAttack: soldier.getAttack.bind(soldier),
+            getMaxHealth: soldier.getMaxHealth.bind(soldier),
+            getStatus: soldier.getStatus.bind(soldier)
+        }
+    }
+
+    teamProxy(team, soldierProxy) {
+        return {
+            getFirstSoldier: () => {
+                return soldierProxy(team.shift());
+            },
+            getLastSoldier: () => {
+                return soldierProxy(team.pop());
+            },
+            getStrongestSoldier: () => {
+                let strongest = {getAttack: () => 0};
+                for(let i = 0; i < team.length; i++) {
+                    if (strongest.getAttack() < team[i].getAttack()) {
+                        strongest = team[i]
+                    }
+                } 
+                return soldierProxy(strongest);
+            },
+            getWeakestSoldier: () => {
+                let weakest = {getAttack: () => 100};
+                for(let i = 0; i < team.length; i++) {
+                    if (weakest.getAttack() > team[i].getAttack()) {
+                        weakest = team[i]
+                    }
+                } 
+                return soldierProxy(weakest);
+            },
+            getMostDamagedSoldier: () => {
+                let mostDamaged = {getHealth: () => 100};
+                for(let i = 0; i < team.length; i++) {
+                    if (team[i].getHealth() > 0 &&  mostDamaged.getHealth() > team[i].getHealth()) {
+                        mostDamaged = team[i]
+                    }
+                } 
+                return soldierProxy(mostDamaged);
+            },
+            getHealer: () => {
+                for(let i = 0; i < team.length; i++) {
+                    if (team[i].getHealth() > 0 && team[i].getType() === 'pm') {
+                        return team[i];    
+                    }
+                }
+            }
         }
     }
 
     getEnemyTeam() {
-
         const enemyTeam = this.getAliveTroops(this.opponentPlayer.team);
+        return this.teamProxy(enemyTeam, this.opponentSoldierProxy)
+    }
 
-        return {
-            getFirstSoldier: () => {
-                return this.opponentSoldierProxy(enemyTeam.shift());
-            },
-            getLastSoldier: () => {
-                return this.opponentSoldierProxy(enemyTeam.pop());
-            },
-            getStrongestSoldier: () => {
-                let strongest = {getAttack: () => 0};
-                for(let i = 0; i < enemyTeam.length; i++) {
-                    if (strongest.getAttack() < enemyTeam[i].getAttack()) {
-                        strongest = enemyTeam[i]
-                    }
-                } 
-                return this.opponentSoldierProxy(strongest);
-            },
-            getWeakestSoldier: () => {
-                let weakest = {getAttack: () => 100};
-                for(let i = 0; i < enemyTeam.length; i++) {
-                    if (weakest.getAttack() > enemyTeam[i].getAttack()) {
-                        weakest = enemyTeam[i]
-                    }
-                } 
-                return this.opponentSoldierProxy(weakest);
-            }
-        }
-
+    getMyTeam() {
+        const myTeam = this.getAliveTroops(this.currentPlayer.team);
+        return this.teamProxy(myTeam, this.mySoldierProxy)
     }
 
     isOver() {
@@ -121,6 +211,35 @@ class Game {
             return true;
         }
         return false
+    }
+
+    checkWinner() {
+        const player1AliveTroop = this.getAliveTroops(this.teams[0]);
+        const player2AliveTroop = this.getAliveTroops(this.teams[1]);
+
+        let winner = null;
+
+        if (player1AliveTroop.length === player2AliveTroop.length) {
+            
+
+            const p1HealthSum = player1AliveTroop.reduce((sum, next) => sum + next.getHealth(), 0)
+            const p2HealthSum = player2AliveTroop.reduce((sum, next) => sum + next.getHealth(), 0)
+
+            if (p1HealthSum === p2HealthSum) {
+                console.log('TIE!');
+            } else if (p1HealthSum > p2HealthSum) {
+                winner = this.teams[0].name;
+            } else {
+                winner = this.teams[1].name;
+            }
+
+        } else if (player1AliveTroop.length > player2AliveTroop.length) {
+            winner = this.teams[0].name;
+        } else {
+            winner = this.teams[1].name;
+        }
+
+        console.log('Winner : ' + winner)
     }
 
     Dev(options) {
@@ -145,5 +264,6 @@ class Game {
     }
 
 }
+
 
 module.exports = Game;
