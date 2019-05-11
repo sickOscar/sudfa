@@ -4,7 +4,8 @@ class History {
 	constructor() {
 		this.state = {
 			players: [],
-			turns: []
+			turns: [],
+			exit: {}
 		}	
 	}
 	
@@ -27,6 +28,11 @@ class History {
 
 	addTurn(turn, state) {
 		this.state.turns.push( {turn, state});
+	}
+
+	setExit(winner, by) {
+		console.log('SETTING WINNER')
+		this.state.exit = {winner, by}
 	}
 
 }

@@ -240,6 +240,7 @@ class Game {
         }
 
         console.log('Winner : ' + winner)
+        return winner;
     }
 
     Dev(options) {

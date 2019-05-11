@@ -1,24 +1,29 @@
 class Runner {
 
     constructor(game) {
-
+        // game instance
         this.game = game;
-        
+        // team definition
         this.team = {
-            name: 'MARIO', 
+            name: "Mid Level", 
             troop: [
-                game.Dev(),
-                game.Mktg(),
-                game.Pm(),
-                
+                game.Mktg({
+                    // name: "???",                    
+                    // motto: ""
+                }),
+                game.Pm({
+                    
+                }),
+                game.Dev({
+                    
+                })
             ]
         }
-
     }
 
-
+    
     run() {
-
+        
         // Your current soldier, which is acting in this turn
         const soldier = this.game.getCurrentSoldier();
         // Reference to the enemy team
@@ -39,7 +44,7 @@ class Runner {
             const target = enemyTeam.getMostDamagedSoldier();
             soldier.hit(target);
         }
-
+        
     }
 
 }
