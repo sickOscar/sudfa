@@ -78,7 +78,9 @@ class App extends Component {
     console.log('test code');
     localStorage.setItem('code', this.state.code);
 
-    fetch('http://localhost:5000/source', {
+    const HOST = process.env.NODE_ENV === 'production' ? 'http://jsfight.herokuapp.com:5000' : 'http://localhost:5000';
+
+    fetch(`${HOST}/source`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

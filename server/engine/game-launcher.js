@@ -1,11 +1,16 @@
 const Game = require('./game.js');
 const fs = require('fs');
 
+const botFolder = `${__dirname}/../bots/`;
+
 const loadCode = function(source) {
     const loadedModule = {};
-    (function(module) {
+    const require = (el) => {
+        throw new Error('NO!');
+    };
+    (function(module, require) {
         eval(source)
-    }(loadedModule))
+    }(loadedModule, require))
     return loadedModule.exports
 }
 
@@ -17,14 +22,14 @@ const launch = function(options) {
 
     switch (options.level) {
         case 'senior':
-            pl2Source = fs.readFileSync('./bots/mid-level.js').toString();
+            pl2Source = fs.readFileSync(botFolder + 'mid-level.js').toString();
             break;
         case 'mid-level':
-            pl2Source = fs.readFileSync('./bots/mid-level.js').toString();
+            pl2Source = fs.readFileSync(botFolder + 'mid-level.js').toString();
             break;
         case 'junior':
         default:
-            pl2Source = fs.readFileSync('./bots/junior.js').toString();
+            pl2Source = fs.readFileSync(botFolder + 'junior.js').toString();
             break;
     }
 
