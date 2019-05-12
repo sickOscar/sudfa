@@ -106,7 +106,7 @@ const launch = function(options) {
             game.history.setExit(game.checkWinner(), 'TIE')
     }
 
-    const ret = Object.assign({}, ...game.history.state)
+    const ret = JSON.parse(JSON.stringify(game.history.state));
     game.history.reset();
     return ret;
 
