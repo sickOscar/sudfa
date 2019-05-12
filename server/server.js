@@ -7,6 +7,10 @@ const GameLauncher = require('./engine/game-launcher')
 app.use(bodyParser.json());
 app.use(cors())
 
+app-get('/', (req, res) => {    
+    res.send('OK');
+})
+
 app.post('/source', (req, res)  => {
     
     console.log(req.body)
