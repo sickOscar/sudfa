@@ -105,8 +105,10 @@ const launch = function(options) {
 
             game.history.setExit(game.checkWinner(), 'TIE')
     }
-    
-    return game.history.state;
+
+    const ret = Object.assign({}, ...game.history.state)
+    game.history.reset();
+    return ret;
 
 }
 

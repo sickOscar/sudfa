@@ -35,6 +35,14 @@ class History {
 		this.state.exit = {winner, by}
 	}
 
+	reset() {
+		this.state = {
+			players: [],
+			turns: [],
+			exit: {}
+		}	
+	}
+
 }
 
 
