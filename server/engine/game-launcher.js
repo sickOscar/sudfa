@@ -1,39 +1,34 @@
 const Game = require('./game.js');
-const fs = require('fs');
 
-const botFolder = `${__dirname}/../bots/`;
+
 
 const loadCode = function(source) {
-    const loadedModule = {};
-    const require = (el) => {
+
+    const moduleMock = {};
+    const requireMock = (el) => {
         throw new Error('NO!');
     };
-    (function(module, require) {
-        eval(source)
-    }(loadedModule, require))
-    return loadedModule.exports
-}
+    let errorMock = null;
 
-const launch = function(options) {
-
-    const pl1Source = options.source;
-
-    let pl2Source = null;
-
-    switch (options.level) {
-        case 'senior':
-            pl2Source = fs.readFileSync(botFolder + 'mid-level.js').toString();
-            break;
-        case 'mid-level':
-            pl2Source = fs.readFileSync(botFolder + 'mid-level.js').toString();
-            break;
-        case 'junior':
-        default:
-            pl2Source = fs.readFileSync(botFolder + 'junior.js').toString();
-            break;
+    const loader = function(module, require, error) {
+        try {
+            eval(source)
+        } catch(err) {
+            error = err;
+        }
     }
 
-    console.log(pl2Source);
+    loader(moduleMock, requireMock, errorMock)
+
+    if (!errorMock) {
+        return moduleMock.exports
+    } else {
+        throw new Error('Invalid source file')
+    }
+
+}
+
+const launch = function(p1, p2) {
 
     const game = new Game();
 
@@ -50,21 +45,23 @@ const launch = function(options) {
     }(game));
 
 
-    const Player1 = loadCode(pl1Source)
-    const Player2 = loadCode(pl2Source)
+    const Player1 = loadCode(p1.source)
+    const Player2 = loadCode(p2.source)
 
     const player1 = new Player1(gameProxy)
     const player2 = new Player2(gameProxy)
 
     game.setupPlayers(player1, player2)
 
+    player1.botId = p1.botId;
+    player2.botId = p2.botId;
 
     const MAX_TURNS = 50;
 
-    console.log('INIT')
-    console.log('_______________________');
-    game.printState()
-    console.log('_____________________')
+    // console.log('INIT')
+    // console.log('_______________________');
+    // game.printState()
+    // console.log('_____________________')
 
     let gameOver = false;
 
@@ -81,7 +78,7 @@ const launch = function(options) {
         if (game.isOver()) {
             // GAME OVER
             game.printGameOver(game.currentPlayer)
-            game.history.setExit(game.currentPlayer.team.name, 'WIN')
+            game.history.setExit(game.currentPlayer.botId, 'WIN')
             gameOver = true;
         } else {
 
@@ -91,19 +88,25 @@ const launch = function(options) {
             
             game.turn++;
 
-            console.log('_______________________');
-            game.printState()
-            console.log('_____________________')
+            // console.log('_______________________');
+            // game.printState()
+            // console.log('_____________________')
         }
     }
 
     if (game.turn === MAX_TURNS) {
-        console.log('END TURNS')
-            console.log('_______________________');
-            game.printState()
-            console.log('_____________________')
+        // console.log('END TURNS')
+        //     console.log('_______________________');
+        //     game.printState()
+        //     console.log('_____________________')
 
-            game.history.setExit(game.checkWinner(), 'TIE')
+        if (game.checkWinner()) {
+            game.history.setExit(player2.botId, 'TIE')
+        } else {
+            game.history.setExit(player1.botId, 'TIE')
+        }
+
+        
     }
 
     const ret = JSON.parse(JSON.stringify(game.history.state));

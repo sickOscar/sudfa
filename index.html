@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <script>
+            if (typeof(w) == "undefined") {
+                w = new Worker("worker.js");
+            }
+
+            let done = false;
+
+            function patata() {
+                console.log('patata');
+            }
+
+            w.postMessage('while (true) {} postMessage("test")')
+
+            w.onmessage = function(event){
+                console.log(event)
+                done = true;
+            };
+
+            setTimeout(() => {
+
+                if (done) {
+
+                    console.log('FUNZIA');
+                }
+
+                if (!done) {
+                    console.log('NON FUNZIA');
+                }
+
+                w.terminate()
+
+            }, 3000)
+
+        </script>
+    </head>
+</html>

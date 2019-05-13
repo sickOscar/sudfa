@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import brace from 'brace';
+// import brace from 'brace';
 import AceEditor from 'react-ace';
 
 import 'brace/mode/java';
@@ -11,6 +11,7 @@ export class Editor extends Component {
 
     constructor(props) {
         super(props)
+        this.state = {}
     }
 
     render() {

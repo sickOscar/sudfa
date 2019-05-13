@@ -226,20 +226,20 @@ class Game {
             const p2HealthSum = player2AliveTroop.reduce((sum, next) => sum + next.getHealth(), 0)
 
             if (p1HealthSum === p2HealthSum) {
-                console.log('TIE!');
+                // in caso di parità, vince il secondo
+                winner = 1;
             } else if (p1HealthSum > p2HealthSum) {
-                winner = this.teams[0].name;
+                winner = 0;
             } else {
-                winner = this.teams[1].name;
+                winner = 1;
             }
 
         } else if (player1AliveTroop.length > player2AliveTroop.length) {
-            winner = this.teams[0].name;
+            winner = 0;
         } else {
-            winner = this.teams[1].name;
+            winner = 1;
         }
 
-        console.log('Winner : ' + winner)
         return winner;
     }
 

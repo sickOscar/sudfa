@@ -27,18 +27,21 @@ class Runner {
         const myTeam = this.game.getMyTeam();
         
         // Simple AI
-        if (soldier.canCast()) {
-            // If the soldier can cast, then cast on all enemies
-            soldier.cast();
-        } else if (soldier.canHeal()) {
-            // if the soldier can heal, then heal the most damaged of your team
-            const t = myTeam.getMostDamagedSoldier()
-            soldier.heal(t);
-        } else {
-            // make the soldier hit the most damaged enemy
-            const target = enemyTeam.getMostDamagedSoldier();
+        // if (soldier.canCast()) {
+        //     // If the soldier can cast, then cast on all enemies
+        //     soldier.cast();
+        // } else if (soldier.canHeal()) {
+        //     // if the soldier can heal, then heal the most damaged of your team
+        //     const t = myTeam.getMostDamagedSoldier()
+        //     soldier.heal(t);
+        // } else {
+        //     // make the soldier hit the most damaged enemy
+        //     const target = enemyTeam.getMostDamagedSoldier();
+        //     soldier.hit(target);
+        // }
+
+        const target = enemyTeam.getMostDamagedSoldier();
             soldier.hit(target);
-        }
 
     }
 
