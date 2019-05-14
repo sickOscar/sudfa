@@ -50,7 +50,15 @@ export class GameResults extends Component {
                         {this.levels.map(level => {
                             return <option key={level.label} value={level.value}>{level.label}</option>
                         })}
-                    </select>  
+                    </select>  |
+
+                  <select onChange={this.props.onChallengeTeamSelection}>
+                    {this.props.bots.map(bot => {
+                      return <option key={bot.botId} value={bot.botId}>{bot.name}</option>
+                    })}
+                  </select>
+
+                    <button onClick={this.props.challenge}>Challenge team</button>
                     <button onClick={this.props.sendToLeague}>Send to league</button>
                 </div>
                 <div>

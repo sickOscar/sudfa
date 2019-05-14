@@ -21,6 +21,10 @@ module.exports = {
       return botsCollection.find({user: userId}).toArray()
     },
 
+    allBots: function() {
+      return botsCollection.find({}).toArray()
+    },
+
     one: function(params) {
       return botsCollection.findOne(params)
     }

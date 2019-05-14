@@ -39,44 +39,77 @@ app.post('/source', jwtCheck, (req, res) => {
   const botId = req.body.bot;
   let code = req.body.source;
   const level = req.body.level;
+  const challenge = req.body.challenge;
 
   code = code.replace('/n', '');
   code = code.replace('/r', '');
 
-  let pl2Source = null;
+  if (challenge) {
 
-  switch (level) {
-    case 'senior':
-      pl2Source = fs.readFileSync(botFolder + 'senior.js').toString();
-      break;
-    case 'mid-level':
-      pl2Source = fs.readFileSync(botFolder + 'mid-level.js').toString();
-      break;
-    case 'guru':
-      pl2Source = fs.readFileSync(botFolder + 'guru.js').toString();
-      break;
-    case 'junior':
-    default:
-      pl2Source = fs.readFileSync(botFolder + 'junior.js').toString();
-      break;
+    Bot.one({botId: challenge})
+      .then(enemyBot => {
+
+        GameLauncher.launch(
+          {
+            source: code,
+            user: userId,
+            botId: botId
+          },
+          {
+            source: enemyBot.source,
+            botId: challenge,
+            user: enemyBot.user
+          })
+          .then(gameHistory => {
+            res.json(gameHistory)
+          })
+          .catch(error => {
+            res.send(error)
+          })
+
+      })
+
+
+  } else {
+
+    let pl2Source = null;
+
+    switch (level) {
+      case 'senior':
+        pl2Source = fs.readFileSync(botFolder + 'senior.js').toString();
+        break;
+      case 'mid-level':
+        pl2Source = fs.readFileSync(botFolder + 'mid-level.js').toString();
+        break;
+      case 'guru':
+        pl2Source = fs.readFileSync(botFolder + 'guru.js').toString();
+        break;
+      case 'junior':
+      default:
+        pl2Source = fs.readFileSync(botFolder + 'junior.js').toString();
+        break;
+    }
+
+    GameLauncher.launch(
+      {
+        source: code,
+        user: userId,
+        botId: botId
+      },
+      {
+        source: pl2Source,
+        botId: level
+      })
+      .then(gameHistory => {
+        res.json(gameHistory)
+      })
+      .catch(error => {
+        res.send(error)
+      })
+
   }
 
-  GameLauncher.launch(
-    {
-      source: code,
-      user: userId,
-      botId: botId
-    },
-    {
-      source: pl2Source,
-      botId: level
-    })
-    .then(gameHistory => {
-      res.json(gameHistory)
-    })
-    .catch(error => {
-      res.send(error)
-    })
+
 
 
 })
@@ -144,6 +177,19 @@ app.get('/fight/:bot1/:bot2', (req, res) => {
 
 app.get('/API', (req, res) => {
   res.send(fs.readFileSync('./src/API.md').toString());
+})
+
+app.get('/bots', jwtCheck, (req, res) => {
+
+  Bot.allBots()
+    .then(bots => {
+      res.json(bots)
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).send(err);
+    })
+
 })
 
 app.post('/league', jwtCheck, (req, res) => {
