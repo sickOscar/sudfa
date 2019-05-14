@@ -12,7 +12,7 @@ const GameLauncher = require('./src/engine/game-launcher');
 const botFolder = `${__dirname}/bots/`;
 
 app.use(bodyParser.json());
-app.use(cors())
+app.use(cors());
 
 var jwtCheck = jwt({
     secret: jwks.expressJwtSecret({

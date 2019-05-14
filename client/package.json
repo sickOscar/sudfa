@@ -2,7 +2,6 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://www.sickdevelopers.com/jsfight",
   "dependencies": {
     "auth0-js": "^9.10.2",
     "brace": "^0.11.1",
