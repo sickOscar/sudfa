@@ -1,3 +1,10 @@
+let deploy = {};
+try {
+  deploy = require('./ecosystem.deploy');
+} catch (err) {
+  console.log('No deploy loaded');
+}
+
 module.exports = {
   apps : [{
     name: 'API',
@@ -19,16 +26,5 @@ module.exports = {
     }
   }],
 
-  deploy : {
-    production : {
-      // SSH key path, default to $HOME/.ssh
-      key  : "",
-      user : 'ubuntu',
-      host : '',
-      ref  : 'origin/master',
-      repo : 'https://github.com/sickDevelopers/jsfight.git',
-      path : '/home/ubuntu/jsfightapi',
-      'post-deploy' : 'docker build -t jsfightapi .; docker run -p:5000:5000 jsfightapi'
-    }
-  }
+  deploy
 };

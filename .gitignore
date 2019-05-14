@@ -90,4 +90,4 @@ typings/
 
 data/
 
-ecosystem.config.js
+ecosystem.deploy.js
