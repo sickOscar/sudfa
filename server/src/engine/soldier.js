@@ -11,6 +11,7 @@ function Soldier(game, options) {
     let magicPower = 0;
     let maxHealth = 0;
     let status = 'OK';
+    let healPower = 0;
     
     switch (options.type) {
         case 'dev':

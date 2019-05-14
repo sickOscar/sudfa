@@ -4,10 +4,10 @@ const cors = require('cors');
 const fs = require('fs');
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
-const GameArena = require('./engine/game-arena');
-const Bot = require('./model/bot');
-const League = require('./model/league');
-const GameLauncher = require('./engine/game-launcher')
+const GameArena = require('./src/engine/game-arena');
+const Bot = require('./src/model/bot');
+const League = require('./src/model/league');
+const GameLauncher = require('./src/engine/game-launcher');
 
 const botFolder = `${__dirname}/bots/`;
 
