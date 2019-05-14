@@ -7,6 +7,8 @@ const { Worker, isMainThread, parentPort } = require('worker_threads');
 
 const launch = function(p1, p2) {
 
+  console.log('p1', p1);
+
   if (isMainThread) {
 
     const worker = new Worker('./src/engine/game-worker.js');

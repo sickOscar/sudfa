@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 app.post('/source', jwtCheck, (req, res) => {
 
   const userId = req.user.sub;
-  const botId = req.body.botId;
+  const botId = req.body.bot;
   let code = req.body.source;
   const level = req.body.level;
 
@@ -52,6 +52,9 @@ app.post('/source', jwtCheck, (req, res) => {
     case 'mid-level':
       pl2Source = fs.readFileSync(botFolder + 'mid-level.js').toString();
       break;
+    case 'guru':
+      pl2Source = fs.readFileSync(botFolder + 'guru.js').toString();
+      break;
     case 'junior':
     default:
       pl2Source = fs.readFileSync(botFolder + 'junior.js').toString();
@@ -60,10 +63,13 @@ app.post('/source', jwtCheck, (req, res) => {
 
   GameLauncher.launch(
     {
-      source: code
+      source: code,
+      user: userId,
+      botId: botId
     },
     {
-      source: pl2Source
+      source: pl2Source,
+      botId: level
     })
     .then(gameHistory => {
       res.json(gameHistory)

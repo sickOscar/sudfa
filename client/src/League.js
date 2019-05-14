@@ -34,12 +34,12 @@ export default class League extends React.Component {
 
                 <Link to="bots">Back to my bots</Link>
 
-                <h1>League</h1>
+                <h1>League leaderboard</h1>
 
                 <ol>
                     {this.state.leaderboard.map(bot => {
-                        return <li key={bot._id}>
-                          {bot.count} -- {bot.name} {bot.botId}
+                        return <li key={bot.botId}>
+                          {bot.name} {bot.botId} - ({bot.count} victories)
                         </li>
                     })}
                 </ol>

@@ -11,6 +11,21 @@ class Game {
         this.opponentPlayer = null;
 
         this.history = History.getInstance();
+
+        this.console = {
+          log: message => {
+            this.getCurrentSoldier().say(message)
+          },
+          error: message => {
+            this.getCurrentSoldier().say(message)
+          },
+          debug: message => {
+            this.getCurrentSoldier().say(message)
+          },
+          info: message => {
+            this.getCurrentSoldier().say(message)
+          }
+        }
     }
 
     shouldTogglePlayers() {
@@ -54,6 +69,7 @@ class Game {
         }
 
         if (this.currentPlayer.actionDone) {
+          console.log("this.currentPlayer.actionDone", this.currentPlayer.actionDone);
             this.history.addTurn(this.currentPlayer.actionDone, this.getState());    
         }
 
@@ -122,6 +138,7 @@ class Game {
             cast: soldier.cast.bind(soldier),
             canHeal: soldier.canHeal.bind(soldier),
             canCast: soldier.canCast.bind(soldier),
+            say: soldier.say.bind(soldier),
             // getters
             getMotto: soldier.getMotto.bind(soldier),
             getType: soldier.getType.bind(soldier),

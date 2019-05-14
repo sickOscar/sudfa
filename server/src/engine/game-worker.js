@@ -1,7 +1,7 @@
 const { Worker, isMainThread, parentPort } = require('worker_threads');
 const Game = require('./game.js');
 
-const loadCode = function(source) {
+const loadCode = function(source, gameConsole) {
 
   const moduleMock = {};
   const requireMock = (el) => {
@@ -9,7 +9,7 @@ const loadCode = function(source) {
   };
   let errorMock = null;
 
-  const loader = function(module, require, error) {
+  const loader = function(module, require, error, console) {
     try {
       eval(source)
     } catch(err) {
@@ -17,7 +17,7 @@ const loadCode = function(source) {
     }
   }
 
-  loader(moduleMock, requireMock, errorMock)
+  loader(moduleMock, requireMock, errorMock, gameConsole)
 
   if (!errorMock) {
     return moduleMock.exports
@@ -55,29 +55,25 @@ const launch = function(p1, p2) {
   }(game));
 
 
-  const Player1 = loadCode(p1.source)
-  const Player2 = loadCode(p2.source)
+  const Player1 = loadCode(p1.source, game.console);
+  const Player2 = loadCode(p2.source, game.console);
 
-  const player1 = new Player1(gameProxy)
-  const player2 = new Player2(gameProxy)
+  const player1 = new Player1(gameProxy);
+  const player2 = new Player2(gameProxy);
 
-  game.setupPlayers(player1, player2)
+  game.setupPlayers(player1, player2);
 
   player1.botId = p1.botId;
   player2.botId = p2.botId;
 
   const MAX_TURNS = 50;
 
-  // console.log('INIT')
-  // console.log('_______________________');
-  // game.printState()
-  // console.log('_____________________')
 
   let gameOver = false;
 
   while (game.turn < MAX_TURNS && !gameOver) {
 
-    console.log('*********************')
+    console.log('*********************');
     try {
       game.runTurn()
     } catch(err) {
@@ -88,6 +84,7 @@ const launch = function(p1, p2) {
     if (game.isOver()) {
       // GAME OVER
       game.printGameOver(game.currentPlayer)
+      console.log(game.currentPlayer);
       game.history.setExit(game.currentPlayer.botId, 'WIN')
       gameOver = true;
     } else {
@@ -98,17 +95,10 @@ const launch = function(p1, p2) {
 
       game.turn++;
 
-      // console.log('_______________________');
-      // game.printState()
-      // console.log('_____________________')
     }
   }
 
   if (game.turn === MAX_TURNS) {
-    // console.log('END TURNS')
-    //     console.log('_______________________');
-    //     game.printState()
-    //     console.log('_____________________')
 
     if (game.checkWinner()) {
       game.history.setExit(player2.botId, 'TIE')

@@ -21,7 +21,7 @@
 - ``heal(target)``: heals a target (must be one of your soldiers)
 - ``cast()``: cast a spell on all enemies
 - ``canHeal()``: check if soldier can heal
-- ``canCast()``: check if soldier can case
+- ``canCast()``: check if soldier can cast
 - ``getMotto()``: return soldier motto
 - ``getType()``: return soldier type
 - ``getHealth()``: return soldier health
