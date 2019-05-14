@@ -14,7 +14,7 @@ export default class Auth {
     this.auth0 = new auth0.WebAuth({
       domain: 'codeinthedarkve.eu.auth0.com',
       clientID: 'XIa57QS7CiWhoD5Oo0xR8H78MGdJ45jL',
-      redirectUri: 'http://localhost:3000/callback',
+      redirectUri: 'http://'+ window.location.hostname + ':3000/callback',
       responseType: 'token id_token',
       scope: 'openid'
     });
