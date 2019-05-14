@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 
-const HOST = 'http://localhost:5000';
+const HOST = 'http://127.0.0.1:5000';
 
 export default class League extends React.Component {
 
