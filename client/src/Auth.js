@@ -3,18 +3,23 @@
 import history from './history';
 import auth0 from 'auth0-js';
 
+
+const callbackUrl = process.env.NODE_ENV === 'production' ? ('http://'+ window.location.hostname) : ('http://'+ window.location.hostname + ':3000')
+
 // ...
 export default class Auth {
   accessToken;
   idToken;
   expiresAt;
 
+
+
   constructor() {
 
     this.auth0 = new auth0.WebAuth({
       domain: 'codeinthedarkve.eu.auth0.com',
       clientID: 'XIa57QS7CiWhoD5Oo0xR8H78MGdJ45jL',
-      redirectUri: 'http://'+ window.location.hostname + ':3000/callback',
+      redirectUri: callbackUrl + '/callback',
       responseType: 'token id_token',
       scope: 'openid'
     });
