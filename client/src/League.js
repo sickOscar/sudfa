@@ -38,7 +38,9 @@ export default class League extends React.Component {
 
                 <ol>
                     {this.state.leaderboard.map(bot => {
-                        return <li key={bot._id}>{bot.count} -- {bot._id}</li>
+                        return <li key={bot._id}>
+                          {bot.count} -- {bot.name} {bot.botId}
+                        </li>
                     })}
                 </ol>
             </div>

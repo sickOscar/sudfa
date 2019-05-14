@@ -3,6 +3,7 @@ const MongoClient = require('mongodb').MongoClient;
 const _ = require('lodash');
 const fs = require('fs');
 
+
 const mongoUrl = 'mongodb://localhost:27017';
 // Database Name
 const dbName = 'jsfight';
@@ -10,107 +11,159 @@ const dbName = 'jsfight';
 const client = new MongoClient(mongoUrl);
 
 const GameArena = {
-    
-    start: function(bot) {
 
-        let db;
-        let bots;
-        
-        return client.connect()
+  start: function (bot) {
+
+    let db;
+    let bots;
+    let allBots = []
+
+    return client.connect()
+
+      .then(() => {
+
+        db = client.db(dbName);
+        bots = db.collection('bots');
+
+        // recupera tutti i bot in gioco
+        return bots.find({}).toArray()
+      })
+      .then(async enemies => {
+        allBots = enemies;
+
+        const fights = [];
+        let homeFightExample = undefined;
+
+        try {
+          for(let i = 0; i < enemies.length; i++) {
+
+            if (bot.botId === enemies[i].botId) {
+              continue;
+            }
+
+            const homeRun = await GameLauncher.launch(bot, enemies[i]);
+            const awayRun = await GameLauncher.launch(enemies[i], bot);
+
+            if (homeRun.error || awayRun.error) {
+              throw new Error(homeRun.error || awayRun.error);
+            }
+
+            const home = {
+              id: `${bot.botId}${enemies[i].botId}`,
+              bot1: bot.botId,
+              bot2: enemies[i].botId,
+              history: homeRun,
+              winner: homeRun.exit.winner,
+              by: homeRun.exit.by,
+              time: new Date()
+            };
+
+            const away = {
+              id: `${enemies[i].botId}${bot.botId}`,
+              bot1: enemies[i].botId,
+              bot2: bot.botId,
+              history: awayRun,
+              winner: awayRun.exit.winner,
+              by: awayRun.exit.by,
+              time: new Date()
+            };
+
+            if (i === 0) {
+              homeFightExample = homeRun;
+            }
+
+            fights.push(home, away);
+
+          }
+
+          const fightsCollection = db.collection('fights')
+
+          return Promise.all([
+              fightsCollection.deleteMany({bot1: bot.botId}),
+              fightsCollection.deleteMany({bot2: bot.botId}),
+            ])
+            .then(() => {
+              if (fights.length) {
+                return fightsCollection.insertMany(_.flatten(fights))
+              }
+            })
             .then(connection => {
 
-                db = client.db(dbName);
-                bots = db.collection('bots');
 
-                console.log('bot to insert', bot)
+              const botName = homeFightExample ? homeFightExample.players[0].name: 'Butthole';
+              console.log('bot to insert', {...bot, name: botName})
 
-                return bots.updateOne(
-                    {botId: bot.botId, user: bot.user}, 
-                    {$set: {
-                        botId: bot.botId,
-                        source: bot.source 
-                    }},
-                    { upsert: true }
-                    )
+              return bots.updateOne(
+                {
+                  botId: bot.botId,
+                  user: bot.user
+                },
+                {
+                  $set: {
+                    botId: bot.botId,
+                    source: bot.source,
+                    name: botName
+                  }
+                },
+                {upsert: true}
+              )
             })
-            .then(operation => {
-                // recupera tutti i bot in gioco
-                return bots.find({}).toArray()
-            })        
-            .then(enemies => {
+            .then(() => {
 
-                // lancia il gioco contro tutti i bot
-                const fights = enemies.map(enemy => {
+              const fightsCollection = db.collection('fights');
+              return fightsCollection.aggregate([
+                {
+                  $group: {
+                    _id: '$winner',
+                    count: {$sum: 1}
+                  }
+                },
+                {
+                  $sort: {
+                    count: 1
+                  }
+                }
+              ]).toArray()
 
-                    const homeRun = GameLauncher.launch(bot, enemy);
-
-                    const home = {
-                        id: `${bot.botId}${enemy.botId}`,
-                        bot1: bot.botId,
-                        bot2: enemy.botId,
-                        history: homeRun,
-                        winner: homeRun.exit.winner,
-                        by: homeRun.exit.by,
-                        time: new Date()
-                    }
-
-                    const awayRun = GameLauncher.launch(enemy, bot);
-
-                    const away = {
-                        id: `${enemy.botId}${bot.botId}`,
-                        bot1: enemy.botId,
-                        bot2: bot.botId,
-                        history: awayRun,
-                        winner: awayRun.exit.winner,
-                        by: awayRun.exit.by,
-                        time: new Date()
-                    }
-
-                    return [home, away];
-                    
-                })
-                
-                const fightsCollection = db.collection('fights')
-
-                console.log(_.flatten(fights));
-
-                return Promise.all([
-                    fightsCollection.deleteMany({bot1: bot.botId}),
-                    fightsCollection.deleteMany({bot2: bot.botId}),
-                ])
-                .then(() => {
-                    return fightsCollection.insertMany(_.flatten(fights))
-                })
-                .then(() => {
-                    
-                    const fightsCollection = db.collection('fights');
-                    return fightsCollection.aggregate([
-                        {
-                            $group:{
-                                _id: '$winner',
-                                count: { $sum: 1}
-                            }
-                        },
-                        {
-                            $sort: {
-                                count: 1
-                            }
-                        }
-                    ]).toArray()
-
-                    
-
-                })
-                .then(leaderboard => {
-                    fs.writeFileSync('./leaderboard.json', JSON.stringify(leaderboard.reverse()));
-                    return 'OK';
-                })
 
             })
+            .then(leaderboard => {
 
-    }
+              leaderboard = leaderboard.map(bot => {
+                const dbBot = allBots.find(b => b.botId === bot._id);
+                return {
+                  count: bot.count,
+                  name: dbBot.name,
+                  botId: dbBot.id
+                }
+              });
 
-    
+
+              fs.writeFileSync('./leaderboard.json', JSON.stringify(leaderboard.reverse()));
+              return {
+                exit: 'OK'
+              };
+            })
+
+
+
+        } catch(err) {
+          console.log('ERROR', err);
+          return {
+            exit: 'KO',
+            message: err.error
+          };
+        }
+
+
+
+
+
+      })
+
+  }
+
+
 }
 
 module.exports = GameArena

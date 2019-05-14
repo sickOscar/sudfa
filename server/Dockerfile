@@ -9,6 +9,7 @@ COPY server.js .
 # Install app dependencies
 ENV NPM_CONFIG_LOGLEVEL warn
 RUN npm install --production
+RUN node -v
 
 # Expose the listening port of your app
 EXPOSE 5000

@@ -22,7 +22,7 @@ export default class Bots extends React.Component {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization' : `Bearer ${this.props.auth.getIdToken()}`
+                'Authorization' : `Bearer ${this.props.auth.getToken()}`
             }
         })
         .then(response => response.json())
@@ -40,7 +40,7 @@ export default class Bots extends React.Component {
         return (
         
             <div>
-                <h1>Your bots</h1>
+                <h1>Your teams</h1>
 
                 <ul>
                     {this.state.bots.map(bot => {
@@ -48,7 +48,7 @@ export default class Bots extends React.Component {
                         return (
                             <li key={bot.botId}>
                                 <Link to={link}>
-                                    Edit bot {bot.botId}
+                                    {bot.name} ({bot.botId})
                                 </Link>
                             </li>
                         )
@@ -56,7 +56,7 @@ export default class Bots extends React.Component {
                     <li>
                         {}
                         <Link to={newBotLink}>
-                            New Bot
+                            New Team
                         </Link>
                     </li>
                 </ul>

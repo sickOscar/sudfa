@@ -6,23 +6,18 @@ const dbName = 'jsfight';
 // Create a new MongoClient
 const client = new MongoClient(mongoUrl);
 
-let botsCollection;
-
+let fightsCollection;
 client.connect()
   .then(() => {
     const db = client.db(dbName);
-    botsCollection = db.collection('bots');
+    fightsCollection = db.collection('fights');
   })
 
 
 module.exports = {
 
-    all: function(userId) {
-      return botsCollection.find({user: userId}).toArray()
-    },
-
-    one: function(params) {
-      return botsCollection.findOne(params)
-    }
+  one: function(params) {
+    return fightsCollection.findOne(params)
+  }
 
 }

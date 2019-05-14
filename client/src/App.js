@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './App.css';
 
 class App extends Component {
@@ -9,43 +9,56 @@ class App extends Component {
     this.state = {}
   }
 
-  goTo(route) {
-    this.props.history.replace(`/${route}`)
+  logout() {
+    this.props.auth.logout();
   }
 
   login() {
     this.props.auth.login();
   }
 
-  logout() {
-    this.props.auth.logout();
-  }
-
   componentDidMount() {
-    const { renewSession } = this.props.auth;
+      console.log('check session')
+      // const {renewSession} = this.props.auth;
 
-    if (localStorage.getItem('isLoggedIn') === 'true') {
-      renewSession();
-    }
+      // if (localStorage.getItem('isLoggedIn') === 'true') {
+      //   renewSession()
+      // }
   }
 
 
   render() {
 
-    const { isAuthenticated } = this.props.auth;
+    const {isAuthenticated} = this.props.auth;
 
-    if (isAuthenticated()) {
-      return <div>
-        <button onClick={this.login.bind(this)}>Logout</button>
-      </div>;
-    } else {
-      return (
-        <div>
-          <button onClick={this.login.bind(this)}>Login</button>
-        </div>
-      )
-    }
-    
+    return (
+      <div>
+
+            {
+              !isAuthenticated() && (
+                <button
+                  id="qsLoginBtn"
+                  className="btn-margin"
+                  onClick={this.login.bind(this)}
+                >
+                  Log In
+                </button>
+              )
+            }
+            {
+              isAuthenticated() && (
+                <button
+                  id="qsLogoutBtn"
+                  className="btn-margin"
+                  onClick={this.logout.bind(this)}
+                >
+                  Log Out
+                </button>
+              )
+            }
+
+      </div>
+    )
   }
 }
 

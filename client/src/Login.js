@@ -1,10 +1,13 @@
 import React from 'react';
+import {Redirect} from 'react-router-dom';
 
 export default class Login extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            auth: props.auth
+        };
     }
 
     login() {
@@ -12,6 +15,13 @@ export default class Login extends React.Component {
     }
 
     render() {
+
+        console.log('AUTH', this.props.auth.isAuthenticated())
+
+        if (this.props.auth.isAuthenticated()) {
+            return <Redirect to="bots" />
+        }
+
         return (
             <div>
                 <button onClick={this.login.bind(this)}>Login</button>  

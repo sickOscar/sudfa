@@ -29,6 +29,7 @@ export class GameResults extends Component {
     render() {
         return (
             <div>
+              {this.props.error ? <div className="error">ERROR {this.props.error}</div> : ''}
                 <div>
                     <button onClick={this.props.onTestCode} >Test Code</button>
                     <select onChange={this.props.onLevelChange}>

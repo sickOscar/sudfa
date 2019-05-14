@@ -9,15 +9,16 @@ export default class Auth {
   idToken;
   expiresAt;
 
-  auth0 = new auth0.WebAuth({
-    domain: 'codeinthedarkve.eu.auth0.com',
-    clientID: 'XIa57QS7CiWhoD5Oo0xR8H78MGdJ45jL',
-    redirectUri: 'http://localhost:3000/callback',
-    responseType: 'token id_token',
-    scope: 'openid'
-  });
-
   constructor() {
+
+    this.auth0 = new auth0.WebAuth({
+      domain: 'codeinthedarkve.eu.auth0.com',
+      clientID: 'XIa57QS7CiWhoD5Oo0xR8H78MGdJ45jL',
+      redirectUri: 'http://localhost:3000/callback',
+      responseType: 'token id_token',
+      scope: 'openid'
+    });
+
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
@@ -40,9 +41,11 @@ export default class Auth {
         history.replace('/bots');
 
       } else if (err) {
+
         history.replace('/');
         console.log(err);
         alert(`Error: ${err.error}. Check the console for further details.`);
+
       }
       
     });
@@ -66,19 +69,20 @@ export default class Auth {
     this.idToken = authResult.idToken;
     this.expiresAt = expiresAt;
 
+    localStorage.setItem('idToken', authResult.idToken);
+    localStorage.setItem('expiresAt', expiresAt);
+
     
   }
 
   renewSession() {
-    console.log('renew session')
     this.auth0.checkSession({}, (err, authResult) => {
-       if (authResult && authResult.accessToken && authResult.idToken) {
-         this.setSession(authResult);
-       } else if (err) {
-         this.logout();
-         console.log(err);
-         alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
-       }
+      if (authResult && authResult.accessToken && authResult.idToken) {
+        this.setSession(authResult);
+      } else if (err) {
+        this.logout();
+        alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
+      }
     });
   }
 
@@ -90,6 +94,8 @@ export default class Auth {
 
     // Remove isLoggedIn flag from localStorage
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('idToken');
+    localStorage.removeItem('expiresAt');
 
     this.auth0.logout({
       returnTo: window.location.origin
@@ -99,10 +105,15 @@ export default class Auth {
     history.replace('/');
   }
 
+  getToken() {
+    return localStorage.getItem('idToken')
+  }
+
   isAuthenticated() {
-    // Check whether the current time is past the
-    // access token's expiry time
-    let expiresAt = this.expiresAt;
-    return new Date().getTime() < expiresAt;
+    if (localStorage.getItem('idToken') && localStorage.getItem('expiresAt')) {
+      const expiresAt = localStorage.getItem('expiresAt');
+      return new Date().getTime() < expiresAt;
+    }
+    return false;
   }
 }
