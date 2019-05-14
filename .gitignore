@@ -87,3 +87,5 @@ typings/
 .dynamodb/
 
 data/
+
+ecosystem.config.js
