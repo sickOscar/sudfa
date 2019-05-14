@@ -28,7 +28,7 @@ module.exports = {
       ref  : 'origin/master',
       repo : 'https://github.com/sickDevelopers/jsfight.git',
       path : '/home/ubuntu/jsfightapi',
-      'post-deploy' : 'cd server; npm i --production;'
+      'post-deploy' : 'docker build -t jsfightapi .; docker run -p:5000:5000 jsfightapi'
     }
   }
 };
