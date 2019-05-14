@@ -131,11 +131,14 @@ const GameArena = {
 
               leaderboard = leaderboard.map(bot => {
                 const dbBot = allBots.find(b => b.botId === bot._id);
-                return {
-                  count: bot.count,
-                  name: dbBot.name,
-                  botId: dbBot.id
+                if (dbBot) {
+                  return {
+                    count: bot.count,
+                    name: dbBot.name,
+                    botId: dbBot.id
+                  }
                 }
+                return bot;
               });
 
 
