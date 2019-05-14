@@ -15,7 +15,7 @@ export default class Bots extends React.Component {
 
     componentDidMount() {
         
-        const HOST = process.env.NODE_ENV === 'production' ? 'https://jsfight.herokuapp.com' : 'http://localhost:5000';
+        const HOST = 'http://localhost:5000';
 
         fetch(`${HOST}/mybots`, {
             method: 'GET',

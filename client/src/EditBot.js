@@ -45,7 +45,7 @@ class Runner {
 module.exports = Runner;
 
 `
-const HOST = process.env.NODE_ENV === 'production' ? 'https://jsfight.herokuapp.com' : 'http://localhost:5000';
+const HOST = 'http://localhost:5000';
 
 export default class Home extends Component {
 
