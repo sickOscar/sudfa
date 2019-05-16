@@ -3,7 +3,7 @@
 import history from './history';
 import auth0 from 'auth0-js';
 
-
+const HOST = 'http://' + window.location.hostname + ':5000';
 const callbackUrl = process.env.NODE_ENV === 'production' ? ('http://'+ window.location.hostname) : ('http://'+ window.location.hostname + ':3000')
 
 // ...
@@ -38,12 +38,35 @@ export default class Auth {
   }
 
   handleAuthentication() {
+
     this.auth0.parseHash((err, authResult) => {
 
       if (authResult && authResult.accessToken && authResult.idToken) {
 
         this.setSession(authResult);
-        history.replace('/bots');
+
+        fetch(`${HOST}/user`, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization' : `Bearer ${authResult.idToken}`
+          }
+        })
+          .then(response => response.json())
+          .then(user => {
+
+            localStorage.setItem('user', JSON.stringify(user))
+
+            if (user.name) {
+              history.replace('/bots');
+            } else {
+              history.replace('/profile');
+            }
+
+
+          })
+          .catch(err => console.error(err))
 
       } else if (err) {
 
@@ -101,6 +124,7 @@ export default class Auth {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('idToken');
     localStorage.removeItem('expiresAt');
+    localStorage.removeItem('user');
 
     this.auth0.logout({
       returnTo: window.location.origin
@@ -108,6 +132,30 @@ export default class Auth {
 
     // navigate to the home route
     history.replace('/');
+  }
+
+  getUser() {
+    return JSON.parse(localStorage.getItem('user'));
+  }
+
+  saveProfile(profile) {
+    return fetch(`${HOST}/user`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        ...profile
+      }),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization' : `Bearer ${this.getToken()}`
+      }
+    })
+      .then(response => response.json())
+      .then(user => {
+        localStorage.setItem('user', JSON.stringify(user))
+        history.replace('/bots');
+      })
+      .catch(err => console.error(err))
   }
 
   getToken() {

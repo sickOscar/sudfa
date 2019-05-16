@@ -1,33 +1,16 @@
 const GameLauncher = require('./game-launcher');
-const MongoClient = require('mongodb').MongoClient;
 const _ = require('lodash');
 const fs = require('fs');
-
-
-const mongoUrl = 'mongodb://localhost:27017';
-// Database Name
-const dbName = 'jsfight';
-// Create a new MongoClient
-const client = new MongoClient(mongoUrl);
+const Bot = require('../model/bot');
 
 const GameArena = {
 
   start: function (bot) {
 
-    let db;
-    let bots;
     let allBots = []
 
-    return client.connect()
-
-      .then(() => {
-
-        db = client.db(dbName);
-        bots = db.collection('bots');
-
-        // recupera tutti i bot in gioco
-        return bots.find({}).toArray()
-      })
+    // recupera tutti i bot in gioco
+    return Bots.all()
       .then(async enemies => {
         allBots = enemies;
 
@@ -35,7 +18,7 @@ const GameArena = {
         let homeFightExample = undefined;
 
         try {
-          for(let i = 0; i < enemies.length; i++) {
+          for (let i = 0; i < enemies.length; i++) {
 
             if (bot.botId === enemies[i].botId) {
               continue;
@@ -90,7 +73,7 @@ const GameArena = {
             .then(connection => {
 
 
-              const botName = homeFightExample ? homeFightExample.players[0].name: 'Butthole';
+              const botName = homeFightExample ? homeFightExample.players[0].name : 'Butthole';
               console.log('bot to insert', {...bot, name: botName})
 
               return bots.updateOne(
@@ -149,8 +132,7 @@ const GameArena = {
             })
 
 
-
-        } catch(err) {
+        } catch (err) {
           console.log('ERROR', err);
           return {
             exit: 'KO',
@@ -159,10 +141,8 @@ const GameArena = {
         }
 
 
-
-
-
       })
+
 
   }
 

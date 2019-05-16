@@ -1,23 +1,30 @@
-const MongoClient = require('mongodb').MongoClient;
+const { Client } = require('pg');
+const client = new Client({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_PASSWORD,
+});
 
-const mongoUrl = 'mongodb://localhost:27017';
-// Database Name
-const dbName = 'jsfight';
-// Create a new MongoClient
-const client = new MongoClient(mongoUrl);
+const clientConnected = client.connect()
 
-let fightsCollection;
-client.connect()
-  .then(() => {
-    const db = client.db(dbName);
-    fightsCollection = db.collection('fights');
-  })
+const FightModel = {
 
+  one: params => {
 
-module.exports = {
+    const whereClause = Object.keys(params).map((key, i) => {
+      return `${key} = $${i}`;
+    })
 
-  one: function(params) {
-    return fightsCollection.findOne(params)
+    const query = {
+      text: `SELECT * FROM fights WHERE ${whereClause.join(' AND ')}`,
+      values: Object.values(params)
+    }
+
+    return clientConnected
+      .then(() => {
+        client.query(query)
+      })
   }
 
 }

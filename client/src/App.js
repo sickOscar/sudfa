@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
 class App extends Component {
@@ -33,7 +34,7 @@ class App extends Component {
 
     return (
       <div>
-
+          <div className="toolbar">
             {
               !isAuthenticated() && (
                 <button
@@ -56,7 +57,7 @@ class App extends Component {
                 </button>
               )
             }
-
+          </div>
       </div>
     )
   }

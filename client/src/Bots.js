@@ -7,6 +7,7 @@ export default class Bots extends React.Component {
         super(props);
 
         this.state = {
+            user: this.props.auth.getUser(),
             bots: [
             ]
         };
@@ -40,7 +41,7 @@ export default class Bots extends React.Component {
         return (
         
             <div>
-                <h1>Your teams</h1>
+                <h1>{this.state.user ? this.state.user.name: ''}'s teams</h1>
 
                 <ul>
                     {this.state.bots.map(bot => {

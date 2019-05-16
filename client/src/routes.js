@@ -11,6 +11,7 @@ import Logout from './Logout';
 import history from './history';
 import App from './App';
 import Fight from './Fight';
+import Profile from './Profile'
 
 const auth = new Auth();
 
@@ -44,7 +45,7 @@ export const makeMainRoutes = () => {
 
       <PrivateRoute path="/bots" component={Bots}/>
       <PrivateRoute path="/edit/:botId" component={EditBot}/>
-
+      <PrivateRoute path="/profile" component={Profile} />
 
       <Route path="/league" component={League}/>
       <Route path="/fight/:bot1/:bot2" component={Fight}/>

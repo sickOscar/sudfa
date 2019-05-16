@@ -2,40 +2,42 @@
 
 ### game
 
-- ``getCurrentSoldier()``: get the current soldier
-- ``getEnemyTeam()``: reference to the enemy team
-- ``getMyTeam()``: reference to your team
+- **`getCurrentSoldier()`**:*Soldier* -> get the current soldier
+- **`getEnemyTeam()`**:*Team* -> reference to the enemy team
+- **`getMyTeam()`**:*Team* -> reference to your team
 
 ### Team API
 
-- ``getFirstSoldier()``: get the first soldier
-- ``getLastSoldier()``: get the last soldier
-- ``getStrongestSoldier()``: get the soldier with the highest attack
-- ``getWeakestSoldier()``: get the soldier with the lowes attack
-- ``getMostDamagedSoldier()``: get the soldier with the lowest health
-- ``getHealer()``: get one soldier who can heal
+- **`getAliveSoldiers()`**:*Array<Soldier>* -> get alive soldiers
+- **`getFirstSoldier()`**:*Soldier* -> get the first soldier
+- **`getLastSoldier()`**:*Soldier* -> get the last soldier
+- **`getStrongestSoldier()`**:*Soldier* -> get the soldier with the highest attack
+- **`getWeakestSoldier()`**:*Soldier* -> get the soldier with the lowes attack
+- **`getMostDamagedSoldier()`**:*Soldier* -> get the soldier with the lowest health
+- **`getHealer()`**:*Soldier* -> get one soldier who can heal
 
 ### Your Soldier API
 
-- ``hit(target)``: attacks a target (must be an enemy soldier)
-- ``heal(target)``: heals a target (must be one of your soldiers)
-- ``cast()``: cast a spell on all enemies
-- ``canHeal()``: check if soldier can heal
-- ``canCast()``: check if soldier can cast
-- ``getMotto()``: return soldier motto
-- ``getType()``: return soldier type
-- ``getHealth()``: return soldier health
-- ``getAttack()``: return soldier attack
-- ``getName()``: return soldier name
-- ``getId()``: return soldier id
-- ``getMaxHealth()``: return soldier max health
-- ``getStatus()``: return soldier status
+- **`hit(target)`**:*void* -> attacks a target (must be an enemy soldier)
+- **`heal(target)`**:*void* -> heals a target (must be one of your soldiers)
+- **`cast()`**:*void* -> cast a spell on all enemies
+- **`canHeal()`**:*boolean* -> check if soldier can heal
+- **`canCast()`**:*boolean* -> check if soldier can cast
+- **`getMotto()`**:*string* -> return soldier motto
+- **`getType()`**:*string* -> return soldier type
+- **`getHealth()`**:*int* -> return soldier health
+- **`getAttack()`**:*int* -> return soldier attack
+- **`getName()`**:*string* -> return soldier name
+- **`getId()`**:*string* -> return soldier id
+- **`getMaxHealth()`**:*int* -> return soldier max health
+- **`getStatus()`**:*string* -> return soldier status
 
 ### Enemy Soldier Api
 
-- ``getHealth()``: return soldier health
-- ``getAttack()``: return soldier attack
-- ``getName()``: return soldier name
-- ``getId()``: return soldier id
-- ``getMaxHealth()``: return soldier max health
-- ``getStatus()``: return soldier status
+- **`getYpe()`**:string* -> return soldier type
+- **`getHealth()`**:int* -> return soldier health
+- **`getAttack()`**:int* -> return soldier attack
+- **`getName()`**:string* -> return soldier name
+- **`getId()`**:string* -> return soldier id
+- **`getMaxHealth()`**:int* -> return soldier max health
+- **`getStatus()`**:string* -> return soldier status

@@ -15,7 +15,7 @@ class Runner {
         this.game = game;
         
         this.team = {
-            name: 'Junior', 
+            name: "__TEAM_NAME__", 
             troop: [
                 game.Dev(),
                 game.Mktg(),
@@ -54,9 +54,11 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
 
+    const user = JSON.parse(localStorage.getItem('user'));
+
     this.state = {
       bot: null,
-      code: exampleCode,
+      code: exampleCode.replace('__TEAM_NAME__', `${user.name}'s team`),
       results: null,
       selectedLevel: 'junior',
       error: null
@@ -148,7 +150,7 @@ export default class Home extends Component {
       .then(bot => {
         this.setState({
           bot: bot,
-          code: bot ? bot.source : exampleCode
+          code: (bot && bot.source)? bot.source : this.state.code
         })
       })
       .catch(err => {

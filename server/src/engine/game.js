@@ -154,6 +154,7 @@ class Game {
     opponentSoldierProxy(soldier) {
         return {
             getType: soldier.getType.bind(soldier),
+            getName: soldier.getName.bind(soldier),
             getId: soldier.getId.bind(soldier),
             getHealth: soldier.getHealth.bind(soldier),
             getAttack: soldier.getAttack.bind(soldier),
@@ -164,6 +165,9 @@ class Game {
 
     teamProxy(team, soldierProxy) {
         return {
+            getAliveSoldiers: () => {
+                return this.getAliveTroops(team).map(soldier => soldierProxy(soldier))
+            },
             getFirstSoldier: () => {
                 return soldierProxy(team.shift());
             },
