@@ -1,7 +1,8 @@
 const GameLauncher = require('./game-launcher');
 const _ = require('lodash');
 const fs = require('fs');
-const Bot = require('../model/bot');
+const Bots = require('../model/bot');
+const Fights = require('../model/fight')
 
 const GameArena = {
 
@@ -59,15 +60,14 @@ const GameArena = {
 
           }
 
-          const fightsCollection = db.collection('fights')
 
           return Promise.all([
-              fightsCollection.deleteMany({bot1: bot.botId}),
-              fightsCollection.deleteMany({bot2: bot.botId}),
+              Fights.delete({bot1: bot.botId}),
+              Fights.delete({bot2: bot.botId}),
             ])
             .then(() => {
               if (fights.length) {
-                return fightsCollection.insertMany(_.flatten(fights))
+                return Fights.addMany(_.flatten(fights))
               }
             })
             .then(connection => {
