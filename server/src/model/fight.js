@@ -15,12 +15,12 @@ const FightModel = {
 
     const whereClause = Object.keys(params).map((key, i) => {
       return `${key} = $${i}`;
-    })
+    });
 
     const query = {
       text: `SELECT * FROM fights WHERE ${whereClause.join(' AND ')}`,
       values: Object.values(params)
-    }
+    };
 
     return clientConnected
       .then(() => client.query(query))
@@ -33,25 +33,21 @@ const FightModel = {
       return Promise.resolve([]);
     }
 
-    const columns = Object.keys(fights[0])
-    const index = 1;
+    const columns = Object.keys(fights[0]);
+    let index = 0;
     const insertKeys = fights.map((fight, i) => {
       const indexes = Object.values(fight).map(val => {
-        return `$${index}`
-      })
+        return `$${++index}`
+      });
       return `( ${indexes.join(', ')} )`
-    })
+    });
 
-    console.log("insertKeys", insertKeys);
-
-    const insertValues = _.flatten(fights.map(fight => Object.values(fight)))
-
-    console.log("insertValues", insertValues);
+    const insertValues = _.flatten(fights.map(fight => Object.values(fight)));
 
     const query = {
       text: `INSERT INTO fights (${columns.join(', ')}) VALUES ${insertKeys.join(', ')} RETURNING *`,
       values: insertValues
-    }
+    };
 
     return clientConnected
       .then(() => client.query(query))
@@ -60,16 +56,22 @@ const FightModel = {
 
   delete: params => {
     const whereClause = Object.keys(params).map((key, i) => {
-      return `${key} = $${i}`;
-    })
+      return `"${key}" = $${i +1}`;
+    });
 
     const query = {
       text: `DELETE FROM fights WHERE ${whereClause.join(' AND ')}`,
       values: Object.values(params)
-    }
+    };
 
     return clientConnected
       .then(() => client.query(query))
+  },
+
+  computeLeaderboard: () => {
+    return [];
   }
 
-}
+};
+
+module.exports = FightModel;

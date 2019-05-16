@@ -2,13 +2,13 @@ const GameLauncher = require('./game-launcher');
 const _ = require('lodash');
 const fs = require('fs');
 const Bots = require('../model/bot');
-const Fights = require('../model/fight')
+const Fights = require('../model/fight');
 
 const GameArena = {
 
   start: function (bot) {
 
-    let allBots = []
+    let allBots = [];
 
     // recupera tutti i bot in gioco
     return Bots.all()
@@ -21,7 +21,7 @@ const GameArena = {
         try {
           for (let i = 0; i < enemies.length; i++) {
 
-            if (bot.botId === enemies[i].botId) {
+            if (bot.botId === enemies[i].botid) {
               continue;
             }
 
@@ -29,13 +29,14 @@ const GameArena = {
             const awayRun = await GameLauncher.launch(enemies[i], bot);
 
             if (homeRun.error || awayRun.error) {
+              console.error(homeRun.error || awayRun.error);
               throw new Error(homeRun.error || awayRun.error);
             }
 
             const home = {
-              id: `${bot.botId}${enemies[i].botId}`,
+              id: `${bot.botId}${enemies[i].botid}`,
               bot1: bot.botId,
-              bot2: enemies[i].botId,
+              bot2: enemies[i].botid,
               history: homeRun,
               winner: homeRun.exit.winner,
               by: homeRun.exit.by,
@@ -43,8 +44,8 @@ const GameArena = {
             };
 
             const away = {
-              id: `${enemies[i].botId}${bot.botId}`,
-              bot1: enemies[i].botId,
+              id: `${enemies[i].botid}${bot.botId}`,
+              bot1: enemies[i].botid,
               bot2: bot.botId,
               history: awayRun,
               winner: awayRun.exit.winner,
@@ -62,69 +63,33 @@ const GameArena = {
 
 
           return Promise.all([
-              Fights.delete({bot1: bot.botId}),
-              Fights.delete({bot2: bot.botId}),
-            ])
+            Fights.delete({bot1: bot.botId}),
+            Fights.delete({bot2: bot.botId}),
+          ])
             .then(() => {
               if (fights.length) {
                 return Fights.addMany(_.flatten(fights))
               }
             })
-            .then(connection => {
-
+            .then(() => {
 
               const botName = homeFightExample ? homeFightExample.players[0].name : 'Butthole';
-              console.log('bot to insert', {...bot, name: botName})
 
-              return bots.updateOne(
+              return Bots.update(
                 {
-                  botId: bot.botId,
+                  botid: bot.botId,
                   user: bot.user
                 },
                 {
-                  $set: {
-                    botId: bot.botId,
-                    source: bot.source,
-                    name: botName
-                  }
-                },
-                {upsert: true}
+                  source: bot.source,
+                  name: botName
+                }
               )
             })
             .then(() => {
-
-              const fightsCollection = db.collection('fights');
-              return fightsCollection.aggregate([
-                {
-                  $group: {
-                    _id: '$winner',
-                    count: {$sum: 1}
-                  }
-                },
-                {
-                  $sort: {
-                    count: 1
-                  }
-                }
-              ]).toArray()
-
-
+              return Fights.computeLeaderboard();
             })
             .then(leaderboard => {
-
-              leaderboard = leaderboard.map(bot => {
-                const dbBot = allBots.find(b => b.botId === bot._id);
-                if (dbBot) {
-                  return {
-                    count: bot.count,
-                    name: dbBot.name,
-                    botId: dbBot.id
-                  }
-                }
-                return bot;
-              });
-
-
               fs.writeFileSync('./leaderboard.json', JSON.stringify(leaderboard.reverse()));
               return {
                 exit: 'OK'
@@ -133,7 +98,7 @@ const GameArena = {
 
 
         } catch (err) {
-          console.log('ERROR', err);
+          console.error(err);
           return {
             exit: 'KO',
             message: err.error

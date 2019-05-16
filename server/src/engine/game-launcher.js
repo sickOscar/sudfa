@@ -1,13 +1,6 @@
-
 const { Worker, isMainThread, parentPort } = require('worker_threads');
 
-
-
-
-
 const launch = function(p1, p2) {
-
-  console.log('p1', p1);
 
   if (isMainThread) {
 
@@ -17,7 +10,6 @@ const launch = function(p1, p2) {
     return new Promise((resolve, reject) => {
       const errorTimeout = setTimeout(() => {
         worker.terminate();
-        console.error('Game is taking too long to complete');
         reject({
           error: "Game is taking too long, maybe infinite loop?"
         });
@@ -28,13 +20,11 @@ const launch = function(p1, p2) {
         resolve(JSON.parse(message))  // Prints 'Hello, world!'.
       });
 
-
-
     })
 
   }
 
-}
+};
 
 
 
@@ -42,4 +32,4 @@ module.exports = (function() {
     return {
         launch
     }
-}())
+}());

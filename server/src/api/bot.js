@@ -8,14 +8,14 @@ class BotApi {
 
     app.get('/mybots', jwtCheck, (req, res) => {
       const user = req.user.sub;
-      Bot.all(user)
+      Bot.myBots(user)
         .then(bots => {
           res.json(bots);
         })
         .catch(error => {
           res.status(500).send(error)
         })
-    })
+    });
 
     app.get('/bots', jwtCheck, (req, res) => {
 
@@ -28,12 +28,12 @@ class BotApi {
           res.status(500).send(err);
         })
 
-    })
+    });
 
     app.get('/bot/:id', jwtCheck, (req, res) => {
       const user = req.user.sub;
 
-      Bot.one({user, botId: req.params.id})
+      Bot.one({user, botid: req.params.id})
         .then(bot => {
 
           if (bot) {

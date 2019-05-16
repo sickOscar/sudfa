@@ -36,23 +36,23 @@ function Soldier(game, options) {
 
   const hit = (target) => {
     doAction.call(this, 'hit', target)
-  }
+  };
 
   const heal = (target) => {
     doAction.call(this, 'heal', target)
-  }
+  };
 
   const cast = () => {
     doAction.call(this, 'cast')
-  }
+  };
 
   const canHeal = () => {
     return type === 'pm';
-  }
+  };
 
   const canCast = () => {
     return type === 'mktg';
-  }
+  };
 
   const say = (message) => {
     if (tells.length < 10) {
@@ -65,7 +65,7 @@ function Soldier(game, options) {
       }
     }
 
-  }
+  };
 
 
   const doAction = (actionType, target) => {
@@ -88,11 +88,9 @@ function Soldier(game, options) {
         t.setHealth(t.getHealth() - attack);
 
         message = `${name} attacks ${t.getName()} - ${attack} damage`;
-        console.log(message);
         success = true;
       } else {
         message = `${name} fails to attack - no target`;
-        console.log(message);
         success = false;
       }
 
@@ -124,7 +122,6 @@ function Soldier(game, options) {
         message = `${name} can't heal, sorry! You lost an action!`;
         success = false;
       }
-      console.log(message);
     }
 
     // CAST
@@ -136,14 +133,13 @@ function Soldier(game, options) {
 
         aliveOpponents.forEach(opponent => {
           opponent.setHealth(opponent.getHealth() - magicPower)
-        })
+        });
 
         success = true;
       } else {
         message = `${name} can't cast, sorry! You lost an action!`;
         success = false;
       }
-      console.log(message);
     }
 
     game.currentPlayer.actionDone = {

@@ -73,18 +73,17 @@ const launch = function(p1, p2) {
 
   while (game.turn < MAX_TURNS && !gameOver) {
 
-    console.log('*********************');
     try {
       game.runTurn()
     } catch(err) {
+      // TODO aggiungere gestione errore
       console.error(err);
     }
     game.currentPlayer.iteration++;
 
     if (game.isOver()) {
       // GAME OVER
-      game.printGameOver(game.currentPlayer)
-      console.log(game.currentPlayer);
+      // game.printGameOver(game.currentPlayer)
       game.history.setExit(game.currentPlayer.botId, 'WIN')
       gameOver = true;
     } else {

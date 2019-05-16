@@ -13,7 +13,6 @@ class GameApi {
   constructor(app) {
 
 
-
     /**
      *
      */
@@ -28,10 +27,15 @@ class GameApi {
       code = code.replace('/n', '');
       code = code.replace('/r', '');
 
+
       if (challenge) {
 
-        Bot.one({botId: challenge})
+        Bot.one({botid: challenge})
           .then(enemyBot => {
+
+            if (!enemyBot) {
+              throw new Error('Invalid challenger')
+            }
 
             GameLauncher.launch(
               {
@@ -47,10 +51,11 @@ class GameApi {
               .then(gameHistory => {
                 res.json(gameHistory)
               })
-              .catch(error => {
-                res.send(error)
-              })
 
+
+          })
+          .catch(error => {
+            res.send(error)
           })
 
 
@@ -85,16 +90,44 @@ class GameApi {
             botId: level
           })
           .then(gameHistory => {
-            res.json(gameHistory)
+
+            // controllo se il bot appartiene all'utente
+            return Bot.one({botid: botId})
+              .then(userBot => {
+                // se non esiste, lo creo al volo
+                if (!userBot) {
+
+                  const newBot = {
+                    botid: botId,
+                    user: userId,
+                    source: code,
+                    name: gameHistory.players[0].name
+                  };
+
+                  return Bot.add(newBot);
+                }
+                // se il bot è effettivamente dell'utente, lo aggiorno
+                if (userBot.user === userId) {
+                  return Bot.update({botid: botId, user: userId}, {
+                    source: code,
+                    name: gameHistory.players[0].name
+                  })
+                }
+
+                throw new Error('These Are Not the Bots You Are Looking For');
+
+
+              })
+              .then(() => {
+                res.json(gameHistory)
+              })
+
           })
           .catch(error => {
             res.send(error)
           })
 
       }
-
-
-
 
     })
 
@@ -108,10 +141,10 @@ class GameApi {
       code = code.replace('/r', '');
 
       GameArena.start({
-          source: code,
-          botId: req.body.botId,
-          user: req.user.sub
-        })
+        source: code,
+        botId: req.body.botId,
+        user: req.user.sub
+      })
         .then(response => {
           res.json(response)
         })
@@ -130,17 +163,17 @@ class GameApi {
     app.get('/fight/:bot1/:bot2', (req, res) => {
 
       Promise.all([
-          Bot.one({botId: req.params.bot1}),
-          Bot.one({botId: req.params.bot2}),
-          Fight.one({
-            bot1: req.params.bot1,
-            bot2: req.params.bot2
-          }),
-          Fight.one({
-            bot2: req.params.bot1,
-            bot1: req.params.bot2
-          }),
-        ])
+        Bot.one({botId: req.params.bot1}),
+        Bot.one({botId: req.params.bot2}),
+        Fight.one({
+          bot1: req.params.bot1,
+          bot2: req.params.bot2
+        }),
+        Fight.one({
+          bot2: req.params.bot1,
+          bot1: req.params.bot2
+        }),
+      ])
         .then(results => {
 
           res.json({
@@ -165,11 +198,11 @@ class GameApi {
 
 }
 
-module.exports = (function() {
+module.exports = (function () {
 
   let instance = null
 
-  const getInstance = function(app) {
+  const getInstance = function (app) {
     if (!instance) {
       instance = new GameApi(app);
     }

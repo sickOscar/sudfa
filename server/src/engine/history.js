@@ -6,9 +6,9 @@ class History {
 			players: [],
 			turns: [],
 			exit: {}
-		}	
+		}
 	}
-	
+
 
 	setPlayers(player1, player2) {
 
@@ -16,12 +16,12 @@ class History {
 		const p1 = {
 			name: player1.team.name,
 			troop: player1.team.troop.map(soldier => soldier.info())
-		}
+		};
 
 		const p2 = {
 			name: player2.team.name,
 			troop: player2.team.troop.map(soldier => soldier.info())
-		}
+		};
 
 		this.state.players.push(p1, p2);
 	}
@@ -31,7 +31,6 @@ class History {
 	}
 
 	setExit(winner, by) {
-		console.log('SETTING WINNER')
 		this.state.exit = {winner, by}
 	}
 
@@ -40,7 +39,7 @@ class History {
 			players: [],
 			turns: [],
 			exit: {}
-		}	
+		}
 	}
 
 }
@@ -48,17 +47,17 @@ class History {
 
 module.exports = (function() {
 
-	instance = null;
+	let instance = null;
 
 	const getInstance = () => {
 		if (!instance) {
 			instance = new History()
 		}
 		return instance;
-	}
+	};
 
 	return {
 		getInstance
 	}
 
-}())
+}());

@@ -5,11 +5,11 @@ export default class Profile extends React.Component {
   constructor(props) {
     super(props);
 
-    const user = JSON.parse(localStorage.getItem('user'))
+    const user = JSON.parse(localStorage.getItem('user'));
 
     this.state = {
-      name: user.name
-    }
+      name: user.name || ''
+    };
 
     this.handleNameChange = this.handleNameChange.bind(this)
 
@@ -25,7 +25,7 @@ export default class Profile extends React.Component {
 
     const saveProfile = this.props.auth.saveProfile.bind(this.props.auth, {
       name : this.state.name
-    })
+    });
 
     return (
       <div>
@@ -41,7 +41,7 @@ export default class Profile extends React.Component {
         </div>
 
         <div>
-          <button onClick={saveProfile} disabled={!(this.state.name.trim())}>
+          <button onClick={saveProfile} disabled={!this.state.name || !(this.state.name.trim())}>
             Save
           </button>
         </div>

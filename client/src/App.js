@@ -19,12 +19,12 @@ class App extends Component {
   }
 
   componentDidMount() {
-      console.log('check session')
-      // const {renewSession} = this.props.auth;
+    console.log('check session')
+    // const {renewSession} = this.props.auth;
 
-      // if (localStorage.getItem('isLoggedIn') === 'true') {
-      //   renewSession()
-      // }
+    // if (localStorage.getItem('isLoggedIn') === 'true') {
+    //   renewSession()
+    // }
   }
 
 
@@ -33,32 +33,32 @@ class App extends Component {
     const {isAuthenticated} = this.props.auth;
 
     return (
-      <div>
-          <div className="toolbar">
-            {
-              !isAuthenticated() && (
-                <button
-                  id="qsLoginBtn"
-                  className="btn-margin"
-                  onClick={this.login.bind(this)}
-                >
-                  Log In
-                </button>
-              )
-            }
-            {
-              isAuthenticated() && (
-                <button
-                  id="qsLogoutBtn"
-                  className="btn-margin"
-                  onClick={this.logout.bind(this)}
-                >
-                  Log Out
-                </button>
-              )
-            }
-          </div>
+
+      <div className="toolbar">
+        {
+          !isAuthenticated() && (
+            <button
+              id="qsLoginBtn"
+              className="btn-margin"
+              onClick={this.login.bind(this)}
+            >
+              Log In
+            </button>
+          )
+        }
+        {
+          isAuthenticated() && (
+            <button
+              id="qsLogoutBtn"
+              className="btn-margin"
+              onClick={this.logout.bind(this)}
+            >
+              Log Out
+            </button>
+          )
+        }
       </div>
+
     )
   }
 }

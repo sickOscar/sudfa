@@ -54,7 +54,7 @@ export class GameResults extends Component {
 
                   <select onChange={this.props.onChallengeTeamSelection}>
                     {this.props.bots.map(bot => {
-                      return <option key={bot.botId} value={bot.botId}>{bot.name}</option>
+                      return <option key={bot.botid} value={bot.botid}>{bot.name}</option>
                     })}
                   </select>
 
