@@ -17,6 +17,19 @@ class BotApi {
         })
     })
 
+    app.get('/bots', jwtCheck, (req, res) => {
+
+      Bot.allBots()
+        .then(bots => {
+          res.json(bots)
+        })
+        .catch(err => {
+          console.error(err);
+          res.status(500).send(err);
+        })
+
+    })
+
     app.get('/bot/:id', jwtCheck, (req, res) => {
       const user = req.user.sub;
 

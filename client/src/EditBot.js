@@ -61,7 +61,9 @@ export default class Home extends Component {
       code: exampleCode.replace('__TEAM_NAME__', `${user.name}'s team`),
       results: null,
       selectedLevel: 'junior',
-      error: null
+      error: null,
+      enemyBot: null,
+      bots: []
     }
   }
 
@@ -175,7 +177,56 @@ export default class Home extends Component {
         console.error(err)
       })
 
+    fetch(`${HOST}/bots`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'text/plain',
+        'Content-Type': 'text/plain',
+        'Authorization': `Bearer ${this.props.auth.getToken()}`
+      }
+    })
+      .then(response => response.json())
+      .then(bots => {
+        this.setState({
+          bots
+        })
+      })
+      .catch(err => {
+        console.error(err)
+      })
 
+
+  }
+
+  onChallengeTeamSelection(event) {
+    this.setState({
+      enemyBot: event.target.value
+    })
+  }
+
+  challengeTeam() {
+    fetch(`${HOST}/source`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.props.auth.getToken()}`
+      },
+      body: JSON.stringify({
+        bot: this.props.match.params.botId,
+        source: this.state.code,
+        level: this.state.selectedLevel,
+        challenge: this.state.enemyBot
+      })
+    })
+      .then(response => response.json())
+      .then(results => {
+        this.setState({results})
+      })
+      .catch(err => {
+        console.error(err)
+        // this.props.auth.logout()
+      })
   }
 
   render() {
@@ -198,6 +249,9 @@ export default class Home extends Component {
                        onTestCode={this.onTestCode.bind(this)}
                        onLevelChange={this.onLevelChange.bind(this)}
                        sendToLeague={this.sendToLeague.bind(this)}
+                       challenge={this.challengeTeam.bind(this)}
+                       onChallengeTeamSelection={this.onChallengeTeamSelection.bind(this)}
+                       bots={this.state.bots}
                         error={this.state.error}
           />
 

@@ -25,6 +25,16 @@ module.exports = {
 
     },
 
+    allBots: function() {
+      const query = {
+          text: `SELECT * FROM bots`,
+      }
+
+      return clientConnected
+        .then(() => client.query(query))
+        .then(results => results.rows)
+    },
+
     one: function(params) {
       const whereClause = Object.keys(params).map((key, i) => {
         return `${key} = $${i+1}`;
