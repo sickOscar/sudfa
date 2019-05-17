@@ -5,13 +5,14 @@ import {Route, Router, Redirect} from 'react-router-dom';
 import Callback from './Callback';
 import Auth from './Auth';
 import EditBot from './EditBot';
-import Bots from './Bots';
-import League from './League';
+import Bots from './Bots/Bots';
+import League from './League/League';
 import Logout from './Logout';
 import history from './history';
 import App from './App';
 import Fight from './Fight';
 import Profile from './Profile'
+import Homepage from './Homepage/Homepage';
 
 const auth = new Auth();
 
@@ -25,7 +26,7 @@ const handleAuthentication = (nextState, replace) => {
 function PrivateRoute({component: Component, ...rest}) {
   return (
     <Route {...rest} render={(props) => {
-      console.log('isAuth', auth.isAuthenticated());
+      // console.log('isAuth', auth.isAuthenticated());
       if (auth.isAuthenticated())
         return <Component {...props} auth={auth}/>
       else
@@ -36,26 +37,31 @@ function PrivateRoute({component: Component, ...rest}) {
 
 export const makeMainRoutes = () => {
   return (
-    <div className="container-fluid">
+
       <Router history={history}>
 
         <Route path="/" render={(props) => <App {...props} auth={auth}/>}/>
 
-        <Route path="/logout" component={Logout}/>
+        <div className="container-fluid">
 
+          <Route path="/" exact component={Homepage}/>
 
-        <PrivateRoute path="/bots" component={Bots}/>
-        <PrivateRoute path="/edit/:botId" component={EditBot}/>
-        <PrivateRoute path="/profile" component={Profile} />
+          <Route path="/logout" component={Logout}/>
 
-        <Route path="/league" component={League}/>
-        <Route path="/fight/:bot1/:bot2" component={Fight}/>
+          <PrivateRoute path="/bots" component={Bots}/>
+          <PrivateRoute path="/edit/:botid" component={EditBot}/>
+          <PrivateRoute path="/profile" component={Profile} />
 
-        <Route path="/callback" render={(props) => {
-          handleAuthentication(props);
-          return <Callback {...props} />
-        }}/>
+          <Route path="/league" component={League}/>
+          <Route path="/fight/:bot1/:bot2" component={Fight}/>
+
+          <Route path="/callback" render={(props) => {
+            handleAuthentication(props);
+            return <Callback {...props} />
+          }}/>
+        </div>
+
       </Router>
-    </div>
+
   );
 }

@@ -63,8 +63,8 @@ const launch = function(p1, p2) {
 
   game.setupPlayers(player1, player2);
 
-  player1.botId = p1.botId;
-  player2.botId = p2.botId;
+  player1.botid = p1.botid;
+  player2.botid = p2.botid;
 
   const MAX_TURNS = 50;
 
@@ -82,9 +82,7 @@ const launch = function(p1, p2) {
     game.currentPlayer.iteration++;
 
     if (game.isOver()) {
-      // GAME OVER
-      // game.printGameOver(game.currentPlayer)
-      game.history.setExit(game.currentPlayer.botId, 'WIN')
+      game.history.setExit(game.currentPlayer.botid, 'WIN')
       gameOver = true;
     } else {
 
@@ -100,9 +98,11 @@ const launch = function(p1, p2) {
   if (game.turn === MAX_TURNS) {
 
     if (game.checkWinner()) {
-      game.history.setExit(player2.botId, 'TIE')
+      console.log("TIE p2", player2.botid);
+      game.history.setExit(player2.botid, 'TIE')
     } else {
-      game.history.setExit(player1.botId, 'TIE')
+      console.log("TIE p1", player2.botid);
+      game.history.setExit(player1.botid, 'TIE')
     }
 
 

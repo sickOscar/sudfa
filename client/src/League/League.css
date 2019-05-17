@@ -1,0 +1,22 @@
+.leaderboard {
+  margin: 0;
+  padding: 0;
+  list-style-type: none; }
+
+.leaderboard-row {
+  margin: 0;
+  padding: 5px 0 5px 10px;
+  border-bottom: 1px solid gray;
+  /*display: block;*/ }
+
+.leaderboard-row:first-child {
+  background-color: gold;
+  font-size: 40px; }
+
+.leaderboard-row:nth-child(2) {
+  background-color: silver;
+  font-size: 30px; }
+
+.leaderboard-row:nth-child(3) {
+  background-color: goldenrod;
+  font-size: 25px; }

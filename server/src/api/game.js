@@ -19,7 +19,7 @@ class GameApi {
     app.post('/source', jwtCheck, (req, res) => {
 
       const userId = req.user.sub;
-      const botId = req.body.bot;
+      const botid = req.body.bot;
       let code = req.body.source;
       const level = req.body.level;
       const challenge = req.body.challenge;
@@ -41,11 +41,11 @@ class GameApi {
               {
                 source: code,
                 user: userId,
-                botId: botId
+                botid: botid
               },
               {
                 source: enemyBot.source,
-                botId: challenge,
+                botid: challenge,
                 user: enemyBot.user
               })
               .then(gameHistory => {
@@ -83,22 +83,22 @@ class GameApi {
           {
             source: code,
             user: userId,
-            botId: botId
+            botid: botid
           },
           {
             source: pl2Source,
-            botId: level
+            botid: level
           })
           .then(gameHistory => {
 
             // controllo se il bot appartiene all'utente
-            return Bot.one({botid: botId})
+            return Bot.one({botid: botid})
               .then(userBot => {
                 // se non esiste, lo creo al volo
                 if (!userBot) {
 
                   const newBot = {
-                    botid: botId,
+                    botid: botid,
                     user: userId,
                     source: code,
                     name: gameHistory.players[0].name
@@ -108,7 +108,7 @@ class GameApi {
                 }
                 // se il bot è effettivamente dell'utente, lo aggiorno
                 if (userBot.user === userId) {
-                  return Bot.update({botid: botId, user: userId}, {
+                  return Bot.update({botid: botid, user: userId}, {
                     source: code,
                     name: gameHistory.players[0].name
                   })
@@ -142,7 +142,7 @@ class GameApi {
 
       GameArena.start({
         source: code,
-        botId: req.body.botId,
+        botid: req.body.botid,
         user: req.user.sub
       })
         .then(response => {
@@ -163,8 +163,8 @@ class GameApi {
     app.get('/fight/:bot1/:bot2', (req, res) => {
 
       Promise.all([
-        Bot.one({botId: req.params.bot1}),
-        Bot.one({botId: req.params.bot2}),
+        Bot.one({botid: req.params.bot1}),
+        Bot.one({botid: req.params.bot2}),
         Fight.one({
           bot1: req.params.bot1,
           bot2: req.params.bot2

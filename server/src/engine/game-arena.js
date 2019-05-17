@@ -21,7 +21,7 @@ const GameArena = {
         try {
           for (let i = 0; i < enemies.length; i++) {
 
-            if (bot.botId === enemies[i].botid) {
+            if (bot.botid === enemies[i].botid) {
               continue;
             }
 
@@ -34,8 +34,8 @@ const GameArena = {
             }
 
             const home = {
-              id: `${bot.botId}${enemies[i].botid}`,
-              bot1: bot.botId,
+              id: `${bot.botid}${enemies[i].botid}`,
+              bot1: bot.botid,
               bot2: enemies[i].botid,
               history: homeRun,
               winner: homeRun.exit.winner,
@@ -44,9 +44,9 @@ const GameArena = {
             };
 
             const away = {
-              id: `${enemies[i].botid}${bot.botId}`,
+              id: `${enemies[i].botid}${bot.botid}`,
               bot1: enemies[i].botid,
-              bot2: bot.botId,
+              bot2: bot.botid,
               history: awayRun,
               winner: awayRun.exit.winner,
               by: awayRun.exit.by,
@@ -61,15 +61,37 @@ const GameArena = {
 
           }
 
+          console.log(`Game arena completed for ${bot.botid}: ${fights.length} fights`)
+
 
           return Promise.all([
-            Fights.delete({bot1: bot.botId}),
-            Fights.delete({bot2: bot.botId}),
+            Fights.delete({bot1: bot.botid}),
+            Fights.delete({bot2: bot.botid}),
           ])
             .then(() => {
               if (fights.length) {
-                return Fights.addMany(_.flatten(fights))
+
+                // controllo che il bot ci sia a db, altrimenti lo creo
+                return Bots.one({botid: bot.botid, user: bot.user})
+                  .then(dbBot => {
+                    if (!dbBot) {
+                      return Bots.add({
+                        botid: bot.botid,
+                        source: bot.source,
+                        // prendo il nome dal primo combattimento,
+                        // il bot corrente combatte per primo in casa
+                        name: fights[0].history.players[0].name,
+                        user: bot.user
+                      })
+                    } else {
+                      return dbBot;
+                    }
+                })
+
               }
+            })
+            .then(() => {
+              return Fights.addMany(_.flatten(fights))
             })
             .then(() => {
 
@@ -77,7 +99,7 @@ const GameArena = {
 
               return Bots.update(
                 {
-                  botid: bot.botId,
+                  botid: bot.botid,
                   user: bot.user
                 },
                 {
@@ -90,7 +112,7 @@ const GameArena = {
               return Fights.computeLeaderboard();
             })
             .then(leaderboard => {
-              fs.writeFileSync('./leaderboard.json', JSON.stringify(leaderboard.reverse()));
+              fs.writeFileSync('./leaderboard.json', JSON.stringify(leaderboard));
               return {
                 exit: 'OK'
               };

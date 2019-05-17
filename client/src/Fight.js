@@ -44,13 +44,13 @@ export default class Fight extends React.Component {
         <h2>Bots</h2>
 
         {this.state.bots.map(bot => {
-          return <div key={bot.botId}>{bot.name}</div>
+          return <div key={bot.botid}>{bot.name}</div>
         })}
 
         <h2>Fights</h2>
 
         {this.state.fights.map(fight => {
-          return <pre key={fight.botId}>{JSON.stringify(fight, null, 2)}</pre>
+          return <pre key={fight.botid}>{JSON.stringify(fight, null, 2)}</pre>
         })}
 
       </div>

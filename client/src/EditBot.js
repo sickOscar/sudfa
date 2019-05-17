@@ -5,7 +5,7 @@ import {GameResults} from './GameResults';
 import Apis from './Apis';
 import history from './history';
 
-import './EditBot.css';
+import './EditBot.scss';
 
 const exampleCode = `
 class Runner {
@@ -91,7 +91,7 @@ export default class Home extends Component {
         'Authorization': `Bearer ${this.props.auth.getToken()}`
       },
       body: JSON.stringify({
-        bot: this.props.match.params.botId,
+        bot: this.props.match.params.botid,
         source: this.state.code,
         level: this.state.selectedLevel
       })
@@ -122,7 +122,7 @@ export default class Home extends Component {
         'Authorization': `Bearer ${this.props.auth.getToken()}`
       },
       body: JSON.stringify({
-        botId: this.props.match.params.botId,
+        botid: this.props.match.params.botid,
         source: this.state.code
       })
     })
@@ -140,7 +140,7 @@ export default class Home extends Component {
 
   componentDidMount() {
 
-    fetch(`${HOST}/bot/${this.props.match.params.botId}`, {
+    fetch(`${HOST}/bot/${this.props.match.params.botid}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -213,7 +213,7 @@ export default class Home extends Component {
         'Authorization': `Bearer ${this.props.auth.getToken()}`
       },
       body: JSON.stringify({
-        bot: this.props.match.params.botId,
+        bot: this.props.match.params.botid,
         source: this.state.code,
         level: this.state.selectedLevel,
         challenge: this.state.enemyBot

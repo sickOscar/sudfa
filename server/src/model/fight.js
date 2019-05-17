@@ -69,6 +69,36 @@ const FightModel = {
   },
 
   computeLeaderboard: () => {
+
+    const text = `
+      select users.id, users.name as username, class_bot.victories, bots.name, bots.botid
+      from (
+             select botid, sum(zz) as victories
+             from (
+                    select winner        as botid,
+                           count(winner) as zz
+                    from fights
+                    group by winner
+                    UNION
+                    select botid,
+                           0 as zz
+                    from bots
+                  ) v
+             group by botid
+           ) class_bot
+             INNER JOIN bots
+                        ON (class_bot.botid = bots.botid)
+             INNER JOIN users
+                        ON (bots.user = users.id)
+      ORDER BY victories DESC;
+    `;
+
+    const query = {text};
+
+    return clientConnected
+      .then(() => client.query(query))
+      .then(results => results.rows)
+
     return [];
   }
 

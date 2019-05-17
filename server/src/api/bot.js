@@ -40,7 +40,7 @@ class BotApi {
             res.json(bot)
           } else {
             res.json({
-              botId: req.params.id
+              botid: req.params.id
             })
           }
 

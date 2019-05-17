@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import './League.scss';
 
 const HOST = 'http://' + window.location.hostname + ':5000';
 
@@ -31,15 +32,14 @@ export default class League extends React.Component {
     render() {
         return (
             <div>
-
-                <Link to="bots">Back to my bots</Link>
-
                 <h1>League leaderboard</h1>
 
-                <ol>
-                    {this.state.leaderboard.map(bot => {
-                        return <li key={bot.botId}>
-                          {bot.name} {bot.botId} - ({bot.count} victories)
+                <ol className="leaderboard">
+                    {this.state.leaderboard.map((bot, i) => {
+                        return <li className="leaderboard-row" key={bot.botid}>
+                          <span>{i + 1}.</span>
+                          <span>{bot.name}<small>@{bot.username}</small></span>
+                          <span>({bot.victories} victories)</span>
                         </li>
                     })}
                 </ol>
