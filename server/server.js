@@ -22,7 +22,7 @@ const client = new Client({
 
 client.connect()
   .then(() => {
-    client.query({text: 'CREATE DATABASE jsfight'})
+    return client.query({text: 'CREATE DATABASE jsfight'})
   })
   .then(res => {
     console.log("res", res);
