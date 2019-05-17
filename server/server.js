@@ -10,6 +10,16 @@ const BotApi = require('./src/api/bot');
 app.use(bodyParser.json());
 app.use(cors());
 
+const pg = require('pg');
+
+const { Client } = require('pg')
+const client = new Client()
+
+client.connect()
+  .then(() => {
+    client.query('CREATE DATABASE jsfight IF NOT EXISTS')
+  })
+
 const gameApi = GameApi.getInstance(app)
 const userApi = UserApi.getInstance(app)
 const botAPi = BotApi.getInstance(app)
