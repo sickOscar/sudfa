@@ -5,7 +5,7 @@ COPY src src/
 COPY package.json .
 COPY ecosystem.config.js .
 COPY server.js .
-COPY ${HOME}/.env .
+COPY /home/ubuntu/.env .
 
 # Install app dependencies
 ENV NPM_CONFIG_LOGLEVEL warn
