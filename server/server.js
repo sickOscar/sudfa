@@ -22,7 +22,14 @@ const client = new Client({
 
 client.connect()
   .then(() => {
-    client.query('CREATE DATABASE jsfight IF NOT EXISTS')
+    client.query('CREATE DATABASE jsfight')
+  })
+  .then(res => {
+    console.log("res", res);
+    client.end()
+  })
+  .catch(err => {
+    console.log("err", err);
   })
 
 const gameApi = GameApi.getInstance(app)
