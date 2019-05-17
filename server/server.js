@@ -20,18 +20,6 @@ const client = new Client({
   password: process.env.DB_PASSWORD,
 })
 
-client.connect()
-  .then(() => {
-    return client.query({text: 'CREATE DATABASE jsfight'})
-  })
-  .then(res => {
-    console.log("res", res);
-    client.end()
-  })
-  .catch(err => {
-    console.log("err", err);
-  })
-
 const gameApi = GameApi.getInstance(app)
 const userApi = UserApi.getInstance(app)
 const botAPi = BotApi.getInstance(app)
