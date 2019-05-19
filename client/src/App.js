@@ -1,8 +1,12 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import './App.scss';
-
 import logo from './images/logo.png';
+import './icons';
+
+
+
+
 
 class App extends Component {
 
@@ -36,24 +40,34 @@ class App extends Component {
 
     return (
 
-      <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+      <nav className="navbar navbar-expand-md navbar-dark bg-primary">
+
         <Link className="header-link" to="/">
           <img src={logo} className="header-logo" alt="SUDFAπ"/>
-          Super Ultra Dev Fight Arena π
+          Super Ultra Dev Fight Arena
         </Link>
+
+
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon" />
         </button>
+
+
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ml-auto">
+            <li className="nav-item">
+              <Link className="nav-link" to="/docs">
+                <b>Docs</b>
+              </Link>
+            </li>
             <li className="nav-item">
               <Link className="nav-link" to="/league">Leaderboard</Link>
             </li>
             {
               isAuthenticated() && (
                 <li className="nav-item">
-                  <Link className="nav-link" to="bots">My Bots</Link>
+                  <Link className="nav-link" to="/bots">My Bots</Link>
                 </li>
               )
             }

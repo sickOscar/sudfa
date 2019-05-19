@@ -2,6 +2,8 @@ import React from 'react';
 import {Link} from 'react-router-dom'
 import './Bots.scss';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 export default class Bots extends React.Component {
 
   constructor(props) {
@@ -41,7 +43,7 @@ export default class Bots extends React.Component {
     return (
       <React.Fragment>
         <div className="row">
-          <div className="col-sm-12">
+          <div className="col-sm-12 text-center section-title">
             <h1>{this.state.user ? this.state.user.name : ''}'s teams</h1>
           </div>
         </div>
@@ -56,8 +58,11 @@ export default class Bots extends React.Component {
                 <div className="card bot-card">
                   <div className="card-body">
                     <h5 className="card-title">{bot.name}</h5>
+                    <div className="icon-box">
+                      <FontAwesomeIcon icon="robot"/>
+                    </div>
                     <Link to={link} className="btn btn-primary">
-                      Edit bot
+                      Edit team
                     </Link>
                   </div>
                 </div>
@@ -69,8 +74,11 @@ export default class Bots extends React.Component {
             <div className="card bot-card">
               <div className="card-body">
                 <h5 className="card-title">New Bot</h5>
+                <div className="icon-box">
+                  <FontAwesomeIcon icon="plus-square"/>
+                </div>
                 <Link to={newBotLink} className="btn btn-primary">
-                  Create new bot
+                  Create new team
                 </Link>
               </div>
             </div>

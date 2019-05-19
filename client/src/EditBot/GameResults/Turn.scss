@@ -1,0 +1,107 @@
+@import '../../variables';
+
+
+.turn {
+  border-bottom: 1px solid lighten(gray, 10%);
+  border-top: 1px solid lighten(map_get($theme-colors, 'primary'), 10%);
+
+  .player-name {
+    font-family: Bungee, sans-serif;
+    padding: 5px;
+    color: #fff;
+    background-color: map_get($theme-colors, 'primary');
+    margin-bottom: 0px;
+  }
+
+
+  .turn-base {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .attack-text {
+    color: #ff4136;
+  }
+
+  .heal-text {
+    color: darkgreen;
+  }
+
+  .cast-text {
+    color: map_get($theme-colors, 'primary')
+  }
+
+  .icon-container {
+    font-size: 3em;
+    padding: 10px;
+    width: 100px;
+    text-align: center;
+  }
+
+  .text-container {
+    flex: 1;
+
+    .action-text {
+
+    }
+  }
+
+  .team-container {
+    text-align: center;
+    margin-bottom: 10px;
+
+    h4 {
+      margin: 0;
+    }
+
+    .soldier-box-container {
+      display: flex;
+      flex-direction: row;
+      align-content: center;
+      justify-content: center;
+
+
+      .soldier-box {
+        flex: 1;
+
+        .soldier {
+          display: inline-block;
+          border-radius: 10px;
+          background-color: #000;
+          height: 20px;
+          width: 20px;
+          border: 2px solid #ccc;
+
+          &.actor {
+            height:20px;
+            width: 20px;
+            border-radius: 10px;
+            border: 2px solid map_get($theme-colors, 'secondary') !important
+          }
+
+          &.target {
+            height:20px;
+            width: 20px;
+            border-radius: 10px;
+            border: 2px solid map_get($theme-colors, 'danger') !important
+          }
+
+          &.healed {
+            height:20px;
+            width: 20px;
+            border-radius: 10px;
+            border: 2px solid forestgreen !important;
+          }
+
+          &.dead {
+            background-color: #aaa;
+            border: 2px solid #aaa;
+          }
+
+        }
+
+      }
+    }
+  }
+
+}

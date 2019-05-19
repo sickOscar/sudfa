@@ -30,6 +30,42 @@ class BotApi {
 
     });
 
+    app.post('/bot/:id', jwtCheck, (req, res) => {
+      const user = req.user.sub;
+
+      Bot.one({botid: req.params.id})
+        .then(bot => {
+
+          // update bot
+          if (bot && bot.user === user) {
+            Bot.update(
+              {botid: bot.botid, user: user},
+              {source: req.body.source}
+            )
+              .then(bot => {
+                res.json(bot);
+              })
+          } else if (!bot) {
+            Bot.add({
+              botid: req.params.id,
+              source: req.body.source,
+              user,
+              name: 'Unknown'
+            })
+          } else {
+            throw new Error('Not your bot!');
+          }
+
+
+        })
+        .catch(err => {
+          console.error(err);
+          res.status(500).send(err);
+        })
+
+
+    });
+
     app.get('/bot/:id', jwtCheck, (req, res) => {
       const user = req.user.sub;
 
@@ -55,11 +91,11 @@ class BotApi {
 
 }
 
-module.exports = (function() {
+module.exports = (function () {
 
   let instance = null
 
-  const getInstance = function(app) {
+  const getInstance = function (app) {
     if (!instance) {
       instance = new BotApi(app);
     }

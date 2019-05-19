@@ -4,7 +4,7 @@ import React from 'react';
 import {Route, Router, Redirect} from 'react-router-dom';
 import Callback from './Callback';
 import Auth from './Auth';
-import EditBot from './EditBot';
+import EditBot from './EditBot/EditBot';
 import Bots from './Bots/Bots';
 import League from './League/League';
 import Logout from './Logout';
@@ -13,6 +13,7 @@ import App from './App';
 import Fight from './Fight';
 import Profile from './Profile'
 import Homepage from './Homepage/Homepage';
+import Docs from './Docs/Docs';
 
 const auth = new Auth();
 
@@ -45,6 +46,7 @@ export const makeMainRoutes = () => {
         <div className="container-fluid">
 
           <Route path="/" exact component={Homepage}/>
+          <Route path="/docs" exact component={Docs}/>
 
           <Route path="/logout" component={Logout}/>
 

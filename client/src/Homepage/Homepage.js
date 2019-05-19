@@ -1,25 +1,30 @@
 import React from 'react';
-
-import logo from '../images/logo.png';
+import './Homepage.scss';
 
 const Homepage = (props) => {
   return (
-    <div className="row">
-      <div className="col-sm-12">
-        <div className="jumbotron">
-          <div className="row">
+    <div className="row head-box">
 
-            <div className="col-md-3 text-center">
-              <img src={logo} style={{maxWidth: '100%'}} alt="LOGO"/>
-            </div>
 
-            <div className="col-md-9">
-              <h1>Super Ultra Dev Fight Arena</h1>
-              <p>The coolest thing ever</p>
-            </div>
-          </div>
+      <div className="col-md-6 text-center">
+        <h1>Are you ready to fight?</h1>
+
+        <div className="subtitle">
+          <p>
+            SUDFA is a competitive AI fighting game.<br />
+            Challenge the world. Be the best.
+          </p>
+
+          <button className="btn btn-secondary">
+            Start now!
+          </button>
         </div>
+
+
       </div>
+
+
+
     </div>
   )
 }

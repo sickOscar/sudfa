@@ -34,7 +34,7 @@
 
 ### Enemy Soldier Api
 
-- **`getYpe()`**:string* -> return soldier type
+- **`getType()`**:string* -> return soldier type
 - **`getHealth()`**:int* -> return soldier health
 - **`getAttack()`**:int* -> return soldier attack
 - **`getName()`**:string* -> return soldier name

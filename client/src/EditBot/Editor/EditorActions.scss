@@ -1,0 +1,65 @@
+@import '../../variables.scss';
+
+
+.editor-actions {
+  display: flex;
+  height: 40px;
+  flex-direction: row;
+
+
+  button {
+    display: block;
+    flex: 1;
+    border-radius: 0px;
+    border: 1px solid lighten(map_get($theme-colors, 'primary'), 10%);
+
+    &.btn-selected {
+      background-color: darken(map_get($theme-colors, 'primary'), 10%);
+    }
+  }
+
+
+
+  .fight-select-pane {
+
+    z-index: 9999;
+    position: absolute;
+    margin-top: -300px;
+    height: 300px;
+    width: 100%;
+    background: map_get($theme-colors, 'primary');
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+
+
+
+    > div {
+      flex: 1;
+      padding: 1em;
+      border-top: 1px solid lighten(map_get($theme-colors, 'primary'), 10%);
+      border-bottom: 1px solid darken(map_get($theme-colors, 'primary'), 10%);
+
+      &.row {
+        margin: 0;
+      }
+
+      p {
+        margin-bottom: 0;
+        //text-transform: uppercase;
+        //font-weight: bold;
+        font-family: Bungee;
+        color: lighten(map_get($theme-colors, 'primary'), 50%);
+
+        .ready {
+
+        }
+      }
+
+    }
+
+
+
+  }
+
+}

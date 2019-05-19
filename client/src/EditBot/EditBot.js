@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import SplitPane from 'react-split-pane'
-import {Editor} from './Editor';
-import {GameResults} from './GameResults';
-import Apis from './Apis';
-import history from './history';
+import {Editor} from './Editor/Editor';
+import {GameResults} from './GameResults/GameResults';
+import Apis from './Apis/Apis';
+import history from '../history';
 
 import './EditBot.scss';
 
@@ -138,6 +138,33 @@ export default class Home extends Component {
 
   }
 
+
+  saveBot() {
+
+    console.log('saving');
+
+    fetch(`${HOST}/bot/${this.props.match.params.botid}`, {
+      method: 'POST',
+      body: JSON.stringify({
+        source: this.state.code
+      }),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.props.auth.getToken()}`
+      }
+    })
+      .then(response => response.json())
+      .then(bot => {
+        history.replace('/bots')
+      })
+      .catch(err => {
+        console.error(err)
+        // this.props.auth.logout()
+      })
+
+  }
+
   componentDidMount() {
 
     fetch(`${HOST}/bot/${this.props.match.params.botid}`, {
@@ -152,7 +179,7 @@ export default class Home extends Component {
       .then(bot => {
         this.setState({
           bot: bot,
-          code: (bot && bot.source)? bot.source : this.state.code
+          code: (bot && bot.source) ? bot.source : this.state.code
         })
       })
       .catch(err => {
@@ -230,33 +257,44 @@ export default class Home extends Component {
   }
 
   render() {
+
+    const splitPaneStyles = {
+      position: 'static'
+    };
+
     return (
-      <SplitPane
-        split="vertical"
-        minSize={30}
-        defaultSize={'50%'}
-        className="primary"
-      >
+      <div className="split-pane-container">
+        <SplitPane
+          style={splitPaneStyles}
+          split="vertical"
+          minSize={30}
+          defaultSize={'50%'}
+        >
 
-        <Editor code={this.state.code} onChange={this.onCodeChange.bind(this)}/>
+          <Editor code={this.state.code}
+                  selectedLevel={this.state.selectedLevel}
+                  onTestCode={this.onTestCode.bind(this)}
+                  onLevelChange={this.onLevelChange.bind(this)}
+                  sendToLeague={this.sendToLeague.bind(this)}
+                  challenge={this.challengeTeam.bind(this)}
+                  onChallengeTeamSelection={this.onChallengeTeamSelection.bind(this)}
+                  bots={this.state.bots}
+                  saveBot={this.saveBot.bind(this)}
+                  onChange={this.onCodeChange.bind(this)}/>
 
-        <SplitPane split="horizontal" defaultSize={'50%'}>
+          <SplitPane split="horizontal" defaultSize={'50%'}>
 
-          <Apis content={this.state.content}/>
+            <Apis content={this.state.content}/>
 
-          <GameResults results={this.state.results}
-                       selectedLevel={this.state.selectedLevel}
-                       onTestCode={this.onTestCode.bind(this)}
-                       onLevelChange={this.onLevelChange.bind(this)}
-                       sendToLeague={this.sendToLeague.bind(this)}
-                       challenge={this.challengeTeam.bind(this)}
-                       onChallengeTeamSelection={this.onChallengeTeamSelection.bind(this)}
-                       bots={this.state.bots}
-                        error={this.state.error}
-          />
+            <div style={{overflow: 'hidden', height: '100%'}}>
+              <GameResults results={this.state.results}
+                           error={this.state.error}
+              />
+            </div>
 
+          </SplitPane>
         </SplitPane>
-      </SplitPane>
+      </div>
     );
 
 
