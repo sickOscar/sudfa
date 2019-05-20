@@ -38,12 +38,61 @@ export default class League extends React.Component {
 
         <div className="col-sm-12">
           <ol className="leaderboard">
+
+            <li className="leaderboard-row" >
+              <div className="position">
+                POS
+              </div>
+
+              <div className="name">
+                BOT NAME
+              </div>
+
+              <div className="username">
+                USER
+              </div>
+
+              <div className="wins">
+                WINS
+              </div>
+
+              <div className="ties">
+                TIES
+              </div>
+
+              <div className="points">
+                SCORE
+              </div>
+
+            </li>
+
             {this.state.leaderboard.map((bot, i) => {
               return <li className="leaderboard-row" key={bot.botid}>
-                <span>{i + 1}.</span>
-                <span>{bot.name}
-                  <small>@{bot.username}</small></span>
-                <span>({bot.victories} victories)</span>
+
+                <div className="position">
+                  {i + 1}
+                </div>
+
+                <div className="name">
+                  {bot.name}
+                </div>
+
+                <div className="username">
+                  {bot.username}
+                </div>
+
+                <div className="wins">
+                  {bot.wins || 0}
+                </div>
+
+                <div className="ties">
+                  {bot.ties || 0}
+                </div>
+
+                <div className="points">
+                  {bot.points || 0}
+                </div>
+
               </li>
             })}
           </ol>

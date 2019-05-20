@@ -70,28 +70,58 @@ const FightModel = {
 
   computeLeaderboard: () => {
 
+    // const text = `
+    //   select users.id, users.name as username, class_bot.victories, bots.name, bots.botid
+    //   from (
+    //          select botid, sum(zz) as victories
+    //          from (
+    //                 select winner        as botid,
+    //                        count(winner) as zz
+    //                 from fights
+    //                 group by winner
+    //                 UNION
+    //                 select botid,
+    //                        0 as zz
+    //                 from bots
+    //               ) v
+    //          group by botid
+    //        ) class_bot
+    //          INNER JOIN bots
+    //                     ON (class_bot.botid = bots.botid)
+    //          INNER JOIN users
+    //                     ON (bots.user = users.id)
+    //   ORDER BY victories DESC;
+    // `;
+
     const text = `
-      select users.id, users.name as username, class_bot.victories, bots.name, bots.botid
-      from (
-             select botid, sum(zz) as victories
-             from (
-                    select winner        as botid,
-                           count(winner) as zz
-                    from fights
-                    group by winner
-                    UNION
-                    select botid,
-                           0 as zz
-                    from bots
-                  ) v
-             group by botid
-           ) class_bot
-             INNER JOIN bots
-                        ON (class_bot.botid = bots.botid)
-             INNER JOIN users
-                        ON (bots.user = users.id)
-      ORDER BY victories DESC;
-    `;
+    SELECT
+        users.id, users.name as username, botid, bots.name, ties.ties, ties.TIES_POINTS, wins.wins, wins.win_POINTS, COALESCE(wins.win_POINTS,0) + COALESCE(ties.TIES_POINTS, 0) as POINTS
+    FROM
+        bots
+        LEFT JOIN (
+            SELECT
+                winner, count(*) as TIES, count(*) * 2 as TIES_POINTS
+            FROM
+                fights
+            WHERE
+                    by = 'TIE'
+            GROUP BY
+                winner
+        ) as ties ON ties.winner = bots.botid
+        LEFT JOIN (
+            SELECT
+                winner, count(*) as wins, count(*) * 3 as win_POINTS
+            FROM
+                fights
+            WHERE
+                    by = 'WIN'
+            GROUP BY
+                winner
+        ) as wins ON wins.winner = bots.botid
+        INNER JOIN users
+            ON (bots.user = users.id)
+        ORDER BY points DESC
+    `
 
     const query = {text};
 

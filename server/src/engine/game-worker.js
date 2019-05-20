@@ -98,7 +98,6 @@ const launch = function(p1, p2) {
     game.currentPlayer.iteration++;
 
     if (game.isOver()) {
-      console.log("game.currentPlayer", game.currentPlayer);
       game.history.setExit(game.currentPlayer.botid, 'WIN', {
         winnerName: game.currentPlayer.team.name
       })

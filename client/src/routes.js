@@ -45,7 +45,7 @@ export const makeMainRoutes = () => {
 
         <div className="container-fluid">
 
-          <Route path="/" exact component={Homepage}/>
+          <Route path="/" exact render={(props) => <Homepage {...props} auth={auth}/>}/>
           <Route path="/docs" exact component={Docs}/>
 
           <Route path="/logout" component={Logout}/>

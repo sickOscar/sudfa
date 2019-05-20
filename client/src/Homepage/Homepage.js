@@ -2,6 +2,9 @@ import React from 'react';
 import './Homepage.scss';
 
 const Homepage = (props) => {
+
+  const login = props.auth.login;
+
   return (
     <div className="row head-box">
 
@@ -15,7 +18,7 @@ const Homepage = (props) => {
             Challenge the world. Be the best.
           </p>
 
-          <button className="btn btn-secondary">
+          <button onClick={login} className="btn btn-secondary">
             Start now!
           </button>
         </div>

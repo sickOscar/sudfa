@@ -12,20 +12,55 @@
   margin: 0;
   padding: 5px 0 5px 10px;
   border-bottom: 1px solid gray;
+
+  display: flex;
+  flex-direction: row;
+
+  .position {
+    width: 60px;
+  }
+
+  .name {
+    flex: 1
+  }
+
+  .username {
+    flex: 1
+  }
+
+  .wins {
+    text-align: center;
+    width: 60px;
+  }
+
+  .ties {
+    text-align: center;
+    width: 60px;
+  }
+
+  .points {
+    text-align: center;
+    width: 60px;
+  }
+
   /*display: block;*/
 }
+.leaderboard-row:first-child(2) {
+  //background-color: gold;
+  font-size: 20px;
+}
 
-.leaderboard-row:first-child {
+.leaderboard-row:nth-child(2) {
   background-color: gold;
   font-size: 40px;
 }
 
-.leaderboard-row:nth-child(2) {
+.leaderboard-row:nth-child(3) {
   background-color: silver;
   font-size: 30px;
 }
 
-.leaderboard-row:nth-child(3) {
+.leaderboard-row:nth-child(4) {
   background-color: goldenrod;
   font-size: 25px;
 }
