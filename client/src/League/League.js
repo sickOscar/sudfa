@@ -1,7 +1,7 @@
 import React from 'react';
 import './League.scss';
 
-const HOST = 'http://' + window.location.hostname + ':5000';
+const HOST = '//' + window.location.hostname + ':5000';
 
 export default class League extends React.Component {
 

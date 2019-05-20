@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha ./test --recursive",
     "start": "PORT=5000 node server.js"
   },
   "author": "",
@@ -18,5 +18,9 @@
     "jwks-rsa": "^1.5.0",
     "lodash": "^4.17.11",
     "pg": "^7.11.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4"
   }
 }

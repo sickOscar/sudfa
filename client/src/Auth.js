@@ -3,8 +3,8 @@
 import history from './history';
 import auth0 from 'auth0-js';
 
-const HOST = 'http://' + window.location.hostname + ':5000';
-const callbackUrl = process.env.NODE_ENV === 'production' ? ('http://'+ window.location.hostname) : ('http://'+ window.location.hostname + ':3000')
+const HOST = '//' + window.location.hostname + ':5000';
+const callbackUrl = process.env.NODE_ENV === 'production' ? ('//'+ window.location.hostname) : ('//'+ window.location.hostname + ':3000')
 
 // ...
 export default class Auth {
