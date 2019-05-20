@@ -18,7 +18,7 @@ export default class Bots extends React.Component {
 
   componentDidMount() {
 
-    const HOST = 'http://' + window.location.hostname + ':5000';
+    const HOST = window.location.protocol + '//' + window.location.hostname + ':5000';
 
     fetch(`${HOST}/mybots`, {
       method: 'GET',
