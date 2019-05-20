@@ -47,7 +47,7 @@ class Runner {
 module.exports = Runner;
 
 `
-const HOST = '//' + window.location.hostname + ':5000';
+const HOST = 'http://' + window.location.hostname + ':5000';
 
 export default class Home extends Component {
 
