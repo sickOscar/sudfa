@@ -1,5 +1,10 @@
-const { Worker, isMainThread, parentPort } = require('worker_threads');
+const { parentPort } = require('worker_threads');
 const Game = require('./game.js');
+const vm  = require('vm');
+const random = require('random');
+const seedrandom = require('seedrandom');
+
+random.use(seedrandom('trololololo'));
 
 
 parentPort.once('message', (message) => {
@@ -16,7 +21,7 @@ parentPort.once('message', (message) => {
     }));
   }
 
-})
+});
 
 const loadCode = function(source, gameConsole) {
 
@@ -26,11 +31,25 @@ const loadCode = function(source, gameConsole) {
   };
 
   const loader = function(module, require, console) {
-    eval(source)
-  }
+
+    Math.random = () => {
+      return random.float();
+    };
+
+    const sandbox = {
+      module, require, console, Math
+    };
+
+    const secureSource = `'use strict'; ${source}`;
+    vm.runInNewContext(secureSource, vm.createContext(sandbox));
+
+    // EVAL
+    // eval(secureSource);
+  };
 
   try {
-    loader(moduleMock, requireMock, gameConsole)
+    loader(moduleMock, requireMock, gameConsole);
+
     if (moduleMock.exports) {
       return moduleMock.exports;
     }
@@ -38,7 +57,7 @@ const loadCode = function(source, gameConsole) {
     throw new Error('Invalid source code: ' + err.message)
   }
 
-}
+};
 
 const launch = function(p1, p2) {
   const game = new Game();
@@ -66,12 +85,17 @@ const launch = function(p1, p2) {
     const Player2 = loadCode(p2.source, game.console);
     player2 = new Player2(gameProxy);
 
+    if (player1.team.troop.length > 3) {
+      player1.team.troop = [player1.team.troop[0], player2.team.troop[1], player1.team.troop[2]];
+    }
+
+    if (player2.team.length > 3) {
+      player2.team.troop = [player2.team.troop[0], player2.team.troop[1], player2.team.troop[2]];
+    }
+
   } catch(err) {
     throw new Error(err);
   }
-
-
-
 
   game.setupPlayers(player1, player2);
 

@@ -44,11 +44,17 @@
     .action-text {
 
     }
+
+    .team-container:nth-child(2) {
+      border-bottom: 1px dotted black;
+    }
   }
 
   .team-container {
     text-align: center;
     margin-bottom: 10px;
+
+
 
     h4 {
       margin: 0;

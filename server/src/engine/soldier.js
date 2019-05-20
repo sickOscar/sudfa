@@ -153,7 +153,7 @@ function Soldier(game, options) {
 
     tells = [];
 
-  }
+  };
 
   // getters
   const getId = () => id;

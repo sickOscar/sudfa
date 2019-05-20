@@ -70,7 +70,7 @@ export default class Bots extends React.Component {
             )
           })}
 
-          <div className="col-sm-4">
+          {this.state.bots.length < 3 && <div className="col-sm-4">
             <div className="card bot-card">
               <div className="card-body">
                 <h5 className="card-title">New Bot</h5>
@@ -85,6 +85,7 @@ export default class Bots extends React.Component {
               </div>
             </div>
           </div>
+          }
 
         </div>
 

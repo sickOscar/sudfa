@@ -8,6 +8,11 @@
   .turns-container {
     flex: 1;
     overflow-y: scroll;
+
+    .end-fight-container {
+      margin-left: 0;
+      margin-right: 0;
+    }
   }
 
   .actions-container {
