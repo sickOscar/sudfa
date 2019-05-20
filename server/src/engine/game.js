@@ -159,7 +159,13 @@ class Game {
   teamProxy(team, soldierProxy) {
     return {
       getAliveSoldiers: () => {
-        return this.getAliveTroops(team).map(soldier => soldierProxy(soldier))
+        let aliveTroops = [];
+        for (let i = 0; i < team.length; i++) {
+          if (team[i].getHealth() > 0) {
+            aliveTroops.push(team[i])
+          }
+        }
+        return aliveTroops.map(soldier => soldierProxy(soldier));
       },
       getFirstSoldier: () => {
         return soldierProxy(team.shift());

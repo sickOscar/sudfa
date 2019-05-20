@@ -4,7 +4,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import Turn from './Turn';
 
 
-const BASE_TURN_DURATION = 2000;
+const BASE_TURN_DURATION = 1000;
 const SPEED_TURN_DURATION = 200;
 
 export default class Battle extends React.Component {
@@ -184,7 +184,7 @@ export default class Battle extends React.Component {
               </div>
               <div className="col-sm-8">
                 <p>The winner is</p>
-                <h2>{this.props.results.exit.winner}</h2>
+                <h2>{this.props.results.exit.winnerName}</h2>
               </div>
             </div>
           )}

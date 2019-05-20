@@ -30,8 +30,8 @@ class History {
 		this.state.turns.push( {turn, state});
 	}
 
-	setExit(winner, by) {
-		this.state.exit = {winner, by}
+	setExit(winner, by, info) {
+		this.state.exit = {winner, by, ...info}
 	}
 
 	reset() {

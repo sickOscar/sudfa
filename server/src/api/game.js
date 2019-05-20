@@ -30,14 +30,14 @@ class GameApi {
 
       if (challenge) {
 
-        Bot.one({botid: challenge})
+        return Bot.one({botid: challenge})
           .then(enemyBot => {
 
             if (!enemyBot) {
               throw new Error('Invalid challenger')
             }
 
-            GameLauncher.launch(
+            return GameLauncher.launch(
               {
                 source: code,
                 user: userId,
@@ -49,12 +49,14 @@ class GameApi {
                 user: enemyBot.user
               })
               .then(gameHistory => {
+                // console.log('GOT ', gameHistory);
                 res.json(gameHistory)
               })
 
 
           })
           .catch(error => {
+            // console.log('GOT error', error);
             res.send(error)
           })
 
@@ -79,7 +81,7 @@ class GameApi {
             break;
         }
 
-        GameLauncher.launch(
+        return GameLauncher.launch(
           {
             source: code,
             user: userId,
@@ -90,6 +92,10 @@ class GameApi {
             botid: level
           })
           .then(gameHistory => {
+
+            if (gameHistory.error) {
+              return res.json(gameHistory)
+            }
 
             // controllo se il bot appartiene all'utente
             return Bot.one({botid: botid})
@@ -124,6 +130,7 @@ class GameApi {
 
           })
           .catch(error => {
+            // console.log('GOT error', error);
             res.send(error)
           })
 

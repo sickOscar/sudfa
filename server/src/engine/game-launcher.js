@@ -17,7 +17,7 @@ const launch = function(p1, p2) {
 
       worker.once('message', (message) => {
         clearTimeout(errorTimeout);
-        resolve(JSON.parse(message))  // Prints 'Hello, world!'.
+        resolve(JSON.parse(message))
       });
 
     })

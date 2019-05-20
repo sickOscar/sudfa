@@ -1,43 +1,44 @@
 const { Worker, isMainThread, parentPort } = require('worker_threads');
 const Game = require('./game.js');
 
+
+parentPort.once('message', (message) => {
+
+  const players = JSON.parse(message);
+
+  try {
+    const results = launch(players[0], players[1]);
+    parentPort.postMessage(JSON.stringify(results));
+  } catch (error) {
+    console.log('CODE ERROR', error.message);
+    parentPort.postMessage(JSON.stringify({
+      error: error.message
+    }));
+  }
+
+})
+
 const loadCode = function(source, gameConsole) {
 
   const moduleMock = {};
   const requireMock = (el) => {
     throw new Error('NO!');
   };
-  let errorMock = null;
 
-  const loader = function(module, require, error, console) {
-    try {
-      eval(source)
-    } catch(err) {
-      error = err;
-    }
+  const loader = function(module, require, console) {
+    eval(source)
   }
 
-  loader(moduleMock, requireMock, errorMock, gameConsole)
-
-  if (!errorMock) {
-    return moduleMock.exports
-  } else {
-    throw new Error('Invalid source file')
+  try {
+    loader(moduleMock, requireMock, gameConsole)
+    if (moduleMock.exports) {
+      return moduleMock.exports;
+    }
+  } catch(err) {
+    throw new Error('Invalid source code: ' + err.message)
   }
 
 }
-
-
-parentPort.once('message', (message) => {
-
-  const players = JSON.parse(message);
-
-  const results = launch(players[0], players[1]);
-
-  parentPort.postMessage(JSON.stringify(results));
-})
-
-
 
 const launch = function(p1, p2) {
   const game = new Game();
@@ -55,11 +56,22 @@ const launch = function(p1, p2) {
   }(game));
 
 
-  const Player1 = loadCode(p1.source, game.console);
-  const Player2 = loadCode(p2.source, game.console);
+  let player1, player2;
 
-  const player1 = new Player1(gameProxy);
-  const player2 = new Player2(gameProxy);
+  try {
+
+    const Player1 = loadCode(p1.source, game.console);
+    player1 = new Player1(gameProxy);
+
+    const Player2 = loadCode(p2.source, game.console);
+    player2 = new Player2(gameProxy);
+
+  } catch(err) {
+    throw new Error(err);
+  }
+
+
+
 
   game.setupPlayers(player1, player2);
 
@@ -77,12 +89,19 @@ const launch = function(p1, p2) {
       game.runTurn()
     } catch(err) {
       // TODO aggiungere gestione errore
-      console.error(err);
+      game.history.addTurn({
+        error: err.message,
+        actor: game.getCurrentSoldier().getId()
+      }, game.getState());
+
     }
     game.currentPlayer.iteration++;
 
     if (game.isOver()) {
-      game.history.setExit(game.currentPlayer.botid, 'WIN')
+      console.log("game.currentPlayer", game.currentPlayer);
+      game.history.setExit(game.currentPlayer.botid, 'WIN', {
+        winnerName: game.currentPlayer.team.name
+      })
       gameOver = true;
     } else {
 
@@ -99,10 +118,14 @@ const launch = function(p1, p2) {
 
     if (game.checkWinner()) {
       console.log("TIE p2", player2.botid);
-      game.history.setExit(player2.botid, 'TIE')
+      game.history.setExit(player2.botid, 'TIE', {
+        winnerName: game.opponentPlayer.team.name
+      })
     } else {
       console.log("TIE p1", player2.botid);
-      game.history.setExit(player1.botid, 'TIE')
+      game.history.setExit(player1.botid, 'TIE', {
+        winnerName: game.currentPlayer.team.name
+      })
     }
 
 

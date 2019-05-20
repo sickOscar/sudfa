@@ -75,7 +75,9 @@ export default class Bots extends React.Component {
               <div className="card-body">
                 <h5 className="card-title">New Bot</h5>
                 <div className="icon-box">
-                  <FontAwesomeIcon icon="plus-square"/>
+                  <Link to={newBotLink}>
+                    <FontAwesomeIcon icon="plus-square"/>
+                  </Link>
                 </div>
                 <Link to={newBotLink} className="btn btn-primary">
                   Create new team

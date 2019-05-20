@@ -8,6 +8,11 @@ const Turn = (props) => {
   const {turn, team, state: status, index, players} = propsTurn;
 
   const getIcon = (turn) => {
+
+    if (turn.error) {
+      return <FontAwesomeIcon icon="times"/>;
+    }
+
     switch (turn.type) {
       case 'hit':
         return <FontAwesomeIcon icon="khanda"/>;
@@ -99,58 +104,66 @@ const Turn = (props) => {
 
         <div className="text-container">
 
+          {turn.error && <div>ERROR {turn.error}</div>}
 
-          <p className="action-text">
+          {!turn.error &&
+          (
+            <React.Fragment>
+              <p className="action-text">
 
             <span className={getTextClass(turn)}>
             {turn.message}
             </span>
 
-            {turn.tells && turn.tells.map((message, i) => {
-              return (
-                <React.Fragment key={i}>
-                  <br/>
-                  <small>{typeof message === 'string' ? message : JSON.stringify(message)}</small>
-                </React.Fragment>
-              )
-            })}
+                {turn.tells && turn.tells.map((message, i) => {
+                  return (
+                    <React.Fragment key={i}>
+                      <br/>
+                      <small>{typeof message === 'string' ? message : JSON.stringify(message)}</small>
+                    </React.Fragment>
+                  )
+                })}
 
-          </p>
+              </p>
 
 
-          {status.teams.map((team, i) => {
-            return (
-              <div key={i} className="team-container">
+              {status.teams.map((team, i) => {
+                return (
+                  <div key={i} className="team-container">
 
-                {i === 0 && <h4>{players[i].name}</h4>}
+                    {i === 0 && <h4>{players[i].name}</h4>}
 
-                <div className="soldier-box-container">
-                  {
-                    Object.keys(team).map(soldierId => {
-                      return (
-                        <div className="soldier-box" key={soldierId}>
+                    <div className="soldier-box-container">
+                      {
+                        Object.keys(team).map(soldierId => {
+                          return (
+                            <div className="soldier-box" key={soldierId}>
 
-                          {i === 0 && <div className="soldier-status">
-                            {getSoldierName(soldierId)}
-                            <small>({team[soldierId].health} HP)</small>
-                          </div>}
+                              {i === 0 && <div className="soldier-status">
+                                {getSoldierName(soldierId)}
+                                <small>({team[soldierId].health} HP)</small>
+                              </div>}
 
-                          <div className={getSoldierClassName(soldierId, turn)}></div>
+                              <div className={getSoldierClassName(soldierId, turn)}></div>
 
-                          {i === 1 && <div className="soldier-status">
-                            {getSoldierName(soldierId)}
-                            <small>({team[soldierId].health} HP)</small>
-                          </div>}
-                        </div>
-                      )
-                    })
-                  }
-                </div>
+                              {i === 1 && <div className="soldier-status">
+                                {getSoldierName(soldierId)}
+                                <small>({team[soldierId].health} HP)</small>
+                              </div>}
+                            </div>
+                          )
+                        })
+                      }
+                    </div>
 
-                {i === 1 && <h4>{players[i].name}</h4>}
-              </div>
-            )
-          })}
+                    {i === 1 && <h4>{players[i].name}</h4>}
+                  </div>
+                )
+              })}
+
+            </React.Fragment>
+          )
+          }
 
         </div>
 

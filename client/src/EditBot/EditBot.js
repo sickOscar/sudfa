@@ -63,7 +63,8 @@ export default class Home extends Component {
       selectedLevel: 'junior',
       error: null,
       enemyBot: null,
-      bots: []
+      bots: [],
+      loading: false
     }
   }
 
@@ -83,6 +84,10 @@ export default class Home extends Component {
   onTestCode() {
     localStorage.setItem('code', this.state.code);
 
+    this.setState({
+      error: null
+    })
+
     fetch(`${HOST}/source`, {
       method: 'POST',
       headers: {
@@ -98,7 +103,13 @@ export default class Home extends Component {
     })
       .then(response => response.json())
       .then(results => {
-        this.setState({results})
+        if (results.error) {
+          this.setState({
+            error: results.error
+          })
+        } else {
+          this.setState({results})
+        }
       })
       .catch(err => {
         console.error(err)
@@ -141,7 +152,9 @@ export default class Home extends Component {
 
   saveBot() {
 
-    console.log('saving');
+    this.setState({
+      loading: true
+    })
 
     fetch(`${HOST}/bot/${this.props.match.params.botid}`, {
       method: 'POST',
@@ -156,9 +169,19 @@ export default class Home extends Component {
     })
       .then(response => response.json())
       .then(bot => {
+
+        this.setState({
+          loading: false
+        })
+
         history.replace('/bots')
       })
       .catch(err => {
+
+        this.setState({
+          loading: false
+        })
+
         console.error(err)
         // this.props.auth.logout()
       })
@@ -232,6 +255,11 @@ export default class Home extends Component {
   }
 
   challengeTeam() {
+
+    this.setState({
+      error: null
+    })
+
     fetch(`${HOST}/source`, {
       method: 'POST',
       headers: {
@@ -242,13 +270,22 @@ export default class Home extends Component {
       body: JSON.stringify({
         bot: this.props.match.params.botid,
         source: this.state.code,
-        level: this.state.selectedLevel,
+        // level: this.state.selectedLevel,
         challenge: this.state.enemyBot
       })
     })
       .then(response => response.json())
       .then(results => {
-        this.setState({results})
+        console.log("results", results);
+        if (results.error) {
+          this.setState({
+            error: results.error
+          })
+        } else {
+          this.setState({results})
+        }
+
+
       })
       .catch(err => {
         console.error(err)
