@@ -19,7 +19,7 @@ export default class MyBotsFights extends React.Component {
   componentDidMount() {
     // console.log('should do shit', this.props.mybots, this.props.botid);
 
-    fetch(`${HOST}/fights?bots=${this.props.mybots.map(b => b.botid).join(',')}`, {
+    fetch(`${HOST}/fights?bots=${this.props.mybots.map(b => b.botid).join(',')}&against=${this.props.botid}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',

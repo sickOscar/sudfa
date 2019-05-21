@@ -16,10 +16,16 @@ class GameApi {
     app.get('/fights', (req, res) => {
 
       const bots = req.query.bots;
+      const against = req.query.against;
 
-      Fight.ofBots(bots.split(','))
-        .then(bots => {
-          res.json(bots)
+      Fight.ofBotsAgainst(bots.split(','), against)
+        .then(fights => {
+
+          res.json(fights.map(f => {
+            delete f.history;
+            delete f.time;
+            return f;
+          }))
         })
         .catch(err => {
           console.error(err);
