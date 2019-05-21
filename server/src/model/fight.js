@@ -138,7 +138,8 @@ const FightModel = {
         ) as wins ON wins.winner = league_bots.botid
         INNER JOIN users
             ON (league_bots.user = users.id)
-        ORDER BY points DESC
+        ORDER BY points DESC, wins.wins DESC, ties.ties DESC
+        
     `
 
     const query = {text};
