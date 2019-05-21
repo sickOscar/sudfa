@@ -85,8 +85,10 @@ export default class Home extends Component {
     localStorage.setItem('code', this.state.code);
 
     this.setState({
-      error: null
+      error: null,
+      loading: true
     })
+
 
     fetch(`${HOST}/source`, {
       method: 'POST',
@@ -105,10 +107,14 @@ export default class Home extends Component {
       .then(results => {
         if (results.error) {
           this.setState({
-            error: results.error
+            error: results.error,
+            loading: false
           })
         } else {
-          this.setState({results})
+          this.setState({
+            results,
+            loading: false
+          })
         }
       })
       .catch(err => {
@@ -116,12 +122,14 @@ export default class Home extends Component {
         // this.props.auth.logout()
       })
 
+
   }
 
   sendToLeague() {
     localStorage.setItem('code', this.state.code);
 
     this.setState({
+      loading: true,
       error: null
     })
 
@@ -140,8 +148,14 @@ export default class Home extends Component {
       .then(response => response.json())
       .then(results => {
         if (results.exit === 'KO') {
-          this.setState({error: results.message})
+          this.setState({
+            loading: false,
+            error: results.message
+          })
         } else {
+          this.setState({
+            loading: false
+          })
           history.replace('/league');
         }
       })
@@ -248,16 +262,20 @@ export default class Home extends Component {
 
   }
 
-  onChallengeTeamSelection(event) {
+  onChallengeTeamSelection(selection) {
     this.setState({
-      enemyBot: event.target.value
+      enemyBot: {
+        botid: selection.value,
+        name: selection.label
+      }
     })
   }
 
   challengeTeam() {
 
     this.setState({
-      error: null
+      error: null,
+      loading: true
     })
 
     fetch(`${HOST}/source`, {
@@ -271,18 +289,21 @@ export default class Home extends Component {
         bot: this.props.match.params.botid,
         source: this.state.code,
         // level: this.state.selectedLevel,
-        challenge: this.state.enemyBot
+        challenge: this.state.enemyBot.botid
       })
     })
       .then(response => response.json())
       .then(results => {
-        console.log("results", results);
         if (results.error) {
           this.setState({
-            error: results.error
+            error: results.error,
+            loading: false
           })
         } else {
-          this.setState({results})
+          this.setState({
+            results,
+            loading: false
+          })
         }
 
 
@@ -316,6 +337,8 @@ export default class Home extends Component {
                   challenge={this.challengeTeam.bind(this)}
                   onChallengeTeamSelection={this.onChallengeTeamSelection.bind(this)}
                   bots={this.state.bots}
+                  enemyBot={this.state.enemyBot}
+                  loading={this.state.loading}
                   saveBot={this.saveBot.bind(this)}
                   onChange={this.onCodeChange.bind(this)}/>
 

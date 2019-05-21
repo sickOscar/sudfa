@@ -2,8 +2,8 @@ import React from 'react';
 
 const Docs = (props) => (
 
-  <React.Fragment>
 
+  <div className="container">
     <div className="row">
       <div className="col-sm-12 section-title text-center">
         <h1>Super Ultra Dev Fight Arena</h1>
@@ -21,6 +21,7 @@ const Docs = (props) => (
       </div>
     </div>
 
+
     <div className="row">
       <div className="col-sm-12">
         <h2>How does it work?</h2>
@@ -32,8 +33,8 @@ const Docs = (props) => (
         </p>
       </div>
     </div>
+  </div>
 
-  </React.Fragment>
 )
 
 export default Docs;

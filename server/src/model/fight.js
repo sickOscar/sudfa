@@ -27,6 +27,22 @@ const FightModel = {
       .then(results => results.rows[0])
   },
 
+  ofBots: botIds => {
+
+    const whereClause = botIds.map((botid, i) => {
+      return `bot1 = $${i + 1} OR bot2 = $${i + 1}`;
+    });
+
+    const query = {
+      text: `SELECT * FROM fights WHERE ${whereClause.join(' OR ')}`,
+      values: botIds
+    };
+
+    return clientConnected
+      .then(() => client.query(query))
+      .then(results => results.rows)
+  },
+
   addMany: fights => {
 
     if (fights.length === 0) {

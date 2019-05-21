@@ -30,11 +30,13 @@ export class Editor extends Component {
           editorProps={{$blockScrolling: true}}
         />
         <EditorActions bots={this.props.bots}
+                       loading={this.props.loading}
                        onTestCode={this.props.onTestCode}
                        onLevelChange={this.props.onLevelChange}
                        onChallengeTeamSelection={this.props.onChallengeTeamSelection}
                        challenge={this.props.challenge}
                        saveBot={this.props.saveBot}
+                       enemyBot={this.props.enemyBot}
                        sendToLeague={this.props.sendToLeague}
           />
       </div>

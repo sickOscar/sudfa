@@ -1,5 +1,6 @@
 import React from 'react';
 import './EditorActions.scss';
+import Select from 'react-select';
 
 export default class EditorActions extends React.Component {
 
@@ -30,6 +31,7 @@ export default class EditorActions extends React.Component {
     ];
 
     this.toggleSelectPane = this.toggleSelectPane.bind(this);
+
   }
 
   closePane(action) {
@@ -63,7 +65,8 @@ export default class EditorActions extends React.Component {
                 </select>
               </div>
               <div className="col-sm-4">
-                <button className="btn btn-primary" onClick={this.closePane.bind(this, this.props.onTestCode)}>Fight!</button>
+                <button className="btn btn-primary" onClick={this.closePane.bind(this, this.props.onTestCode)}>Fight!
+                </button>
               </div>
 
             </div>
@@ -74,15 +77,17 @@ export default class EditorActions extends React.Component {
               </div>
 
               <div className="col-sm-8">
-                <select className="form-control" onChange={this.props.onChallengeTeamSelection}>
-                  {this.props.bots.map(bot => {
-                    return <option key={bot.botid} value={bot.botid}>{bot.name}</option>
-                  })}
-                </select>
+                <Select classNamePrefix="select"
+                        onChange={this.props.onChallengeTeamSelection}
+                        value={this.props.enemyBot && {value: this.props.enemyBot.botid, label: this.props.enemyBot.name}}
+                        options={
+                          this.props.bots.map(bot => ({value: bot.botid, label: bot.name}))
+                        }/>
               </div>
 
               <div className="col-sm-4">
-                <button className="btn btn-primary" onClick={this.closePane.bind(this, this.props.challenge)}>Fight!</button>
+                <button className="btn btn-primary" disabled={!this.props.enemyBot} onClick={this.closePane.bind(this, this.props.challenge)}>Fight!
+                </button>
               </div>
             </div>
 
@@ -96,7 +101,9 @@ export default class EditorActions extends React.Component {
               </div>
 
               <div className="col-sm-4">
-                <button className="btn btn-primary" onClick={this.closePane.bind(this, this.props.sendToLeague)}>Fight!</button>
+                <button className="btn btn-primary"
+                        onClick={this.closePane.bind(this, this.props.sendToLeague)}>Fight!
+                </button>
               </div>
 
 
@@ -104,8 +111,13 @@ export default class EditorActions extends React.Component {
           </div>
         )}
 
-        <button className={this.state.selectOpen ? "btn btn-primary btn-selected" : "btn btn-primary"} onClick={this.toggleSelectPane}>Fight!</button>
-        <button className="btn btn-primary" onClick={this.props.saveBot}>Save Team</button>
+        <button className={this.state.selectOpen ? "btn btn-primary btn-selected" : "btn btn-primary"}
+                disabled={this.props.loading} onClick={this.toggleSelectPane}>
+          {this.props.loading ? 'Fighting...' : 'Fight!'}
+        </button>
+        <button className="btn btn-primary" disabled={this.props.loading} onClick={this.props.saveBot}>
+          Save Team
+        </button>
 
       </div>
     )

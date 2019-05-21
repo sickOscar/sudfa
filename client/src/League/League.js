@@ -1,5 +1,9 @@
 import React from 'react';
 import './League.scss';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import MyBotsFights from './MyBotsFights';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const HOST = window.location.protocol + '//' + window.location.hostname + ':5000';
 
@@ -8,11 +12,32 @@ export default class League extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      leaderboard: []
+      leaderboard: [],
+      logged: false,
+      bots: []
     };
   }
 
   componentDidMount() {
+
+    if (this.props.auth.isAuthenticated()) {
+      fetch(`${HOST}/mybots`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.props.auth.getToken()}`
+        }
+      })
+        .then(response => response.json())
+        .then(bots => {
+          this.setState({bots})
+        })
+        .catch(err => console.error(err))
+
+    }
+
+
     fetch(`${HOST}/leaderboard`, {
       method: 'GET',
       headers: {
@@ -26,6 +51,11 @@ export default class League extends React.Component {
       })
       .catch(err => console.error(err))
 
+  }
+
+
+  createPopover(botid) {
+    return <MyBotsFights botid={botid} mybots={this.state.bots} />;
   }
 
   render() {
@@ -75,6 +105,13 @@ export default class League extends React.Component {
 
                 <div className="name">
                   {bot.name}
+                  {this.state.bots.length > 0 &&
+                    <span className="watch-container">
+                      <OverlayTrigger  trigger="click" placement="right" overlay={this.createPopover(bot.botid)}>
+                        <FontAwesomeIcon id={bot.botid + '-popover-placement'} className="watch-icon" icon="eye" />
+                      </OverlayTrigger>
+                    </span>
+                  }
                 </div>
 
                 <div className="username">

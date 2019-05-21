@@ -13,6 +13,21 @@ class GameApi {
   constructor(app) {
 
 
+    app.get('/fights', (req, res) => {
+
+      const bots = req.query.bots;
+
+      Fight.ofBots(bots.split(','))
+        .then(bots => {
+          res.json(bots)
+        })
+        .catch(err => {
+          console.error(err);
+          res.status(500).send(err);
+        })
+
+    })
+
     /**
      *
      */

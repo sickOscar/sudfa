@@ -18,7 +18,7 @@ class BotApi {
     });
 
     app.get('/bots', jwtCheck, (req, res) => {
-
+      
       Bot.allBots()
         .then(bots => {
           res.json(bots)

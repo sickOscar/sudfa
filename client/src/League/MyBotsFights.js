@@ -1,0 +1,91 @@
+import React from 'react';
+import Popover from "react-bootstrap/Popover";
+
+const HOST = window.location.protocol + '//' + window.location.hostname + ':5000';
+
+export default class MyBotsFights extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      fights: {}
+    }
+  }
+
+  componentDidMount() {
+    // console.log('should do shit', this.props.mybots, this.props.botid);
+
+    fetch(`${HOST}/fights?bots=${this.props.mybots.map(b => b.botid).join(',')}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then(fights => {
+        this.setState({
+          fights: this.props.mybots.reduce((final, mybotObj) => {
+            const mybot = mybotObj.botid;
+            const involved = fights.filter(f => (f.bot1 === mybot || f.bot2 === mybot));
+
+            final[mybot] = {
+              w: involved.filter(i => i.winner === mybot && i.by === 'WIN').length,
+              t: involved.filter(i => i.winner === mybot && i.by === 'TIE').length,
+              l: involved.filter(i => i.winner !== mybot).length,
+            }
+
+            return final;
+
+          }, {})
+
+        })
+      })
+      .catch(err => console.error(err))
+
+
+
+    var rect = document.getElementById(this.props.botid + '-popover-placement').getBoundingClientRect();
+
+    this.setState({
+      top: rect.top,
+      right: rect.right,
+      bottom: rect.bottom,
+      left: rect.left
+    })
+
+  }
+
+  render() {
+    return <Popover title="Fights with your bots" style={{left: this.state.left + 30, top: this.state.top}}>
+
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Bot</th>
+            <th>W</th>
+            <th>T</th>
+            <th>L</th>
+          </tr>
+        </thead>
+        <tbody>
+        {this.props.mybots.map((mybot, i) => {
+          return (
+            <tr key={i}>
+              <td>{mybot.name}</td>
+              <td>{this.state.fights[mybot.botid] && this.state.fights[mybot.botid].w}</td>
+              <td>{this.state.fights[mybot.botid] && this.state.fights[mybot.botid].t}</td>
+              <td>{this.state.fights[mybot.botid] && this.state.fights[mybot.botid].l}</td>
+            </tr>)
+        })}
+        </tbody>
+      </table>
+
+    </Popover>
+  }
+
+}

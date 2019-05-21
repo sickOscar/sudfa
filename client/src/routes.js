@@ -54,7 +54,8 @@ export const makeMainRoutes = () => {
           <PrivateRoute path="/edit/:botid" component={EditBot}/>
           <PrivateRoute path="/profile" component={Profile} />
 
-          <Route path="/league" component={League}/>
+          <Route path="/league" render={(props) => <League {...props} auth={auth} />} />
+
           <Route path="/fight/:bot1/:bot2" component={Fight}/>
 
           <Route path="/callback" render={(props) => {
