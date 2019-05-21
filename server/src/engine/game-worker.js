@@ -85,11 +85,12 @@ const launch = function(p1, p2) {
     const Player2 = loadCode(p2.source, game.console);
     player2 = new Player2(gameProxy);
 
+
     if (player1.team.troop.length > 3) {
       player1.team.troop = [player1.team.troop[0], player2.team.troop[1], player1.team.troop[2]];
     }
 
-    if (player2.team.length > 3) {
+    if (player2.team.troop.length > 3) {
       player2.team.troop = [player2.team.troop[0], player2.team.troop[1], player2.team.troop[2]];
     }
 
