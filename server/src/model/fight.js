@@ -35,8 +35,6 @@ const FightModel = {
 
     const text = `SELECT * FROM fights WHERE ${whereClause.join(' OR ')}`;
 
-    console.log(text)
-
     const query = {
       text,
       values: [against, ...botIds]

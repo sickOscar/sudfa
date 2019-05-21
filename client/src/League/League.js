@@ -74,6 +74,10 @@ export default class League extends React.Component {
                 POS
               </div>
 
+              <div className="watch">
+                STATS
+              </div>
+
               <div className="name">
                 BOT NAME
               </div>
@@ -103,15 +107,19 @@ export default class League extends React.Component {
                   {i + 1}
                 </div>
 
-                <div className="name">
-                  {bot.name}
+                <div className="watch">
                   {this.state.bots.length > 0 &&
-                    <span className="watch-container">
+                  <span className="watch-container">
                       <OverlayTrigger  trigger="click" placement="right" overlay={this.createPopover(bot.botid)}>
                         <FontAwesomeIcon id={bot.botid + '-popover-placement'} className="watch-icon" icon="eye" />
                       </OverlayTrigger>
                     </span>
                   }
+                </div>
+
+                <div className="name">
+                  {bot.name}
+
                 </div>
 
                 <div className="username">

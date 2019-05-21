@@ -74,6 +74,10 @@ const launch = function(p1, p2) {
     }
   }(game));
 
+  if (process.env.NODE_ENV === 'development') {
+    game.console = console;
+  }
+
 
   let player1, player2;
 
