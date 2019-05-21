@@ -100,7 +100,7 @@ const FightModel = {
         bots
         LEFT JOIN (
             SELECT
-                winner, count(*) as TIES, count(*) * 2 as TIES_POINTS
+                winner, count(*) as TIES, count(*) * 1 as TIES_POINTS
             FROM
                 fights
             WHERE
