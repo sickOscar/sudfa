@@ -2,11 +2,9 @@ import React from 'react';
 import './League.scss';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import MyBotsFights from './MyBotsFights';
+import Env from '../env';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
-// const HOST = window.location.protocol + '//' + window.location.hostname + ':5000';
-const HOST = `${window.location.protocol}//${ window.location.hostname}/api`
 
 export default class League extends React.Component {
 
@@ -22,7 +20,7 @@ export default class League extends React.Component {
   componentDidMount() {
 
     if (this.props.auth.isAuthenticated()) {
-      fetch(`${HOST}/myleaguebots`, {
+      fetch(`${Env.API_HOST}/myleaguebots`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -39,7 +37,7 @@ export default class League extends React.Component {
     }
 
 
-    fetch(`${HOST}/leaderboard`, {
+    fetch(`${Env.API_HOST}/leaderboard`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',

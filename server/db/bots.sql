@@ -10,3 +10,5 @@ CREATE TABLE public.bots (
 	CONSTRAINT bots_pk PRIMARY KEY (botid),
 	CONSTRAINT bots_fk FOREIGN KEY ("user") REFERENCES users(id)
 );
+
+alter table public.bots add column "timestamp" timestamp default now()

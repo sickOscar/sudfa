@@ -2,9 +2,7 @@ import React from 'react';
 import Popover from "react-bootstrap/Popover";
 import {Link} from 'react-router-dom';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-
-// const HOST = window.location.protocol + '//' + window.location.hostname + ':5000';
-const HOST = `${window.location.protocol}//${ window.location.hostname}/api`
+import Env from '../env';
 
 export default class MyBotsFights extends React.Component {
 
@@ -20,9 +18,8 @@ export default class MyBotsFights extends React.Component {
   }
 
   componentDidMount() {
-    // console.log('should do shit', this.props.mybots, this.props.botid);
 
-    fetch(`${HOST}/fights?bots=${this.props.mybots.map(b => b.botid).join(',')}&against=${this.props.botid}`, {
+    fetch(`${Env.API_HOST}/fights?bots=${this.props.mybots.map(b => b.botid).join(',')}&against=${this.props.botid}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',

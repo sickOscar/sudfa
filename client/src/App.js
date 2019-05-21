@@ -4,16 +4,20 @@ import './App.scss';
 import logo from './images/logo.png';
 import './icons';
 
-
-
-
-
 class App extends Component {
 
   constructor(props) {
     super(props);
 
-    this.state = {}
+    this.state = {
+      firstAccessComplete: null
+    }
+  }
+
+  componentDidMount() {
+    this.setState({
+      firstAccessComplete: localStorage.getItem('firstAccessComplete')
+    })
   }
 
   logout() {
@@ -23,16 +27,6 @@ class App extends Component {
   login() {
     this.props.auth.login();
   }
-
-  componentDidMount() {
-    console.log('check session')
-    // const {renewSession} = this.props.auth;
-
-    // if (localStorage.getItem('isLoggedIn') === 'true') {
-    //   renewSession()
-    // }
-  }
-
 
   render() {
 

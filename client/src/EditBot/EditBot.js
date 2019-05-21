@@ -4,6 +4,7 @@ import {Editor} from './Editor/Editor';
 import {GameResults} from './GameResults/GameResults';
 import Apis from './Apis/Apis';
 import history from '../history';
+import Env from '../env';
 
 import './EditBot.scss';
 
@@ -46,9 +47,7 @@ class Runner {
 
 module.exports = Runner;
 
-`
-// const HOST = window.location.protocol + '//' + window.location.hostname + ':5000';
-const HOST = `${window.location.protocol}//${ window.location.hostname}/api`
+`;
 
 export default class Home extends Component {
 
@@ -91,7 +90,7 @@ export default class Home extends Component {
     })
 
 
-    fetch(`${HOST}/source`, {
+    fetch(`${Env.API_HOST}/source`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -134,7 +133,7 @@ export default class Home extends Component {
       error: null
     })
 
-    fetch(`${HOST}/league`, {
+    fetch(`${Env.API_HOST}/league`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -171,7 +170,7 @@ export default class Home extends Component {
       loading: true
     })
 
-    fetch(`${HOST}/bot/${this.props.match.params.botid}`, {
+    fetch(`${Env.API_HOST}/bot/${this.props.match.params.botid}`, {
       method: 'POST',
       body: JSON.stringify({
         source: this.state.code
@@ -205,7 +204,7 @@ export default class Home extends Component {
 
   componentDidMount() {
 
-    fetch(`${HOST}/bot/${this.props.match.params.botid}`, {
+    fetch(`${Env.API_HOST}/bot/${this.props.match.params.botid}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -225,7 +224,7 @@ export default class Home extends Component {
         this.props.auth.logout()
       })
 
-    fetch(`${HOST}/API`, {
+    fetch(`${Env.API_HOST}/API`, {
       method: 'GET',
       headers: {
         'Accept': 'text/plain',
@@ -242,7 +241,7 @@ export default class Home extends Component {
         console.error(err)
       })
 
-    fetch(`${HOST}/bots`, {
+    fetch(`${Env.API_HOST}/bots`, {
       method: 'GET',
       headers: {
         'Accept': 'text/plain',
@@ -279,7 +278,7 @@ export default class Home extends Component {
       loading: true
     })
 
-    fetch(`${HOST}/source`, {
+    fetch(`${Env.API_HOST}/source`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

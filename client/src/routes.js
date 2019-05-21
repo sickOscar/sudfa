@@ -2,8 +2,8 @@
 
 import React from 'react';
 import {Route, Router, Redirect} from 'react-router-dom';
-import Callback from './Callback';
-import Auth from './Auth';
+import Callback from './Auth/Callback';
+import Auth from './Auth/Auth';
 import EditBot from './EditBot/EditBot';
 import Bots from './Bots/Bots';
 import League from './League/League';

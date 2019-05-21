@@ -12,3 +12,5 @@ create table if not exists public.league_bots
 );
 
 alter table public.league_bots owner to postgres;
+
+alter table public.bots add column "timestamp" timestamp default now()

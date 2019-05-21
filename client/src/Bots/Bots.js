@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
 import './Bots.scss';
+import Env from '../env';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -18,10 +19,7 @@ export default class Bots extends React.Component {
 
   componentDidMount() {
 
-    // const HOST = window.location.protocol + '//' + window.location.hostname + ':5000';
-    const HOST = `${window.location.protocol}//${ window.location.hostname}/api`
-
-    fetch(`${HOST}/mybots`, {
+    fetch(`${Env.API_HOST}/mybots`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -39,7 +37,7 @@ export default class Bots extends React.Component {
   render() {
 
     const newBotId = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
-    const newBotLink = `edit/${newBotId}`
+    const newBotLink = `edit/${newBotId}`;
 
     return (
       <React.Fragment>

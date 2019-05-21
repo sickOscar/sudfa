@@ -8,175 +8,212 @@ const LEAGUE_BOTS_TABLE = 'league_bots';
 
 const GameArena = {
 
-  start: function (bot) {
+  /**
+   *
+   * @param bot
+   * @returns {Promise<*>}
+   */
+  start: async function (bot) {
 
-    let allBots = [];
+    try {
+
+      // CHECK TIMESTAMPS
+      await GameArena.canRun(bot);
+
+      // EXEC FIGHTS
+      const {fights, homeFightExample} = await GameArena.fight(bot);
+
+      // SAVE BOT
+      await GameArena.saveBot(bot, fights, homeFightExample);
+
+      // WRITE LEADERBOARD
+      const leaderboard = await Fights.computeLeaderboard();
+      await new Promise((resolve, reject) => {
+        fs.writeFile('./leaderboard.json', JSON.stringify(leaderboard), (err) => {
+          return err ? reject(err) : resolve()
+        });
+      });
+
+      return {
+        exit: 'OK'
+      };
+
+
+    } catch (err) {
+      console.error(err);
+      return {
+        exit: 'KO',
+        message: err.error
+      };
+    }
+
+
+  },
+
+  /**
+   *
+   * @param bot
+   * @returns {Promise<void>}
+   */
+  canRun: async function(bot) {
+
+    const leagueBot = await Bots.one({botid: bot.botid, user: bot.user}, LEAGUE_BOTS_TABLE)
+
+    if (leagueBot) {
+      const now = new Date();
+      const sendToLeagueTime = new Date(leagueBot.timestamp);
+
+      console.log(now, sendToLeagueTime);
+    }
+
+  },
+
+  /**
+   *
+   * @param bot
+   * @returns {Promise<{fights: Array, homeFightExample: undefined}>}
+   */
+  fight: async function (bot) {
 
     // recupera tutti i bot in gioco
-    return Bots.all(LEAGUE_BOTS_TABLE)
-      .then(async enemies => {
-        allBots = enemies;
+    const enemies = await Bots.all(LEAGUE_BOTS_TABLE);
 
-        const fights = [];
-        let homeFightExample = undefined;
+    const fights = [];
+    let homeFightExample = undefined;
 
-        try {
-          for (let i = 0; i < enemies.length; i++) {
+    for (let i = 0; i < enemies.length; i++) {
 
-            if (bot.botid === enemies[i].botid) {
-              continue;
-            }
+      if (bot.botid === enemies[i].botid) {
+        continue;
+      }
 
-            const homeRun = await GameLauncher.launch(bot, enemies[i]);
-            const awayRun = await GameLauncher.launch(enemies[i], bot);
+      const homeRun = await GameLauncher.launch(bot, enemies[i]);
+      const awayRun = await GameLauncher.launch(enemies[i], bot);
 
-            if (homeRun.error || awayRun.error) {
-              console.error(homeRun.error || awayRun.error);
-              throw new Error(homeRun.error || awayRun.error);
-            }
+      if (homeRun.error || awayRun.error) {
+        console.error(homeRun.error || awayRun.error);
+        throw new Error(homeRun.error || awayRun.error);
+      }
 
-            const home = {
-              id: `${bot.botid}${enemies[i].botid}`,
-              bot1: bot.botid,
-              bot2: enemies[i].botid,
-              history: homeRun,
-              winner: homeRun.exit.winner,
-              by: homeRun.exit.by,
-              time: new Date()
-            };
+      const home = {
+        id: `${bot.botid}${enemies[i].botid}`,
+        bot1: bot.botid,
+        bot2: enemies[i].botid,
+        history: homeRun,
+        winner: homeRun.exit.winner,
+        by: homeRun.exit.by,
+        time: new Date()
+      };
 
-            const away = {
-              id: `${enemies[i].botid}${bot.botid}`,
-              bot1: enemies[i].botid,
-              bot2: bot.botid,
-              history: awayRun,
-              winner: awayRun.exit.winner,
-              by: awayRun.exit.by,
-              time: new Date()
-            };
-
-            if (i === 0) {
-              homeFightExample = homeRun;
-            }
-
-            fights.push(home, away);
-
-          }
-
-          console.log(`Game arena completed for ${bot.botid}: ${fights.length} fights`)
+      const away = {
+        id: `${enemies[i].botid}${bot.botid}`,
+        bot1: enemies[i].botid,
+        bot2: bot.botid,
+        history: awayRun,
+        winner: awayRun.exit.winner,
+        by: awayRun.exit.by,
+        time: new Date()
+      };
 
 
-          return Promise.all([
-            Fights.delete({bot1: bot.botid}),
-            Fights.delete({bot2: bot.botid}),
-          ])
-            .then(() => {
-              if (fights.length) {
+      homeFightExample = homeFightExample || homeRun;
 
-                // controllo che il bot ci sia a db, altrimenti lo creo
-                return Bots.one({botid: bot.botid, user: bot.user})
-                  .then(dbBot => {
-                    if (!dbBot) {
+      fights.push(home, away);
 
-                      // add to bots
-                      return Bots.add({
-                        botid: bot.botid,
-                        source: bot.source,
-                        // prendo il nome dal primo combattimento,
-                        // il bot corrente combatte per primo in casa
-                        name: fights[0].history.players[0].name,
-                        user: bot.user,
-                        team: homeFightExample.players[0].troop.map(s => s.type)
-                      })
+    }
 
+    console.log(`Game arena completed for ${bot.botid}: ${fights.length} fights`)
 
-                    } else {
-                      return dbBot;
-                    }
-                })
+    await Promise.all([
+      Fights.delete({bot1: bot.botid}),
+      Fights.delete({bot2: bot.botid}),
+    ]);
 
-              }
-            })
-            .then(() => {
-              return Fights.addMany(_.flatten(fights))
-            })
-            .then(() => {
+    await Fights.addMany(_.flatten(fights));
 
-              const botName = homeFightExample ? homeFightExample.players[0].name : 'Butthole';
+    return {
+      fights,
+      homeFightExample
+    }
 
-              // update bot
-              return Bots.update(
-                {
-                  botid: bot.botid,
-                  user: bot.user
-                },
-                {
-                  source: bot.source,
-                  name: botName,
-                  team: homeFightExample ? homeFightExample.players[0].troop.map(s => s.type) : []
-                }
-              )
-                .then(bot => {
+  },
 
-                  // controllo che esista in league
-                  return Bots.one({botid: bot.botid, user: bot.user}, LEAGUE_BOTS_TABLE)
-                    .then(dbBot => {
-                      if (dbBot) {
-                        // update in league
-                        return Bots.update(
-                          {
-                            botid: dbBot.botid,
-                            user: dbBot.user
-                          },
-                          {
-                            source: bot.source,
-                            name: botName,
-                            team: homeFightExample ? homeFightExample.players[0].troop.map(s => s.type): []
-                          },
-                          LEAGUE_BOTS_TABLE
-                        )
-                      } else {
-                        // add to league
-                        return Bots.add({
-                          botid: bot.botid,
-                          source: bot.source,
-                          // prendo il nome dal primo combattimento,
-                          // il bot corrente combatte per primo in casa
-                          name: fights[0].history.players[0].name,
-                          user: bot.user,
-                          team: homeFightExample.players[0].troop.map(s => s.type)
-                        }, LEAGUE_BOTS_TABLE)
-                      }
-                    })
+  /**
+   *
+   * @param bot
+   * @param fights
+   * @param homeFightExample
+   * @returns {Promise<void>}
+   */
+  saveBot: async function(bot, fights, homeFightExample) {
 
-                })
-            })
-            .then(() => {
-              return Fights.computeLeaderboard();
-            })
-            .then(leaderboard => {
-              fs.writeFileSync('./leaderboard.json', JSON.stringify(leaderboard));
-              return {
-                exit: 'OK'
-              };
-            })
+    if (fights.length === 0) {
+      console.log('Well, no fights, maybe first run.');
+      throw new Error('First run?');
+    }
 
+    // controllo che il bot ci sia a db, altrimenti lo creo
+    // caso di send to league come prima azione
+    let baseBot = await Bots.one({botid: bot.botid, user: bot.user});
 
-        } catch (err) {
-          console.error(err);
-          return {
-            exit: 'KO',
-            message: err.error
-          };
-        }
+    const botName = fights[0].history.players[0].name;
+    const botTeam = homeFightExample.players[0].troop.map(s => s.type);
 
-
+    if (!baseBot) {
+      // add to bots
+      baseBot = await Bots.add({
+        botid: bot.botid,
+        source: bot.source,
+        name: botName,
+        user: bot.user,
+        team: botTeam
       })
+    } else {
+      baseBot = await Bots.update(
+        {
+          botid: bot.botid,
+          user: bot.user
+        },
+        {
+          source: bot.source,
+          name: botName,
+          team: botTeam
+        }
+      );
+    }
 
+    // controllo che esista in league
+    const leagueBot = await Bots.one({botid: baseBot.botid, user: baseBot.user}, LEAGUE_BOTS_TABLE)
 
+    if (leagueBot) {
+      // update in league
+      await Bots.update(
+        {
+          botid: leagueBot.botid,
+          user: leagueBot.user
+        },
+        {
+          source: baseBot.source,
+          name: botName,
+          team: botTeam,
+          timestamp: Math.round((+new Date()) / 1000)
+        },
+        LEAGUE_BOTS_TABLE
+      )
+    } else {
+      // add to league
+      await Bots.add({
+        botid: baseBot.botid,
+        source: baseBot.source,
+        // prendo il nome dal primo combattimento,
+        // il bot corrente combatte per primo in casa
+        name: botName,
+        user: baseBot.user,
+        team: botTeam
+      }, LEAGUE_BOTS_TABLE)
+    }
   }
 
+};
 
-}
-
-module.exports = GameArena
+module.exports = GameArena;

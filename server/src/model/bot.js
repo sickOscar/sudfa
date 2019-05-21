@@ -122,7 +122,13 @@ module.exports = {
       const setClause = [];
 
       for (let i = 0; i < updateFields.length; i++) {
-        setClause.push(`"${updateFields[i]}" = $${index}`);
+
+        let clause = `"${updateFields[i]}" = $${index}`;
+        if (updateFields[i] === 'timestamp') {
+          clause = `"${updateFields[i]}" = to_timestamp($${index})`;
+        }
+
+        setClause.push(clause);
 
         let v = updates[updateFields[i]];
         if (Array.isArray(v)) {

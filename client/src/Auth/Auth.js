@@ -1,19 +1,13 @@
-// src/Auth/Auth.js
+import Env from '../env';
 
-import history from './history';
+import history from '../history';
 import auth0 from 'auth0-js';
 
-// const HOST = window.location.protocol + '//' + window.location.hostname + ':5000';
-
-const HOST = `${window.location.protocol}//${ window.location.hostname}/api`
-
 const callbackUrl = process.env.NODE_ENV === 'production'
-  ? (window.location.protocol + '//' + window.location.hostname)
-  : (window.location.protocol + '//' + window.location.hostname + ':3000')
+  ? Env.DOMAIN_WITH_PROTOCOL
+  : `${Env.DOMAIN_WITH_PROTOCOL}:3000`;
 
 
-console.log("callbackUrl", callbackUrl);
-// ...
 export default class Auth {
   accessToken;
   idToken;
@@ -52,7 +46,7 @@ export default class Auth {
 
         this.setSession(authResult);
 
-        fetch(`${HOST}/user`, {
+        fetch(`${Env.API_HOST}/user`, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -82,7 +76,7 @@ export default class Auth {
         alert(`Error: ${err.error}. Check the console for further details.`);
 
       }
-      
+
     });
   }
 
@@ -107,7 +101,7 @@ export default class Auth {
     localStorage.setItem('idToken', authResult.idToken);
     localStorage.setItem('expiresAt', expiresAt);
 
-    
+
   }
 
   renewSession() {
@@ -146,7 +140,7 @@ export default class Auth {
   }
 
   saveProfile(profile) {
-    return fetch(`${HOST}/user`, {
+    return fetch(`${Env.API_HOST}/user`, {
       method: 'PUT',
       body: JSON.stringify({
         ...profile
