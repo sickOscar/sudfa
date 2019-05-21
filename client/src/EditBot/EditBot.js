@@ -47,7 +47,8 @@ class Runner {
 module.exports = Runner;
 
 `
-const HOST = window.location.protocol + '//' + window.location.hostname + ':5000';
+// const HOST = window.location.protocol + '//' + window.location.hostname + ':5000';
+const HOST = `${window.location.protocol}//${ window.location.hostname}/api`
 
 export default class Home extends Component {
 

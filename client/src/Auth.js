@@ -3,7 +3,10 @@
 import history from './history';
 import auth0 from 'auth0-js';
 
-const HOST = window.location.protocol + '//' + window.location.hostname + ':5000';
+// const HOST = window.location.protocol + '//' + window.location.hostname + ':5000';
+
+const HOST = `${window.location.protocol}//${ window.location.hostname}/api`
+
 const callbackUrl = process.env.NODE_ENV === 'production'
   ? (window.location.protocol + '//' + window.location.hostname)
   : (window.location.protocol + '//' + window.location.hostname + ':3000')

@@ -22,7 +22,8 @@ export default class Fight extends React.Component {
 
   componentDidMount() {
 
-    const HOST = window.location.protocol + '//' + window.location.hostname + ':5000';
+    // const HOST = window.location.protocol + '//' + window.location.hostname + ':5000';
+    const HOST = `${window.location.protocol}//${ window.location.hostname}/api`
 
     fetch(`${HOST}/fight/${this.state.bot1Id}/${this.state.bot2Id}`, {
       method: 'GET',

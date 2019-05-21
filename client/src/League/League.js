@@ -5,7 +5,8 @@ import MyBotsFights from './MyBotsFights';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-const HOST = window.location.protocol + '//' + window.location.hostname + ':5000';
+// const HOST = window.location.protocol + '//' + window.location.hostname + ':5000';
+const HOST = `${window.location.protocol}//${ window.location.hostname}/api`
 
 export default class League extends React.Component {
 

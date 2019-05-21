@@ -3,7 +3,8 @@ import Popover from "react-bootstrap/Popover";
 import {Link} from 'react-router-dom';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
-const HOST = window.location.protocol + '//' + window.location.hostname + ':5000';
+// const HOST = window.location.protocol + '//' + window.location.hostname + ':5000';
+const HOST = `${window.location.protocol}//${ window.location.hostname}/api`
 
 export default class MyBotsFights extends React.Component {
 
