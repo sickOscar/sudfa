@@ -1,12 +1,12 @@
 create table if not exists public.league_bots
 (
   botid varchar not null
-    constraint bots_pk
+    constraint league_bots_pk
       primary key,
   name varchar not null,
   source varchar not null,
   "user" varchar not null
-    constraint bots_fk
+    constraint league_bots_fk
       references public.users,
   team json
 );
