@@ -4,6 +4,8 @@ const fs = require('fs');
 const Bots = require('../model/bot');
 const Fights = require('../model/fight');
 
+const LEAGUE_BOTS_TABLE = 'league_bots';
+
 const GameArena = {
 
   start: function (bot) {
@@ -11,7 +13,7 @@ const GameArena = {
     let allBots = [];
 
     // recupera tutti i bot in gioco
-    return Bots.all()
+    return Bots.all(LEAGUE_BOTS_TABLE)
       .then(async enemies => {
         allBots = enemies;
 
@@ -75,14 +77,19 @@ const GameArena = {
                 return Bots.one({botid: bot.botid, user: bot.user})
                   .then(dbBot => {
                     if (!dbBot) {
+
+                      // add to bots
                       return Bots.add({
                         botid: bot.botid,
                         source: bot.source,
                         // prendo il nome dal primo combattimento,
                         // il bot corrente combatte per primo in casa
                         name: fights[0].history.players[0].name,
-                        user: bot.user
+                        user: bot.user,
+                        team: homeFightExample.players[0].troop.map(s => s.type)
                       })
+
+
                     } else {
                       return dbBot;
                     }
@@ -97,6 +104,7 @@ const GameArena = {
 
               const botName = homeFightExample ? homeFightExample.players[0].name : 'Butthole';
 
+              // update bot
               return Bots.update(
                 {
                   botid: bot.botid,
@@ -104,9 +112,44 @@ const GameArena = {
                 },
                 {
                   source: bot.source,
-                  name: botName
+                  name: botName,
+                  team: homeFightExample ? homeFightExample.players[0].troop.map(s => s.type) : []
                 }
               )
+                .then(bot => {
+
+                  // controllo che esista in league
+                  return Bots.one({botid: bot.botid, user: bot.user}, LEAGUE_BOTS_TABLE)
+                    .then(dbBot => {
+                      if (dbBot) {
+                        // update in league
+                        return Bots.update(
+                          {
+                            botid: dbBot.botid,
+                            user: dbBot.user
+                          },
+                          {
+                            source: bot.source,
+                            name: botName,
+                            team: homeFightExample ? homeFightExample.players[0].troop.map(s => s.type): []
+                          },
+                          LEAGUE_BOTS_TABLE
+                        )
+                      } else {
+                        // add to league
+                        return Bots.add({
+                          botid: bot.botid,
+                          source: bot.source,
+                          // prendo il nome dal primo combattimento,
+                          // il bot corrente combatte per primo in casa
+                          name: fights[0].history.players[0].name,
+                          user: bot.user,
+                          team: homeFightExample.players[0].troop.map(s => s.type)
+                        }, LEAGUE_BOTS_TABLE)
+                      }
+                    })
+
+                })
             })
             .then(() => {
               return Fights.computeLeaderboard();

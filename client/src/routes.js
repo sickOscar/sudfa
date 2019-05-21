@@ -10,8 +10,8 @@ import League from './League/League';
 import Logout from './Logout';
 import history from './history';
 import App from './App';
-import Fight from './Fight';
-import Profile from './Profile'
+import Fight from './Fight/Fight';
+import Profile from './Profile/Profile'
 import Homepage from './Homepage/Homepage';
 import Docs from './Docs/Docs';
 

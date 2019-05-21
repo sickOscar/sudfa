@@ -10,10 +10,12 @@ const clientConnected = client.connect();
 
 module.exports = {
 
-    myBots: function(userId) {
+    myBots: function(userId, table) {
+
+      table = table || 'bots';
 
       const query = {
-        text: `SELECT * FROM bots WHERE "user" = $1`,
+        text: `SELECT * FROM ${table} WHERE "user" = $1`,
         values: [userId]
       };
 
@@ -23,9 +25,12 @@ module.exports = {
 
     },
 
-    allBots: function() {
+    allBots: function(table) {
+
+      table = table || 'bots';
+
       const query = {
-          text: `SELECT * FROM bots`,
+          text: `SELECT * FROM ${table}`,
       };
 
       return clientConnected
@@ -33,12 +38,15 @@ module.exports = {
         .then(results => results.rows)
     },
 
-    one: function(params) {
+    one: function(params, table) {
+
+      table = table || 'bots'
+
       const whereClause = Object.keys(params).map((key, i) => {
         return `"${key}" = $${i+1}`;
       });
 
-      const text = `SELECT * FROM bots WHERE ${whereClause.join(' AND ')}`;
+      const text = `SELECT * FROM ${table} WHERE ${whereClause.join(' AND ')}`;
       const values = Object.values(params);
 
       const query = {
@@ -51,9 +59,12 @@ module.exports = {
         .then(results => results.rows[0])
     },
 
-    all: function() {
+    all: function(table) {
+
+      table = table || 'bots';
+
       const query = {
-        text: `SELECT * FROM bots`
+        text: `SELECT * FROM ${table}`
       };
 
       return clientConnected
@@ -62,15 +73,20 @@ module.exports = {
 
     },
 
-    add: function(bot) {
+    add: function(bot, table) {
+
+      table = table || 'bots';
 
       const columns = Object.keys(bot).map(col => `"${col}"`);
       const indexes = Object.values(bot).map((val, i) => {
         return `$${i + 1}`;
       });
 
-      const text = `INSERT INTO bots (${columns.join(', ')}) VALUES (${indexes.join(', ')}) RETURNING *`;
-      const values = Object.values(bot);
+      const text = `INSERT INTO ${table} (${columns.join(', ')}) VALUES (${indexes.join(', ')}) RETURNING *`;
+      const values = Object.values(bot).map(v => {
+        if (Array.isArray(v)) return JSON.stringify(v)
+        return v;
+      });
 
       const query = {
         text,
@@ -82,7 +98,9 @@ module.exports = {
         .then(results => results.rows[0])
     },
 
-    update: function(whereCondition, updates) {
+    update: function(whereCondition, updates, table) {
+
+      table = table || 'bots';
 
       if (!Object.keys(whereCondition) || !Object.keys(updates)) {
         throw new Error('Invalid bot update');
@@ -105,11 +123,17 @@ module.exports = {
 
       for (let i = 0; i < updateFields.length; i++) {
         setClause.push(`"${updateFields[i]}" = $${index}`);
-        values.push(updates[updateFields[i]]);
+
+        let v = updates[updateFields[i]];
+        if (Array.isArray(v)) {
+          v = JSON.stringify(v)
+        }
+        values.push(v);
+
         index++;
       }
 
-      const text = `UPDATE bots SET ${setClause.join(', ')} WHERE ${whereClause.join(' AND ')} RETURNING *`;
+      const text = `UPDATE ${table} SET ${setClause.join(', ')} WHERE ${whereClause.join(' AND ')} RETURNING *`;
 
       const query = {text, values};
 

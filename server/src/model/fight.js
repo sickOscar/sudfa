@@ -14,7 +14,7 @@ const FightModel = {
   one: params => {
 
     const whereClause = Object.keys(params).map((key, i) => {
-      return `${key} = $${i}`;
+      return `${key} = $${i + 1}`;
     });
 
     const query = {
@@ -113,9 +113,9 @@ const FightModel = {
 
     const text = `
     SELECT
-        users.id, users.name as username, botid, bots.name, ties.ties, ties.TIES_POINTS, wins.wins, wins.win_POINTS, COALESCE(wins.win_POINTS,0) + COALESCE(ties.TIES_POINTS, 0) as POINTS
+        users.id, users.name as username, botid, league_bots.name, league_bots.team as team, ties.ties, ties.TIES_POINTS, wins.wins, wins.win_POINTS, COALESCE(wins.win_POINTS,0) + COALESCE(ties.TIES_POINTS, 0) as POINTS
     FROM
-        bots
+        league_bots
         LEFT JOIN (
             SELECT
                 winner, count(*) as TIES, count(*) * 1 as TIES_POINTS
@@ -125,7 +125,7 @@ const FightModel = {
                     by = 'TIE'
             GROUP BY
                 winner
-        ) as ties ON ties.winner = bots.botid
+        ) as ties ON ties.winner = league_bots.botid
         LEFT JOIN (
             SELECT
                 winner, count(*) as wins, count(*) * 3 as win_POINTS
@@ -135,9 +135,9 @@ const FightModel = {
                     by = 'WIN'
             GROUP BY
                 winner
-        ) as wins ON wins.winner = bots.botid
+        ) as wins ON wins.winner = league_bots.botid
         INNER JOIN users
-            ON (bots.user = users.id)
+            ON (league_bots.user = users.id)
         ORDER BY points DESC
     `
 

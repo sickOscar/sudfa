@@ -70,8 +70,50 @@ class GameApi {
                 user: enemyBot.user
               })
               .then(gameHistory => {
-                // console.log('GOT ', gameHistory);
-                res.json(gameHistory)
+
+                if (gameHistory.error) {
+                  return res.json(gameHistory)
+                }
+
+                // controllo se il bot appartiene all'utente
+                return Bot.one({botid: botid})
+                  .then(userBot => {
+
+                    const team = gameHistory.players[0].troop.map(soldier => soldier.type)
+
+                    console.debug('team', team);
+
+                    // se non esiste, lo creo al volo
+                    if (!userBot) {
+
+                      const newBot = {
+                        botid: botid,
+                        user: userId,
+                        source: code,
+                        name: gameHistory.players[0].name,
+                        team
+                      };
+
+                      return Bot.add(newBot);
+                    }
+                    // se il bot è effettivamente dell'utente, lo aggiorno
+                    if (userBot.user === userId) {
+                      console.debug('UPDATE');
+                      return Bot.update({botid: botid, user: userId}, {
+                        source: code,
+                        name: gameHistory.players[0].name,
+                        team
+                      })
+                    }
+
+                    throw new Error('These Are Not the Bots You Are Looking For');
+
+
+                  })
+                  .then(() => {
+                    res.json(gameHistory)
+                  })
+
               })
 
 
@@ -121,6 +163,11 @@ class GameApi {
             // controllo se il bot appartiene all'utente
             return Bot.one({botid: botid})
               .then(userBot => {
+
+                const team = gameHistory.players[0].troop.map(soldier => soldier.type)
+
+                console.debug('team', team);
+
                 // se non esiste, lo creo al volo
                 if (!userBot) {
 
@@ -128,16 +175,19 @@ class GameApi {
                     botid: botid,
                     user: userId,
                     source: code,
-                    name: gameHistory.players[0].name
+                    name: gameHistory.players[0].name,
+                    team
                   };
 
                   return Bot.add(newBot);
                 }
                 // se il bot è effettivamente dell'utente, lo aggiorno
                 if (userBot.user === userId) {
+                  console.debug('UPDATE');
                   return Bot.update({botid: botid, user: userId}, {
                     source: code,
-                    name: gameHistory.players[0].name
+                    name: gameHistory.players[0].name,
+                    team
                   })
                 }
 
@@ -191,15 +241,15 @@ class GameApi {
     app.get('/fight/:bot1/:bot2', (req, res) => {
 
       Promise.all([
-        Bot.one({botid: req.params.bot1}),
-        Bot.one({botid: req.params.bot2}),
+        Bot.one({botid: req.params.bot1}, 'league_bots'),
+        Bot.one({botid: req.params.bot2}, 'league_bots'),
         Fight.one({
           bot1: req.params.bot1,
           bot2: req.params.bot2
         }),
         Fight.one({
-          bot2: req.params.bot1,
-          bot1: req.params.bot2
+          bot1: req.params.bot2,
+          bot2: req.params.bot1
         }),
       ])
         .then(results => {

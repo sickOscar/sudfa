@@ -1,0 +1,28 @@
+.full-height {
+  height: 100%;
+}
+
+.fight-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.vs {
+  margin: 0 20px;
+}
+
+.fight-splitter {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+
+  > div {
+    flex: 1;
+
+
+    &:first-child {
+      border-right: 1px solid #ccc;
+    }
+  }
+}

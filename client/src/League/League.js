@@ -21,7 +21,7 @@ export default class League extends React.Component {
   componentDidMount() {
 
     if (this.props.auth.isAuthenticated()) {
-      fetch(`${HOST}/mybots`, {
+      fetch(`${HOST}/myleaguebots`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -118,8 +118,16 @@ export default class League extends React.Component {
                 </div>
 
                 <div className="name">
-                  {bot.name}
-
+                  <span className="text">{bot.name}</span>
+                  <div className="team">
+                    {bot.team && bot.team.map((soldier, i) => {
+                      return (
+                        <div key={i} className="soldier">
+                          <img src="" alt={soldier}/>
+                        </div>
+                      )
+                    })}
+                  </div>
                 </div>
 
                 <div className="username">

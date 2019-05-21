@@ -62,7 +62,7 @@ class App extends Component {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/league">Leaderboard</Link>
+              <Link className="nav-link" to="/profile">My profile</Link>
             </li>
             {
               isAuthenticated() && (
@@ -71,6 +71,9 @@ class App extends Component {
                 </li>
               )
             }
+            <li className="nav-item">
+              <Link className="nav-link" to="/league">Leaderboard</Link>
+            </li>
             <li className="nav-item">
                 {
                   !isAuthenticated() && (

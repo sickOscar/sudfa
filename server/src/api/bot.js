@@ -17,6 +17,17 @@ class BotApi {
         })
     });
 
+    app.get('/myleaguebots', jwtCheck, (req, res) => {
+      const user = req.user.sub;
+      Bot.myBots(user, 'league_bots')
+        .then(bots => {
+          res.json(bots);
+        })
+        .catch(error => {
+          res.status(500).send(error)
+        })
+    });
+
     app.get('/bots', jwtCheck, (req, res) => {
       
       Bot.allBots()
@@ -50,7 +61,8 @@ class BotApi {
               botid: req.params.id,
               source: req.body.source,
               user,
-              name: 'Unknown'
+              name: 'Unknown',
+              team: []
             })
           } else {
             throw new Error('Not your bot!');

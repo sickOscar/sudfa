@@ -1,0 +1,15 @@
+@import '../variables';
+
+.profile-container {
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+
+  .name-input {
+    text-align: center;
+  }
+
+}

@@ -172,6 +172,7 @@ function Soldier(game, options) {
 
   const info = () => ({
     id,
+    type,
     name,
     motto,
     health,

@@ -1,5 +1,7 @@
 import React from 'react';
 import Popover from "react-bootstrap/Popover";
+import {Link} from 'react-router-dom';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const HOST = window.location.protocol + '//' + window.location.hostname + ':5000';
 
@@ -48,11 +50,15 @@ export default class MyBotsFights extends React.Component {
       .catch(err => console.error(err))
 
 
+    const popoverPlacement = document.getElementById(this.props.botid + '-popover-placement');
+    var rect = popoverPlacement.getBoundingClientRect();
+    const scrollTop = window.pageYOffset;
 
-    var rect = document.getElementById(this.props.botid + '-popover-placement').getBoundingClientRect();
+
+    console.log("rect", rect, scrollTop);
 
     this.setState({
-      top: rect.top,
+      top: rect.top + scrollTop,
       right: rect.right,
       bottom: rect.bottom,
       left: rect.left
@@ -61,7 +67,8 @@ export default class MyBotsFights extends React.Component {
   }
 
   render() {
-    return <Popover title="Fights with your bots" style={{left: this.state.left + 30, top: this.state.top}}>
+    return <Popover title="Fights with your bots"
+                    style={{left: this.state.left + 30, top: this.state.top, width: '300px'}}>
 
       <table className="table">
         <thead>
@@ -70,6 +77,7 @@ export default class MyBotsFights extends React.Component {
             <th>W</th>
             <th>T</th>
             <th>L</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -80,6 +88,11 @@ export default class MyBotsFights extends React.Component {
               <td>{this.state.fights[mybot.botid] && this.state.fights[mybot.botid].w}</td>
               <td>{this.state.fights[mybot.botid] && this.state.fights[mybot.botid].t}</td>
               <td>{this.state.fights[mybot.botid] && this.state.fights[mybot.botid].l}</td>
+              <td>
+                <Link to={`/fight/${mybot.botid}/${this.props.botid}`}>
+                  <FontAwesomeIcon icon="eye" />
+                </Link>
+              </td>
             </tr>)
         })}
         </tbody>
