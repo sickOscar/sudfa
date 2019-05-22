@@ -1,5 +1,6 @@
 const {jwtCheck} = require('./auth');
 const Bot = require('../model/bot');
+const GameArena = require('../engine/game-arena');
 
 class BotApi {
 
@@ -29,8 +30,21 @@ class BotApi {
     });
 
     app.get('/bots', jwtCheck, (req, res) => {
-      
+
       Bot.allBots()
+        .then(bots => {
+          res.json(bots)
+        })
+        .catch(err => {
+          console.error(err);
+          res.status(500).send(err);
+        })
+
+    });
+
+    app.get('/league_bots', jwtCheck, (req, res) => {
+
+      Bot.allBots('league_bots')
         .then(bots => {
           res.json(bots)
         })
@@ -44,37 +58,21 @@ class BotApi {
     app.post('/bot/:id', jwtCheck, (req, res) => {
       const user = req.user.sub;
 
-      Bot.one({botid: req.params.id})
-        .then(bot => {
+      const fightParams = {
+        userId: user,
+        botid: req.params.id,
+        level: 'junior',
+        code: req.body.source
+      }
 
-          // update bot
-          if (bot && bot.user === user) {
-            Bot.update(
-              {botid: bot.botid, user: user},
-              {source: req.body.source}
-            )
-              .then(bot => {
-                res.json(bot);
-              })
-          } else if (!bot) {
-            Bot.add({
-              botid: req.params.id,
-              source: req.body.source,
-              user,
-              name: 'Unknown',
-              team: []
-            })
-          } else {
-            throw new Error('Not your bot!');
-          }
-
-
+      return GameArena.singleBotFight(fightParams)
+        .then(gameHistory => {
+          res.json(gameHistory)
         })
-        .catch(err => {
-          console.error(err);
-          res.status(500).send(err);
+        .catch(error => {
+          console.error(error)
+          res.send(error)
         })
-
 
     });
 

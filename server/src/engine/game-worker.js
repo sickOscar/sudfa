@@ -67,7 +67,6 @@ const launch = function(p1, p2) {
       getCurrentSoldier: game.getCurrentSoldier.bind(game),
       getEnemyTeam: game.getEnemyTeam.bind(game),
       getMyTeam: game.getMyTeam.bind(game),
-      registerTeam: game.registerTeam.bind(game),
       Dev: game.Dev.bind(game),
       Pm: game.Pm.bind(game),
       Mktg: game.Mktg.bind(game)
@@ -113,7 +112,6 @@ const launch = function(p1, p2) {
     try {
       game.runTurn()
     } catch(err) {
-      // TODO aggiungere gestione errore
       game.history.addTurn({
         error: err.message,
         actor: game.getCurrentSoldier().getId()

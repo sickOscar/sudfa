@@ -7,8 +7,7 @@ CREATE TABLE public.bots (
 	"name" varchar NOT NULL,
 	"source" varchar NOT NULL,
 	"user" varchar NOT NULL,
+	"timestamp" timestamp with time zone default now(),
 	CONSTRAINT bots_pk PRIMARY KEY (botid),
 	CONSTRAINT bots_fk FOREIGN KEY ("user") REFERENCES users(id)
 );
-
-alter table public.bots add column "timestamp" timestamp default now()

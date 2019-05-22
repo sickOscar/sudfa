@@ -5,8 +5,153 @@ const Bots = require('../model/bot');
 const Fights = require('../model/fight');
 
 const LEAGUE_BOTS_TABLE = 'league_bots';
+const botFolder = `${__dirname}/../bots/`;
 
 const GameArena = {
+
+  singleBotFight: async function (fightParams) {
+
+    const {level, userId, botid, code} = fightParams;
+
+    let filename = `junior.js`;
+
+    switch (level) {
+      case 'senior':
+        filename = 'senior.js';
+        break;
+      case 'mid-level':
+        filename = 'mid-level.js';
+        break;
+      case 'guru':
+        filename = 'guru.js';
+        break;
+      case 'junior':
+      default:
+        filename = 'junior.js';
+        break;
+    }
+
+    filename = `${botFolder}${filename}`;
+
+    const pl2Source = await new Promise((resolve, reject) => {
+      fs.readFile(filename, (err, content) => {
+        return err ? reject(err) : resolve(content.toString());
+      })
+    })
+
+    const gameHistory = await GameLauncher.launch(
+      {
+        source: code,
+        user: userId,
+        botid: botid
+      },
+      {
+        source: pl2Source,
+        botid: level
+      })
+
+
+    if (gameHistory.error) {
+      return gameHistory
+    }
+
+    const team = gameHistory.players[0].troop.map(soldier => soldier.type)
+    const botName = gameHistory.players[0].name;
+
+    const updatedBot = {
+      botid: botid,
+      user: userId,
+      source: code,
+      name: botName,
+      team
+    }
+
+    await GameArena.saveBotAfterSingleFight(updatedBot);
+
+    return gameHistory;
+
+  },
+
+  singleChallengeFight: async function (fightParams) {
+
+    const {
+      challenge,
+      code,
+      userId,
+      botid
+    } = fightParams;
+
+    const enemyBot = Bots.one({botid: challenge});
+
+    if (!enemyBot) {
+      throw new Error('Invalid challenger');
+    }
+
+    const gameHistory = await GameLauncher.launch(
+      {
+        source: code,
+        user: userId,
+        botid: botid
+      },
+      {
+        source: enemyBot.source,
+        botid: challenge,
+        user: enemyBot.user
+      });
+
+    if (gameHistory.error) {
+      return gameHistory;
+    }
+
+    const botName = gameHistory.players[0].name;
+    const team = gameHistory.players[0].troop.map(soldier => soldier.type);
+
+    const updatedBot = {
+      botid: botid,
+      user: userId,
+      source: code,
+      name: botName,
+      team
+    };
+
+    await GameArena.saveBotAfterSingleFight(updatedBot);
+
+    return gameHistory;
+
+  },
+
+  saveBotAfterSingleFight: async function (bot) {
+
+    const userBot = await Bots.one({botid: bot.botid});
+
+    // se non esiste, lo creo al volo
+    if (!userBot) {
+      
+      const newBot = {
+        botid: bot.botid,
+        user: bot.user,
+        source: bot.source,
+        name: bot.name,
+        team: bot.team
+      };
+
+      return await Bots.add(newBot);
+    }
+
+    // se il bot è effettivamente dell'utente, lo aggiorno
+    if (userBot.user === bot.user) {
+      return await Bots.update({botid: bot.botid, user: bot.user}, {
+        source: bot.source,
+        name: bot.name,
+        team: bot.team,
+        timestamp: Math.round((+new Date()) / 1000)
+      })
+    }
+
+    // bot non dell'utente che sta facendo la richiesta
+    throw new Error('These are not the droids your looking for')
+
+  },
 
   /**
    *
@@ -55,7 +200,7 @@ const GameArena = {
    * @param bot
    * @returns {Promise<void>}
    */
-  canRun: async function(bot) {
+  canRun: async function (bot) {
 
     const leagueBot = await Bots.one({botid: bot.botid, user: bot.user}, LEAGUE_BOTS_TABLE)
 
@@ -145,7 +290,7 @@ const GameArena = {
    * @param homeFightExample
    * @returns {Promise<void>}
    */
-  saveBot: async function(bot, fights, homeFightExample) {
+  saveBot: async function (bot, fights, homeFightExample) {
 
     if (fights.length === 0) {
       console.log('Well, no fights, maybe first run.');

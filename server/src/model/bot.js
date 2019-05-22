@@ -93,6 +93,8 @@ module.exports = {
         values
       };
 
+      console.log("query", query);
+
       return clientConnected
         .then(() => client.query(query))
         .then(results => results.rows[0])

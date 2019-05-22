@@ -55,9 +55,13 @@ class App extends Component {
                 <b>Docs</b>
               </Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/profile">My profile</Link>
-            </li>
+            {
+              isAuthenticated() && (
+                <li className="nav-item">
+                  <Link className="nav-link" to="/profile">My profile</Link>
+                </li>
+              )
+            }
             {
               isAuthenticated() && (
                 <li className="nav-item">

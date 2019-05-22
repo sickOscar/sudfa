@@ -188,7 +188,15 @@ export default class Home extends Component {
           loading: false
         })
 
-        history.replace('/bots')
+        if (bot.error) {
+          this.setState({
+            error: bot.error
+          })
+        } else {
+          history.replace('/bots')
+        }
+
+
       })
       .catch(err => {
 
@@ -241,7 +249,7 @@ export default class Home extends Component {
         console.error(err)
       })
 
-    fetch(`${Env.API_HOST}/bots`, {
+    fetch(`${Env.API_HOST}/league_bots`, {
       method: 'GET',
       headers: {
         'Accept': 'text/plain',

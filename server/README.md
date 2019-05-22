@@ -7,5 +7,5 @@ pm2 deploy production
 postgres docker 
 
 ```
-docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=password -v ${PWD}/data:/var/lib/posgresql postgres
+docker run -d --name jsfightdb --network jsfight-net -e POSTGRES_PASSWORD=password -v ${PWD}/data:/var/lib/postgresql/data postgres
 ```

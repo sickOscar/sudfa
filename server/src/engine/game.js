@@ -49,7 +49,6 @@ class Game {
 
   setupPlayers(player1, player2) {
 
-
     // remap lazy constructor
     player1.team.troop = player1.team.troop.map(t => t.getInstance());
     player2.team.troop = player2.team.troop.map(t => t.getInstance());
@@ -71,11 +70,38 @@ class Game {
 
   runTurn() {
 
+    const runGameProxy = function(game) {
+      return {
+        getCurrentSoldier: game.getCurrentSoldier.bind(game),
+        getEnemyTeam: game.getEnemyTeam.bind(game),
+        getMyTeam: game.getMyTeam.bind(game),
+      }
+    };
+
     const currentSoldier = this.getCurrentSoldier();
     if (currentSoldier.getHealth() <= 0) {
       // do nothing
     } else {
-      this.currentPlayer.run();
+
+      // get prototype functions (ES6 class defined)
+      const protoFunctions = Object.getOwnPropertyNames(Object.getPrototypeOf(this.currentPlayer));
+      const contextFunctions = protoFunctions.reduce((context, funcName) => {
+        if (funcName !== 'constructor' && funcName !== 'run') {
+          context[funcName] = this.currentPlayer[funcName].bind(this.currentPlayer);
+        }
+        return context;
+      }, {})
+
+      const objectProperties = Object.getOwnPropertyNames(this.currentPlayer);
+
+
+      this.currentPlayer.run.call({
+        ...contextFunctions,
+        game: runGameProxy(this.currentPlayer.game),
+        team: {
+          name: this.currentPlayer.team.name
+        }
+      });
     }
 
     if (this.currentPlayer.actionDone) {
@@ -179,10 +205,10 @@ class Game {
         return aliveTroops.map(soldier => soldierProxy(soldier));
       },
       getFirstSoldier: () => {
-        return soldierProxy(team.shift());
+        return soldierProxy(team[0]);
       },
       getLastSoldier: () => {
-        return soldierProxy(team.pop());
+        return soldierProxy(team[team.length - 1]);
       },
       getStrongestSoldier: () => {
         let strongest = {getAttack: () => 0};

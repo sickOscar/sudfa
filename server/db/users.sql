@@ -4,6 +4,7 @@ create table if not exists public.users
     constraint users_pk
       primary key,
   name varchar,
+  "timestamp" timestamp with time zone DEFAULT now(),
   auth_id varchar not null
 );
 

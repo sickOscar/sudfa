@@ -39,6 +39,7 @@ class GameApi {
      */
     app.post('/source', jwtCheck, (req, res) => {
 
+
       const userId = req.user.sub;
       const botid = req.body.bot;
       let code = req.body.source;
@@ -48,164 +49,41 @@ class GameApi {
       code = code.replace('/n', '');
       code = code.replace('/r', '');
 
-
+      // CHALLENGE A USER BOT
       if (challenge) {
-
-        return Bot.one({botid: challenge})
-          .then(enemyBot => {
-
-            if (!enemyBot) {
-              throw new Error('Invalid challenger')
-            }
-
-            return GameLauncher.launch(
-              {
-                source: code,
-                user: userId,
-                botid: botid
-              },
-              {
-                source: enemyBot.source,
-                botid: challenge,
-                user: enemyBot.user
-              })
-              .then(gameHistory => {
-
-                if (gameHistory.error) {
-                  return res.json(gameHistory)
-                }
-
-                // controllo se il bot appartiene all'utente
-                return Bot.one({botid: botid})
-                  .then(userBot => {
-
-                    const team = gameHistory.players[0].troop.map(soldier => soldier.type)
-
-                    console.debug('team', team);
-
-                    // se non esiste, lo creo al volo
-                    if (!userBot) {
-
-                      const newBot = {
-                        botid: botid,
-                        user: userId,
-                        source: code,
-                        name: gameHistory.players[0].name,
-                        team
-                      };
-
-                      return Bot.add(newBot);
-                    }
-                    // se il bot è effettivamente dell'utente, lo aggiorno
-                    if (userBot.user === userId) {
-                      console.debug('UPDATE');
-                      return Bot.update({botid: botid, user: userId}, {
-                        source: code,
-                        name: gameHistory.players[0].name,
-                        team
-                      })
-                    }
-
-                    throw new Error('These Are Not the Bots You Are Looking For');
-
-
-                  })
-                  .then(() => {
-                    res.json(gameHistory)
-                  })
-
-              })
-
-
-          })
-          .catch(error => {
-            // console.log('GOT error', error);
-            res.send(error)
-          })
-
-
-      } else {
-
-        let pl2Source = null;
-
-        switch (level) {
-          case 'senior':
-            pl2Source = fs.readFileSync(botFolder + 'senior.js').toString();
-            break;
-          case 'mid-level':
-            pl2Source = fs.readFileSync(botFolder + 'mid-level.js').toString();
-            break;
-          case 'guru':
-            pl2Source = fs.readFileSync(botFolder + 'guru.js').toString();
-            break;
-          case 'junior':
-          default:
-            pl2Source = fs.readFileSync(botFolder + 'junior.js').toString();
-            break;
+        const fightParams = {
+          userId,
+          botid,
+          code,
+          challenge
         }
-
-        return GameLauncher.launch(
-          {
-            source: code,
-            user: userId,
-            botid: botid
-          },
-          {
-            source: pl2Source,
-            botid: level
-          })
+        return GameArena.singleChallengeFight(fightParams)
           .then(gameHistory => {
-
-            if (gameHistory.error) {
-              return res.json(gameHistory)
-            }
-
-            // controllo se il bot appartiene all'utente
-            return Bot.one({botid: botid})
-              .then(userBot => {
-
-                const team = gameHistory.players[0].troop.map(soldier => soldier.type)
-
-                console.debug('team', team);
-
-                // se non esiste, lo creo al volo
-                if (!userBot) {
-
-                  const newBot = {
-                    botid: botid,
-                    user: userId,
-                    source: code,
-                    name: gameHistory.players[0].name,
-                    team
-                  };
-
-                  return Bot.add(newBot);
-                }
-                // se il bot è effettivamente dell'utente, lo aggiorno
-                if (userBot.user === userId) {
-                  console.debug('UPDATE');
-                  return Bot.update({botid: botid, user: userId}, {
-                    source: code,
-                    name: gameHistory.players[0].name,
-                    team
-                  })
-                }
-
-                throw new Error('These Are Not the Bots You Are Looking For');
-
-
-              })
-              .then(() => {
-                res.json(gameHistory)
-              })
-
+            res.json(gameHistory)
           })
           .catch(error => {
-            // console.log('GOT error', error);
+            console.error(error)
             res.send(error)
           })
 
       }
+
+      const fightParams = {
+        userId,
+        botid,
+        level,
+        code
+      }
+
+      return GameArena.singleBotFight(fightParams)
+        .then(gameHistory => {
+          res.json(gameHistory)
+        })
+        .catch(error => {
+          console.error(error)
+          res.send(error)
+        })
+
 
     })
 
@@ -219,10 +97,10 @@ class GameApi {
       code = code.replace('/r', '');
 
       GameArena.start({
-        source: code,
-        botid: req.body.botid,
-        user: req.user.sub
-      })
+          source: code,
+          botid: req.body.botid,
+          user: req.user.sub
+        })
         .then(response => {
           res.json(response)
         })
@@ -241,17 +119,17 @@ class GameApi {
     app.get('/fight/:bot1/:bot2', (req, res) => {
 
       Promise.all([
-        Bot.one({botid: req.params.bot1}, 'league_bots'),
-        Bot.one({botid: req.params.bot2}, 'league_bots'),
-        Fight.one({
-          bot1: req.params.bot1,
-          bot2: req.params.bot2
-        }),
-        Fight.one({
-          bot1: req.params.bot2,
-          bot2: req.params.bot1
-        }),
-      ])
+          Bot.one({botid: req.params.bot1}, 'league_bots'),
+          Bot.one({botid: req.params.bot2}, 'league_bots'),
+          Fight.one({
+            bot1: req.params.bot1,
+            bot2: req.params.bot2
+          }),
+          Fight.one({
+            bot1: req.params.bot2,
+            bot2: req.params.bot1
+          }),
+        ])
         .then(results => {
 
           res.json({
