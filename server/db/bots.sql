@@ -8,6 +8,7 @@ CREATE TABLE public.bots (
 	"source" varchar NOT NULL,
 	"user" varchar NOT NULL,
 	"timestamp" timestamp with time zone default now(),
+	team json,
 	CONSTRAINT bots_pk PRIMARY KEY (botid),
 	CONSTRAINT bots_fk FOREIGN KEY ("user") REFERENCES users(id)
 );
