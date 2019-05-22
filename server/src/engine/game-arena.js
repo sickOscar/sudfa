@@ -247,7 +247,7 @@ const GameArena = {
         history: homeRun,
         winner: homeRun.exit.winner,
         by: homeRun.exit.by,
-        time: new Date()
+        timestamp: Math.round((+new Date()) / 1000)
       };
 
       const away = {
@@ -257,7 +257,7 @@ const GameArena = {
         history: awayRun,
         winner: awayRun.exit.winner,
         by: awayRun.exit.by,
-        time: new Date()
+        time: Math.round((+new Date()) / 1000)
       };
 
 
