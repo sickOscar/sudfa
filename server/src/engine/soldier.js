@@ -100,20 +100,21 @@ function Soldier(game, options) {
 
     // HIT
     if (actionType === 'hit') {
-      if (target) {
-        const aliveOpponents = game.getAliveTroops(game.opponentPlayer.team);
-        const t = aliveOpponents.find(soldier => soldier.getId() === target.getId());
+      if (canHit()) {
+        if (target) {
+          const aliveOpponents = game.getAliveTroops(game.opponentPlayer.team);
+          const t = aliveOpponents.find(soldier => soldier.getId() === target.getId());
 
 
-        t.setHealth(t.getHealth() - attack);
+          t.setHealth(t.getHealth() - attack);
 
-        message = `${name} attacks ${t.getName()} - ${attack} damage`;
-        success = true;
-      } else {
-        message = `${name} fails to attack - no target`;
-        success = false;
+          message = `${name} attacks ${t.getName()} - ${attack} damage`;
+          success = true;
+        } else {
+          message = `${name} fails to attack - no target`;
+          success = false;
+        }
       }
-
     }
 
     // HEAL
