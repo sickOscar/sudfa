@@ -4,6 +4,10 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import MyBotsFights from './MyBotsFights';
 import Env from '../env';
 
+import dev_icon from '../images/dev_icon.jpeg';
+import pm_icon from '../images/pm_icon.jpeg';
+import mktg_icon from '../images/mktg_icon.jpeg';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export default class League extends React.Component {
@@ -15,6 +19,12 @@ export default class League extends React.Component {
       logged: false,
       bots: []
     };
+
+    this.icons = {
+      'dev': dev_icon,
+      'pm': pm_icon,
+      'mktg': mktg_icon
+    }
   }
 
   componentDidMount() {
@@ -122,7 +132,7 @@ export default class League extends React.Component {
                     {bot.team && bot.team.map((soldier, i) => {
                       return (
                         <div key={i} className="soldier">
-                          <img src="" alt={soldier}/>
+                          <img src={this.icons[soldier]} alt={soldier}/>
                         </div>
                       )
                     })}

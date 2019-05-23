@@ -2,10 +2,20 @@ import React from 'react';
 import './Turn.scss';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
+import dev_icon from '../../images/dev_icon.jpeg';
+import pm_icon from '../../images/pm_icon.jpeg';
+import mktg_icon from '../../images/mktg_icon.jpeg';
+
 const Turn = (props) => {
 
   const {turn: propsTurn} = props;
   const {turn, team, state: status, index, players} = propsTurn;
+
+  const icons = {
+    'dev': dev_icon,
+    'pm': pm_icon,
+    'mktg': mktg_icon
+  };
 
   const getIcon = (turn) => {
 
@@ -46,8 +56,10 @@ const Turn = (props) => {
     }
   };
 
-  const getSoldierClassName = (soldierId, turn, soldierStatus) => {
+  const getSoldierClassName = (soldierId, turn, soldierStatus, type) => {
     let className = [soldierId, 'soldier'];
+
+    className.push(type);
 
     if (soldierId === turn.actor) {
       className.push('actor');
@@ -116,6 +128,14 @@ const Turn = (props) => {
     return team.troop.find(soldier => soldier.id === soldierId).name;
   };
 
+  const getSoldierType = soldierId => {
+    const team = players.find(player => {
+      return player.troop.find(soldier => soldier.id === soldierId)
+    });
+
+    return team.troop.find(soldier => soldier.id === soldierId).type;
+  };
+
   return (
     <div className="turn">
 
@@ -169,7 +189,8 @@ const Turn = (props) => {
                                 <small>({team[soldierId].health} HP)</small>
                               </div>}
 
-                              <div className={getSoldierClassName(soldierId, turn, team[soldierId].status)}></div>
+                              <div className={getSoldierClassName(soldierId, turn, team[soldierId].status, getSoldierType(soldierId))}
+                                style={{backgroundImage: `url(${icons[getSoldierType(soldierId)]})`}}/>
 
                               {i === 1 && <div className="soldier-status">
                                 {getSoldierName(soldierId)}
