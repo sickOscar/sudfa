@@ -89,6 +89,14 @@ const FightModel = {
       .then(() => client.query(query))
   },
 
+  truncate: () => {
+    const query = {
+      text: `TRUNCATE fights`,
+    }
+    return clientConnected
+      .then(() => client.query(query))
+  },
+
   computeLeaderboard: () => {
 
     // const text = `

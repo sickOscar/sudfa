@@ -200,6 +200,71 @@ const GameArena = {
 
   /**
    *
+   * @return {Promise<{fights: Array, homeFightExample: undefined}>}
+   */
+  rerun: async function() {
+
+    // recupera tutti i bot in gioco
+    const enemies = await Bots.all(LEAGUE_BOTS_TABLE);
+
+    const fights = [];
+
+    for (let i = 0; i < enemies.length; i++) {
+      for (let j = i + 1; j < enemies.length; j++) {
+
+        const bot1 = enemies[i];
+        const bot2 = enemies[j];
+
+        const homeRun = await GameLauncher.launch(bot1, bot2);
+        const awayRun = await GameLauncher.launch(bot2, bot1);
+
+        if (homeRun.error || awayRun.error) {
+          console.error(homeRun.error || awayRun.error);
+          throw new Error(homeRun.error || awayRun.error);
+        }
+
+        const home = {
+          id: `${bot1.botid}${bot2.botid}`,
+          bot1: bot1.botid,
+          bot2: bot2.botid,
+          history: homeRun,
+          winner: homeRun.exit.winner,
+          by: homeRun.exit.by,
+          timestamp: Math.round((+new Date()) / 1000)
+        };
+
+        const away = {
+          id: `${bot2.botid}${bot1.botid}`,
+          bot1: bot2.botid,
+          bot2: bot1.botid,
+          history: awayRun,
+          winner: awayRun.exit.winner,
+          by: awayRun.exit.by,
+          time: Math.round((+new Date()) / 1000)
+        };
+
+        fights.push(home, away);
+
+      }
+
+    }
+
+    console.log(`Game arena rerun completed: ${fights.length} fights`)
+
+    await Fights.truncate();
+    await Fights.addMany(_.flatten(fights));
+
+    const leaderboard = await Fights.computeLeaderboard();
+    await new Promise((resolve, reject) => {
+      fs.writeFile('./leaderboard.json', JSON.stringify(leaderboard), (err) => {
+        return err ? reject(err) : resolve()
+      });
+    });
+
+  },
+
+  /**
+   *
    * @param bot
    * @returns {Promise<void>}
    */

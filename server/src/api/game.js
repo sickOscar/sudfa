@@ -150,6 +150,17 @@ class GameApi {
       res.send(fs.readFileSync('./src/API.md').toString());
     })
 
+    app.get('/rerun', (req, res) => {
+      GameArena.rerun()
+        .then(response => {
+          res.json(response)
+        })
+        .catch(error => {
+          console.error(error);
+          res.status(500).send({error: error});
+        })
+    })
+
   }
 
 }
