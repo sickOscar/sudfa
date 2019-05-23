@@ -9,7 +9,7 @@ function Soldier(game, options) {
   let attack = 0;
   let magicPower = 0;
   let maxHealth = 0;
-  let status = 'OK';
+  let status = ['OK'];
   let healPower = 0;
 
   let tells = [];
@@ -22,7 +22,7 @@ function Soldier(game, options) {
     case 'pm':
       health = maxHealth = 10;
       attack = 2;
-      healPower = 4;
+      healPower = 5;
       break;
     case 'mktg':
       health = maxHealth = 7;
@@ -163,7 +163,7 @@ function Soldier(game, options) {
   const getType = () => type;
   const getMotto = () => motto;
   const getMaxHealth = () => maxHealth;
-  const getStatus = () => health <= 0 ? 'DEAD' : (status ? status : 'OK')
+  const getStatus = () => health <= 0 ? ['DEAD'] : (status ? status : ['OK'])
 
   // setters
   const setHealth = value => {

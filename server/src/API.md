@@ -30,7 +30,7 @@
 - **`getName()`**:*string* -> return soldier name
 - **`getId()`**:*string* -> return soldier id
 - **`getMaxHealth()`**:*int* -> return soldier max health
-- **`getStatus()`**:*string* -> return soldier status
+- **`getStatus()`**:*Array* -> return soldier status
 
 ### Enemy Soldier Api
 
