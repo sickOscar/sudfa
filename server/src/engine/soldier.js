@@ -182,7 +182,7 @@ function Soldier(game, options) {
             success = true;
           }
         } else {
-          message`${name} can't silence - no target`;
+          message = `${name} can't silence - no target`;
           success = false;
         }
 
