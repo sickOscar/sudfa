@@ -209,7 +209,7 @@ function Soldier(game, options) {
             success = true;
           }
         } else {
-          message`${name} can't blind - no target`;
+          message = `${name} can't blind - no target`;
           success = false;
         }
 
