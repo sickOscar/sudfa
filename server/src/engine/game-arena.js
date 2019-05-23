@@ -171,6 +171,9 @@ const GameArena = {
       // SAVE BOT
       await GameArena.saveBot(bot, fights, homeFightExample);
 
+      // SAVE FIGHTS
+      await GameArena.saveFights(fights, bot.botid);
+
       // WRITE LEADERBOARD
       const leaderboard = await Fights.computeLeaderboard();
       await new Promise((resolve, reject) => {
@@ -216,6 +219,17 @@ const GameArena = {
 
       // console.log(difference);
     }
+
+  },
+
+  saveFights: async function(fights, botId) {
+
+    await Promise.all([
+      Fights.delete({bot1: botId}),
+      Fights.delete({bot2: botId}),
+    ]);
+
+    return await Fights.addMany(_.flatten(fights));
 
   },
 
@@ -274,13 +288,6 @@ const GameArena = {
     }
 
     console.log(`Game arena completed for ${bot.botid}: ${fights.length} fights`)
-
-    await Promise.all([
-      Fights.delete({bot1: bot.botid}),
-      Fights.delete({bot2: bot.botid}),
-    ]);
-
-    await Fights.addMany(_.flatten(fights));
 
     return {
       fights,

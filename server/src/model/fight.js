@@ -54,7 +54,10 @@ const FightModel = {
     const columns = Object.keys(fights[0]);
     let index = 0;
     const insertKeys = fights.map((fight, i) => {
-      const indexes = Object.values(fight).map(val => {
+      const indexes = Object.values(fight).map((val, j) => {
+        if (columns[j] === 'timestamp') {
+          return `to_timestamp($${++index})`
+        }
         return `$${++index}`
       });
       return `( ${indexes.join(', ')} )`
@@ -66,6 +69,8 @@ const FightModel = {
       text: `INSERT INTO fights (${columns.join(', ')}) VALUES ${insertKeys.join(', ')} RETURNING *`,
       values: insertValues
     };
+
+    console.log("query", query);
 
     return clientConnected
       .then(() => client.query(query))

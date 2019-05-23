@@ -64,7 +64,8 @@ export default class Home extends Component {
       error: null,
       enemyBot: null,
       bots: [],
-      loading: false
+      loading: false,
+      showOverlay: false
     }
   }
 
@@ -150,7 +151,8 @@ export default class Home extends Component {
         if (results.exit === 'KO') {
           this.setState({
             loading: false,
-            error: results.message
+            error: results.message,
+            showOverlay: true
           })
         } else {
           this.setState({
@@ -322,6 +324,12 @@ export default class Home extends Component {
       })
   }
 
+  closeOverlay() {
+    this.setState({
+      showOverlay: false
+    })
+  }
+
   render() {
 
     const splitPaneStyles = {
@@ -330,6 +338,27 @@ export default class Home extends Component {
 
     return (
       <div className="split-pane-container">
+
+        {this.state.showOverlay && (
+          <div className="overlay">
+            <div className="overlay-content">
+              <h3>Ok, let's face it,</h3>
+              <h2>Something went terribly wrong</h2>
+              <p>Maybe your code has errors, maybe our code has errors. Who knows?</p>
+
+              <p>Maybe this is all a nightmare and you will soon wake up all greasy and sweaty.</p>
+
+              <p>Only time will tell us</p>
+
+              <p><b>PS: Are you really sure your code is correct? Just saying...</b></p>
+
+              <button onClick={this.closeOverlay.bind(this)} className="btn btn-primary">
+                Close this thing
+              </button>
+            </div>
+          </div>
+        )}
+
         <SplitPane
           style={splitPaneStyles}
           split="vertical"
