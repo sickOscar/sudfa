@@ -114,6 +114,9 @@ function Soldier(game, options) {
           message = `${name} fails to attack - no target`;
           success = false;
         }
+      } else {
+        message = `${name} can't attack, sorry! You lost an action!`;
+        success = false;
       }
     }
 
@@ -134,7 +137,7 @@ function Soldier(game, options) {
             success = true;
           }
         } else {
-          message`${name} can't heal - no target`;
+          message = `${name} can't heal - no target`;
           success = false;
         }
 
