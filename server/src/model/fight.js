@@ -70,8 +70,6 @@ const FightModel = {
       values: insertValues
     };
 
-    console.log("query", query);
-
     return clientConnected
       .then(() => client.query(query))
       .then(results => results.rows)
