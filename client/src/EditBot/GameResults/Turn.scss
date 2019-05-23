@@ -99,6 +99,14 @@
             border: 2px solid forestgreen !important;
           }
 
+          &.silenced {
+            background-color: purple;
+          }
+
+          &.blind {
+            background-color: orange;
+          }
+
           &.dead {
             background-color: #aaa;
             border: 2px solid #aaa;

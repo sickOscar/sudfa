@@ -6,6 +6,7 @@ const LazySoldier = function(game, options) {
   this.getInstance = () => new Soldier(game, options);
 }
 
+
 class Game {
 
   constructor() {
@@ -16,6 +17,8 @@ class Game {
     this.opponentPlayer = null;
 
     this.history = History.getInstance();
+
+    this.prevSoldier = null;
 
     this.console = {
       log: message => {
@@ -78,7 +81,15 @@ class Game {
       }
     };
 
-    const currentSoldier = this.getCurrentSoldier();
+    // reset status of previous soldier
+    if (this.prevSoldier) {
+      this.prevSoldier.resetStatus();
+    }
+
+    const aliveSoldiers = this.getCurrentTroops();
+    let soldierIndex = this.currentPlayer.iteration % aliveSoldiers.length;
+    const currentSoldier = aliveSoldiers[soldierIndex];
+
     if (currentSoldier.getHealth() <= 0) {
       // do nothing
     } else {
@@ -118,6 +129,8 @@ class Game {
 
     // reset player
     this.currentPlayer.actionDone = false;
+
+    this.prevSoldier = currentSoldier;
   }
 
   getState() {
@@ -174,8 +187,11 @@ class Game {
       hit: soldier.hit.bind(soldier),
       heal: soldier.heal.bind(soldier),
       cast: soldier.cast.bind(soldier),
+      silence: soldier.silence.bind(soldier),
+      blind: soldier.blind.bind(soldier),
       canHeal: soldier.canHeal.bind(soldier),
       canCast: soldier.canCast.bind(soldier),
+      canSilence: soldier.canSilence.bind(soldier),
       say: soldier.say.bind(soldier),
       // getters
       getMotto: soldier.getMotto.bind(soldier),

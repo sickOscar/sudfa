@@ -33,8 +33,9 @@ class Runner {
         
         // Simple AI
         if (soldier.canCast()) {
+            console.log('perchè')
             // If the soldier can cast, then cast on all enemies
-            soldier.cast();
+            // soldier.cast();
         } else if (soldier.canHeal()) {
             // if the soldier can heal, then heal the most damaged of your team
             const t = myTeam.getMostDamagedSoldier()

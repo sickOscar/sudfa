@@ -18,11 +18,24 @@
 
 ### Your Soldier API
 
-- **`hit(target)`**:*void* -> attacks a target (must be an enemy soldier)
-- **`heal(target)`**:*void* -> heals a target (must be one of your soldiers)
-- **`cast()`**:*void* -> cast a spell on all enemies
+#### DEV (12HP)
+- **`hit(target)`**:*void* -> attacks (3dmg) a target (must be an enemy soldier)
+
+
+#### PM (10 HP)
+- **`hit(target)`**:*void* -> attacks (2dmg) a target (must be an enemy soldier)
+- **`heal(target)`**:*void* -> heals (5HP) a target (must be one of your soldiers)
+- **`silence(target)`**:*void* -> silence a target (can't cast or heal) for one turn
+- **`blind(target)`**:*void* -> blinds a target, can't hit for one turn
+
+#### MKTG (7 HP)
+- **`hit(target)`**:*void* -> attacks (1dmg) a target (must be an enemy soldier)
+- **`cast()`**:*void* -> cast a spell (2dmg) on all enemies
+
+#### COMMON TO ALL SOLDIERS
 - **`canHeal()`**:*boolean* -> check if soldier can heal
 - **`canCast()`**:*boolean* -> check if soldier can cast
+- **`canSilence()`**:*boolean* -> check if soldier can cast
 - **`getMotto()`**:*string* -> return soldier motto
 - **`getType()`**:*string* -> return soldier type
 - **`getHealth()`**:*int* -> return soldier health
@@ -31,6 +44,7 @@
 - **`getId()`**:*string* -> return soldier id
 - **`getMaxHealth()`**:*int* -> return soldier max health
 - **`getStatus()`**:*Array* -> return soldier status
+
 
 ### Enemy Soldier Api
 

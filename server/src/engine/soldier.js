@@ -46,13 +46,33 @@ function Soldier(game, options) {
     doAction.call(this, 'cast')
   };
 
+  const silence = (target) => {
+    doAction.call(this, 'silence', target)
+  }
+
+  const blind = (target) => {
+    doAction.call(this, 'blind', target)
+  }
+
+  const canHit = (target) => {
+    return !status.includes('BLIND');
+  }
+
   const canHeal = () => {
-    return type === 'pm';
+    return type === 'pm' && !status.includes('SILENCED');
   };
 
   const canCast = () => {
-    return type === 'mktg';
+    return type === 'mktg' && !status.includes('SILENCED');
   };
+
+  const canSilence = () => {
+    return type === 'pm' && !status.includes('SILENCED');
+  }
+
+  const canBlind = () => {
+    return type === 'pm' && !status.includes('SILENCED');
+  }
 
   const say = (message) => {
     if (tells.length < 10) {
@@ -142,6 +162,60 @@ function Soldier(game, options) {
       }
     }
 
+    // SILENCE
+    if (actionType === 'silence') {
+      if (canSilence()) {
+        if (target) {
+          const aliveOpponents = game.getAliveTroops(game.opponentPlayer.team);
+          const t = aliveOpponents.find(soldier => soldier.getId() === target.getId());
+
+          if (!t) {
+            message = `${name} trying to silence: invalid target`;
+            success = false;
+          } else {
+            message = `${name} silence opponent ${t.getName()}`;
+            t.addStatus('SILENCED');
+            success = true;
+          }
+        } else {
+          message`${name} can't silence - no target`;
+          success = false;
+        }
+
+      }
+      else {
+        message = `${name} can't silence, sorry! You lost an action!`;
+        success = false;
+      }
+    }
+
+    // BLIND
+    if (actionType === 'blind') {
+      if (canBlind()) {
+        if (target) {
+          const aliveOpponents = game.getAliveTroops(game.opponentPlayer.team);
+          const t = aliveOpponents.find(soldier => soldier.getId() === target.getId());
+
+          if (!t) {
+            message = `${name} trying to blind: invalid target`;
+            success = false;
+          } else {
+            message = `${name} blind opponent ${t.getName()}`;
+            t.addStatus('BLIND');
+            success = true;
+          }
+        } else {
+          message`${name} can't blind - no target`;
+          success = false;
+        }
+
+      }
+      else {
+        message = `${name} can't blind, sorry! You lost an action!`;
+        success = false;
+      }
+    }
+
     game.currentPlayer.actionDone = {
       tells: tells.map(tell => tell),
       actor: id,
@@ -150,6 +224,7 @@ function Soldier(game, options) {
       success,
       message
     };
+
 
     tells = [];
 
@@ -163,11 +238,32 @@ function Soldier(game, options) {
   const getType = () => type;
   const getMotto = () => motto;
   const getMaxHealth = () => maxHealth;
-  const getStatus = () => health <= 0 ? ['DEAD'] : (status ? status : ['OK'])
+  const getStatus = () => {
+    if(health <= 0) {
+      return ['DEAD'];
+    } else {
+      return status.map(s => s)
+    }
+  }
 
   // setters
   const setHealth = value => {
     health = Math.min(maxHealth, value);
+  }
+
+  const addStatus = s => {
+    if (!status.includes(s)) {
+      status.push(s)
+    }
+  }
+
+  const resetStatus = () => {
+    if (status.includes('SILENCED')) {
+      status.splice(status.indexOf('SILENCED'), 1)
+    }
+    if (status.includes('BLIND')) {
+      status.splice(status.indexOf('BLIND'), 1)
+    }
   }
 
   const info = () => ({
@@ -187,8 +283,12 @@ function Soldier(game, options) {
     hit,
     heal,
     cast,
+    silence,
+    blind,
     canHeal,
     canCast,
+    canSilence,
+    canBlind,
     say,
     // getters
     info,
@@ -201,7 +301,9 @@ function Soldier(game, options) {
     getMaxHealth,
     getStatus,
     // setters
-    setHealth
+    setHealth,
+    addStatus,
+    resetStatus
   }
 
 }

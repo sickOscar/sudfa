@@ -13,7 +13,9 @@ import {
   faHospitalSymbol,
   faStepForward,
   faTrophy,
-  faEye
+  faEye,
+  faCommentSlash,
+  faEyeSlash
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faTimes);
@@ -30,3 +32,5 @@ library.add(faStepForward);
 library.add(faHospitalSymbol);
 library.add(faTrophy);
 library.add(faEye);
+library.add(faEyeSlash);
+library.add(faCommentSlash);

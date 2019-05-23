@@ -20,6 +20,10 @@ const Turn = (props) => {
         return <FontAwesomeIcon icon="hospital-symbol"/>;
       case 'cast':
         return <FontAwesomeIcon icon="bolt"/>;
+      case 'silence':
+        return <FontAwesomeIcon icon="comment-slash"/>;
+      case 'blind':
+        return <FontAwesomeIcon icon="eye-slash"/>;
       default:
         return <FontAwesomeIcon icon="question"/>;
     }
@@ -33,36 +37,57 @@ const Turn = (props) => {
         return 'heal-text';
       case 'cast':
         return 'cast-text';
+      case 'silence':
+        return 'silence-text';
+      case 'blind':
+        return 'blind-text';
       default:
         return '';
     }
   };
 
-  const getSoldierClassName = (soldierId, turn) => {
-    let className = ['soldier'];
+  const getSoldierClassName = (soldierId, turn, soldierStatus) => {
+    let className = [soldierId, 'soldier'];
+
+    if (soldierId === turn.actor) {
+      className.push('actor');
+    }
+
+    // ACTION TYPE
     if (turn.type === 'hit' && turn.success) {
-      if (soldierId === turn.actor) {
-        className.push('actor');
-      }
       if (soldierId === turn.target) {
         className.push('target');
       }
     }
     if (turn.type === 'heal' && turn.success) {
-      if (soldierId === turn.actor) {
-        className.push('actor');
-      }
       if (soldierId === turn.target) {
         className.push('healed');
       }
     }
     if (turn.type === 'cast' && turn.success) {
-      if (soldierId === turn.actor) {
-        className.push('actor');
-      }
       if (!actorOfSameTeam(soldierId, turn)) {
         className.push('target');
       }
+    }
+    if (turn.type === 'silence' && turn.success) {
+      if (soldierId === turn.target) {
+        className.push('target');
+      }
+    }
+    if (turn.type === 'blind' && turn.success) {
+      if (soldierId === turn.target) {
+        className.push('target');
+      }
+    }
+
+    // SOLDIER STATUS
+    if (soldierStatus.includes('SILENCED')) {
+      className.push('silenced')
+    }
+
+    // SOLDIER STATUS
+    if (soldierStatus.includes('BLIND')) {
+      className.push('blind')
     }
 
     if (isDead(soldierId)) {
@@ -144,7 +169,7 @@ const Turn = (props) => {
                                 <small>({team[soldierId].health} HP)</small>
                               </div>}
 
-                              <div className={getSoldierClassName(soldierId, turn)}></div>
+                              <div className={getSoldierClassName(soldierId, turn, team[soldierId].status)}></div>
 
                               {i === 1 && <div className="soldier-status">
                                 {getSoldierName(soldierId)}
