@@ -6,6 +6,7 @@ const seedrandom = require('seedrandom');
 
 random.use(seedrandom('trololololo'));
 
+const MAX_TURNS = 100;
 
 parentPort.once('message', (message) => {
 
@@ -60,7 +61,7 @@ const loadCode = function(source, gameConsole) {
 };
 
 const launch = function(p1, p2) {
-  
+
   const game = new Game();
 
   const gameProxy = (function(game) {
@@ -103,7 +104,7 @@ const launch = function(p1, p2) {
   player1.botid = p1.botid;
   player2.botid = p2.botid;
 
-  const MAX_TURNS = 50;
+
 
 
   let gameOver = false;

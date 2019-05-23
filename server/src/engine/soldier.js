@@ -16,16 +16,16 @@ function Soldier(game, options) {
 
   switch (options.type) {
     case 'dev':
-      health = maxHealth = 12;
+      health = maxHealth = 12 * 2;
       attack = 3;
       break;
     case 'pm':
-      health = maxHealth = 10;
+      health = maxHealth = 10 * 2;
       attack = 2;
       healPower = 5;
       break;
     case 'mktg':
-      health = maxHealth = 7;
+      health = maxHealth = 7 * 2;
       attack = 1;
       // healPower = 1;
       magicPower = 2;
@@ -248,18 +248,18 @@ function Soldier(game, options) {
     } else {
       return status.map(s => s)
     }
-  }
+  };
 
   // setters
   const setHealth = value => {
     health = Math.min(maxHealth, value);
-  }
+  };
 
   const addStatus = s => {
     if (!status.includes(s)) {
       status.push(s)
     }
-  }
+  };
 
   const resetStatus = () => {
     if (status.includes('SILENCED')) {
@@ -268,7 +268,7 @@ function Soldier(game, options) {
     if (status.includes('BLIND')) {
       status.splice(status.indexOf('BLIND'), 1)
     }
-  }
+  };
 
   const info = () => ({
     id,
@@ -280,7 +280,7 @@ function Soldier(game, options) {
     maxHealth,
     magicPower,
     healPower
-  })
+  });
 
 
   return {
