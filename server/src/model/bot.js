@@ -38,6 +38,18 @@ module.exports = {
         .then(results => results.rows)
     },
 
+    count: function(params, table) {
+      table = table || 'bots';
+
+      const query = {
+        text: `SELECT count(*) FROM ${table}`,
+      };
+
+      return clientConnected
+        .then(() => client.query(query))
+        .then(results => results.rows[0].count)
+    },
+
     one: function(params, table) {
 
       table = table || 'bots'
@@ -92,8 +104,6 @@ module.exports = {
         text,
         values
       };
-
-      console.log("query", query);
 
       return clientConnected
         .then(() => client.query(query))

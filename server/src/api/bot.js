@@ -79,8 +79,18 @@ class BotApi {
     app.get('/bot/:id', jwtCheck, (req, res) => {
       const user = req.user.sub;
 
-      Bot.one({user, botid: req.params.id})
-        .then(bot => {
+      return Promise.all([
+        Bot.one({user, botid: req.params.id}),
+        Bot.one({user, botid: req.params.id}, 'league_bots')
+      ])
+        .then(bots => {
+
+          const bot = bots[0];
+          const leagueBot = bots[1];
+
+          if (leagueBot) {
+            bot.leagueBot = leagueBot;
+          }
 
           if (bot) {
             res.json(bot)

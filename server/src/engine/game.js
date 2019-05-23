@@ -93,9 +93,17 @@ class Game {
       }, {})
 
       const objectProperties = Object.getOwnPropertyNames(this.currentPlayer);
+      const contextProperties = objectProperties.reduce((context, propName) => {
+        const propsToExclude = ['iteration', 'actionDone'];
+        if (!propsToExclude.includes(propName) && !(this.currentPlayer[propName] instanceof Function)) {
+          context[propName] = this.currentPlayer[propName]
+        }
+        return context;
+      }, {})
 
 
       this.currentPlayer.run.call({
+        ...contextProperties,
         ...contextFunctions,
         game: runGameProxy(this.currentPlayer.game),
         team: {

@@ -81,7 +81,7 @@ const GameArena = {
       botid
     } = fightParams;
 
-    const enemyBot = Bots.one({botid: challenge});
+    const enemyBot = await Bots.one({botid: challenge}, LEAGUE_BOTS_TABLE);
 
     if (!enemyBot) {
       throw new Error('Invalid challenger');
@@ -208,7 +208,13 @@ const GameArena = {
       const now = new Date();
       const sendToLeagueTime = new Date(leagueBot.timestamp);
 
-      console.log(now, sendToLeagueTime);
+      const difference = now - sendToLeagueTime;
+
+      if (difference < 5 * 60 * 1000) {
+        throw new Error('too soon')
+      }
+
+      // console.log(difference);
     }
 
   },
@@ -292,9 +298,43 @@ const GameArena = {
    */
   saveBot: async function (bot, fights, homeFightExample) {
 
+    // EDGE CASE per il primo run
     if (fights.length === 0) {
       console.log('Well, no fights, maybe first run.');
-      throw new Error('First run?');
+
+      // get league bots,
+      const leagueBotsCount = parseInt(await Bots.count({}, LEAGUE_BOTS_TABLE), 10);
+
+      // if 0 add bot anyway
+      if (leagueBotsCount === 0) {
+        return await Bots.add({
+          botid: bot.botid,
+          source: bot.source,
+          // prendo il nome dal primo combattimento,
+          // il bot corrente combatte per primo in casa
+          name: 'firstBot',
+          user: bot.user,
+          team: []
+        }, LEAGUE_BOTS_TABLE)
+      }
+
+      // if 1, update current bot
+      if (leagueBotsCount === 1) {
+        return await Bots.update(
+          {
+            botid: bot.botid,
+            user: bot.user
+          },
+          {
+            source: bot.source,
+            name: 'firstBot',
+            team: [],
+            timestamp: Math.round((+new Date()) / 1000)
+          },
+          LEAGUE_BOTS_TABLE
+        )
+      }
+
     }
 
     // controllo che il bot ci sia a db, altrimenti lo creo

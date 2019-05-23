@@ -8,7 +8,9 @@ export default class EditorActions extends React.Component {
     super(props);
 
     this.state = {
-      selectOpen: false
+      selectOpen: false,
+      timeToSendToLeague: 0,
+      tickInterval: 0
     };
 
     this.levels = [
@@ -32,6 +34,16 @@ export default class EditorActions extends React.Component {
 
     this.toggleSelectPane = this.toggleSelectPane.bind(this);
 
+
+
+  }
+
+  componentDidMount() {
+    this.startCounter();
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.tickInterval);
   }
 
   closePane(action) {
@@ -43,6 +55,47 @@ export default class EditorActions extends React.Component {
     this.setState({
       selectOpen: !this.state.selectOpen
     })
+  }
+
+
+  startCounter() {
+    this.setState({
+      tickInterval: setInterval(() => {
+        this.setState({
+          timeToSendToLeague: (5 * 60 * 1000) - this.getTimeFromLastSendToLeague()
+        })
+      }, 1000)
+    })
+  }
+
+  getTimeFromLastSendToLeague() {
+    // bot non arrivato ancora
+    if (!this.props.bot) {
+      return Infinity;
+    }
+    // bot non è mai stato mandato in league
+    if (this.props.bot && !this.props.bot.leagueBot) {
+      return Infinity;
+    }
+
+    if (this.props.bot && this.props.bot.leagueBot && this.props.bot.leagueBot.timestamp) {
+      const now = new Date();
+      const sentToLeague = new Date(this.props.bot.leagueBot.timestamp);
+
+      const difference = now - sentToLeague;
+      return difference;
+    }
+    return 0;
+  }
+
+  canSendToArena() {
+    return this.getTimeFromLastSendToLeague() > 5 * 60 * 1000;
+  }
+
+  formatTime(millis) {
+    const minutes = Math.floor(millis / 60000);
+    const seconds = ((millis % 60000) / 1000).toFixed(0);
+    return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
   }
 
   render() {
@@ -79,14 +132,18 @@ export default class EditorActions extends React.Component {
               <div className="col-sm-8">
                 <Select classNamePrefix="select"
                         onChange={this.props.onChallengeTeamSelection}
-                        value={this.props.enemyBot && {value: this.props.enemyBot.botid, label: this.props.enemyBot.name}}
+                        value={this.props.enemyBot && {
+                          value: this.props.enemyBot.botid,
+                          label: this.props.enemyBot.name
+                        }}
                         options={
                           this.props.bots.map(bot => ({value: bot.botid, label: bot.name}))
                         }/>
               </div>
 
               <div className="col-sm-4">
-                <button className="btn btn-primary" disabled={!this.props.enemyBot} onClick={this.closePane.bind(this, this.props.challenge)}>Fight!
+                <button className="btn btn-primary" disabled={!this.props.enemyBot}
+                        onClick={this.closePane.bind(this, this.props.challenge)}>Fight!
                 </button>
               </div>
             </div>
@@ -97,13 +154,16 @@ export default class EditorActions extends React.Component {
               </div>
 
               <div className="col-sm-8">
-                <p>Ready to rumble?</p>
+                <p>Ready to rumble? {}</p>
               </div>
 
               <div className="col-sm-4">
-                <button className="btn btn-primary"
-                        onClick={this.closePane.bind(this, this.props.sendToLeague)}>Fight!
-                </button>
+                {this.canSendToArena()
+                  ? <button className="btn btn-primary"
+                            onClick={this.closePane.bind(this, this.props.sendToLeague)}>Fight!
+                  </button>
+                  : <p>wait {this.formatTime(this.state.timeToSendToLeague)}</p>
+                }
               </div>
 
 

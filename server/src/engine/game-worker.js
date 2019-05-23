@@ -60,6 +60,7 @@ const loadCode = function(source, gameConsole) {
 };
 
 const launch = function(p1, p2) {
+  
   const game = new Game();
 
   const gameProxy = (function(game) {

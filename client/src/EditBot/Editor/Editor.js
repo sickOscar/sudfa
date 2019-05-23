@@ -30,6 +30,7 @@ export class Editor extends Component {
           editorProps={{$blockScrolling: true}}
         />
         <EditorActions bots={this.props.bots}
+                       bot={this.props.bot}
                        loading={this.props.loading}
                        onTestCode={this.props.onTestCode}
                        onLevelChange={this.props.onLevelChange}

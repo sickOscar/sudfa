@@ -348,6 +348,7 @@ export default class Home extends Component {
                   enemyBot={this.state.enemyBot}
                   loading={this.state.loading}
                   saveBot={this.saveBot.bind(this)}
+                  bot={this.state.bot}
                   onChange={this.onCodeChange.bind(this)}/>
 
           <SplitPane split="horizontal" defaultSize={'50%'}>
