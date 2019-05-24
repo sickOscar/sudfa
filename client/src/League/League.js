@@ -96,11 +96,11 @@ export default class League extends React.Component {
               </div>
 
               <div className="wins">
-                WINS
+                KO WINs
               </div>
 
               <div className="ties">
-                TIES
+                TIES WINs
               </div>
 
               <div className="points">

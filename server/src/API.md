@@ -25,7 +25,7 @@
 #### PM (20 HP)
 - **`hit(target)`**:*void* -> attacks (2dmg) a target (must be an enemy soldier)
 - **`heal(target)`**:*void* -> heals (5HP) a target (must be one of your soldiers)
-- **`silence(target)`**:*void* -> silence a target (can't cast or heal) for one turn
+- **`silence(target)`**:*void* -> silence a target (can't cast, heal or silence) for one turn
 - **`blind(target)`**:*void* -> blinds a target, can't hit for one turn
 
 #### MKTG (14 HP)
@@ -36,7 +36,8 @@
 #### COMMON TO ALL SOLDIERS
 - **`canHeal()`**:*boolean* -> check if soldier can heal
 - **`canCast()`**:*boolean* -> check if soldier can cast
-- **`canSilence()`**:*boolean* -> check if soldier can cast
+- **`canSilence()`**:*boolean* -> check if soldier can silence
+- **`canBlind()`**:*boolean* -> check if soldier can blind
 - **`getMotto()`**:*string* -> return soldier motto
 - **`getType()`**:*string* -> return soldier type
 - **`getHealth()`**:*int* -> return soldier health
@@ -44,8 +45,11 @@
 - **`getName()`**:*string* -> return soldier name
 - **`getId()`**:*string* -> return soldier id
 - **`getMaxHealth()`**:*int* -> return soldier max health
-- **`getStatus()`**:*Array* -> return soldier status
-
+- **`getStatus()`**:*Array* -> return a list containing all soldier status. A soldier can be in one or more of the following states:
+  - OK: the soldier is alive
+  - SILENCED: the soldier is silenced and can't cast, heal or silence
+  - BLIND: the soldier can't do any physical attack
+  - DEAD: the soldier is dead
 
 ### Enemy Soldier Api
 

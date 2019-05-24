@@ -40,6 +40,10 @@ function Soldier(game, options) {
     doAction.call(this, 'hit', target)
   };
 
+  const protect = (target) => {
+    doAction.call(this, 'protect', target)
+  }
+
   const heal = (target) => {
     doAction.call(this, 'heal', target)
   };
@@ -62,6 +66,10 @@ function Soldier(game, options) {
 
   const canHit = (target) => {
     return !status.includes('BLIND');
+  }
+
+  const canProtect = (target) => {
+    return type === 'dev';
   }
 
   const canHeal = () => {
@@ -115,11 +123,17 @@ function Soldier(game, options) {
           const aliveOpponents = game.getAliveTroops(game.opponentPlayer.team);
           const t = aliveOpponents.find(soldier => soldier.getId() === target.getId());
 
+          if (t.getStatus().includes('PROTECTED')) {
+            // remove protected
+            t.removeStatus('PROTECTED');
+            message = `${name} attacks ${t.getName()} - attack failed / active protection`;
+            success = true;
+          } else {
+            t.setHealth(t.getHealth() - attack);
+            message = `${name} attacks ${t.getName()} - ${attack} damage`;
+            success = true;
+          }
 
-          t.setHealth(t.getHealth() - attack);
-
-          message = `${name} attacks ${t.getName()} - ${attack} damage`;
-          success = true;
         } else {
           message = `${name} fails to attack - no target`;
           success = false;
@@ -158,6 +172,34 @@ function Soldier(game, options) {
       }
     }
 
+    // HEAL
+    if (actionType === 'protect') {
+      if (canProtect()) {
+
+        if (target) {
+          const aliveCompanions = game.getAliveTroops(game.currentPlayer.team);
+          const t = aliveCompanions.find(soldier => soldier.getId() === target.getId());
+
+          if (!t) {
+            message = `${name} trying to protect: invalid target`;
+            success = false;
+          } else {
+            message = `${name} protects companion ${t.getName()}`;
+            t.addStatus('PROTECTED');
+            success = true;
+          }
+        } else {
+          message = `${name} can't protect - no target`;
+          success = false;
+        }
+
+
+      } else {
+        message = `${name} can't protect, sorry! You lost an action!`;
+        success = false;
+      }
+    }
+
     // CAST
     if (actionType === 'cast') {
       if (canCast()) {
@@ -166,7 +208,12 @@ function Soldier(game, options) {
         message = `${name} cast on all enemies`;
 
         aliveOpponents.forEach(opponent => {
-          opponent.setHealth(opponent.getHealth() - magicPower)
+          if (opponent.getStatus().includes('PROTECTED')) {
+            opponent.removeStatus('PROTECTED');
+            // opponent.setHealth(opponent.getHealth() - Math.floor(magicPower /2))
+          } else {
+            opponent.setHealth(opponent.getHealth() - magicPower)
+          }
         });
 
         success = true;
@@ -230,6 +277,7 @@ function Soldier(game, options) {
       }
     }
 
+    // POISON
     if (actionType === 'poison') {
       if (canPoison()) {
         if (target) {
@@ -242,7 +290,12 @@ function Soldier(game, options) {
           } else {
             message = `${name} poison opponent ${t.getName()}`;
             if (!t.getStatus().includes('POISONED')) {
-              t.setHealth(t.getHealth() - 2);
+
+              if (!t.getStatus().includes('POISONED')) {
+                // do nothing
+              } else {
+                t.setHealth(t.getHealth() - 2);
+              }
             }
             t.addStatus('POISONED');
             success = true;
@@ -307,6 +360,10 @@ function Soldier(game, options) {
     }
   };
 
+  const removeStatus = s => {
+    status.splice(status.indexOf(s), 1)
+  }
+
   const resetStatus = () => {
     if (status.includes('SILENCED')) {
       status.splice(status.indexOf('SILENCED'), 1)
@@ -342,11 +399,13 @@ function Soldier(game, options) {
     silence,
     blind,
     poison,
+    protect,
     canHeal,
     canCast,
     canSilence,
     canBlind,
     canPoison,
+    canProtect,
     say,
     // getters
     info,
@@ -361,7 +420,8 @@ function Soldier(game, options) {
     // setters
     setHealth,
     addStatus,
-    resetStatus
+    resetStatus,
+    removeStatus
   }
 
 }

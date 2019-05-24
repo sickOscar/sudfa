@@ -36,6 +36,8 @@ const Turn = (props) => {
         return <FontAwesomeIcon icon="eye-slash"/>;
       case 'poison':
         return <FontAwesomeIcon icon="skull-crossbones"/>;
+      case 'protect':
+        return <FontAwesomeIcon icon="user-shield"/>;
       default:
         return <FontAwesomeIcon icon="question"/>;
     }
@@ -55,6 +57,8 @@ const Turn = (props) => {
         return 'blind-text';
       case 'poison':
         return 'poison-text';
+      case 'protect':
+        return 'protect-text';
       default:
         return '';
     }
@@ -75,9 +79,14 @@ const Turn = (props) => {
         className.push('target');
       }
     }
-    if (turn.type === 'heal' && turn.success) {
+    if (turn.type === 'poison' && turn.success) {
       if (soldierId === turn.target) {
-        className.push('healed');
+        className.push('target');
+      }
+    }
+    if (turn.type === 'protect' && turn.success) {
+      if (soldierId === turn.target) {
+        className.push('target');
       }
     }
     if (turn.type === 'cast' && turn.success) {
@@ -101,6 +110,7 @@ const Turn = (props) => {
       }
     }
 
+
     // SOLDIER STATUS
     if (soldierStatus.includes('SILENCED')) {
       className.push('silenced')
@@ -114,6 +124,11 @@ const Turn = (props) => {
     // SOLDIER STATUS
     if (soldierStatus.includes('POISONED')) {
       className.push('poisoned')
+    }
+
+    // SOLDIER STATUS
+    if (soldierStatus.includes('PROTECTED')) {
+      className.push('protected')
     }
 
     if (isDead(soldierId)) {
