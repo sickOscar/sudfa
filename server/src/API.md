@@ -18,19 +18,20 @@
 
 ### Your Soldier API
 
-#### DEV (12HP)
+#### DEV (24HP)
 - **`hit(target)`**:*void* -> attacks (3dmg) a target (must be an enemy soldier)
 
 
-#### PM (10 HP)
+#### PM (20 HP)
 - **`hit(target)`**:*void* -> attacks (2dmg) a target (must be an enemy soldier)
 - **`heal(target)`**:*void* -> heals (5HP) a target (must be one of your soldiers)
 - **`silence(target)`**:*void* -> silence a target (can't cast or heal) for one turn
 - **`blind(target)`**:*void* -> blinds a target, can't hit for one turn
 
-#### MKTG (7 HP)
+#### MKTG (14 HP)
 - **`hit(target)`**:*void* -> attacks (1dmg) a target (must be an enemy soldier)
 - **`cast()`**:*void* -> cast a spell (2dmg) on all enemies
+- **`poison(target)`**:*void* -> poison an enemy. Deals 2dmg, then 2dmg per turn for 2 turns. If the enemy is already poisoned, it doesn't deal initial damage but extends poison duration.
 
 #### COMMON TO ALL SOLDIERS
 - **`canHeal()`**:*boolean* -> check if soldier can heal

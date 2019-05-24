@@ -25,7 +25,7 @@ const Turn = (props) => {
 
     switch (turn.type) {
       case 'hit':
-        return <FontAwesomeIcon icon="khanda"/>;
+        return <FontAwesomeIcon icon="fist-raised"/>;
       case 'heal':
         return <FontAwesomeIcon icon="hospital-symbol"/>;
       case 'cast':
@@ -34,6 +34,8 @@ const Turn = (props) => {
         return <FontAwesomeIcon icon="comment-slash"/>;
       case 'blind':
         return <FontAwesomeIcon icon="eye-slash"/>;
+      case 'poison':
+        return <FontAwesomeIcon icon="skull-crossbones"/>;
       default:
         return <FontAwesomeIcon icon="question"/>;
     }
@@ -51,6 +53,8 @@ const Turn = (props) => {
         return 'silence-text';
       case 'blind':
         return 'blind-text';
+      case 'poison':
+        return 'poison-text';
       default:
         return '';
     }
@@ -91,6 +95,11 @@ const Turn = (props) => {
         className.push('target');
       }
     }
+    if (turn.type === 'poison' && turn.success) {
+      if (soldierId === turn.target) {
+        className.push('target');
+      }
+    }
 
     // SOLDIER STATUS
     if (soldierStatus.includes('SILENCED')) {
@@ -100,6 +109,11 @@ const Turn = (props) => {
     // SOLDIER STATUS
     if (soldierStatus.includes('BLIND')) {
       className.push('blind')
+    }
+
+    // SOLDIER STATUS
+    if (soldierStatus.includes('POISONED')) {
+      className.push('poisoned')
     }
 
     if (isDead(soldierId)) {
@@ -182,11 +196,17 @@ const Turn = (props) => {
                       {
                         Object.keys(team).map(soldierId => {
                           return (
-                            <div className={`soldier-box ${getSoldierClassName(soldierId, turn, team[soldierId].status, getSoldierType(soldierId))}`}>
+                            <div key={soldierId} className={`soldier-box ${getSoldierClassName(soldierId, turn, team[soldierId].status, getSoldierType(soldierId))}`}>
 
                               {i === 0 && <div className="soldier-status">
                                 {getSoldierName(soldierId)}
-                                <small>({team[soldierId].health} HP)</small>
+                                <small>
+                                  ({team[soldierId].health} HP)
+                                  {team[soldierId].healthDiff !== 0 && <span className={team[soldierId].healthDiff > 0 ? 'cure-text' : 'dmg-text'}>
+                                    {team[soldierId].healthDiff < 0 ? ` ${team[soldierId].healthDiff} HP` : `+${team[soldierId].healthDiff} HP` }
+                                  </span>
+                                  }
+                                </small>
                               </div>}
 
                               <div className={getSoldierClassName(soldierId, turn, team[soldierId].status, getSoldierType(soldierId))}
@@ -194,7 +214,12 @@ const Turn = (props) => {
 
                               {i === 1 && <div className="soldier-status">
                                 {getSoldierName(soldierId)}
-                                <small>({team[soldierId].health} HP)</small>
+                                <small>
+                                  ({team[soldierId].health} HP)
+                                  {team[soldierId].healthDiff !== 0 && <span className={team[soldierId].healthDiff > 0 ? 'cure-text' : 'dmg-text'}>
+                                    {team[soldierId].healthDiff < 0 ? ` ${team[soldierId].healthDiff} HP` : `+${team[soldierId].healthDiff} HP` }
+                                  </span>}
+                                </small>
                               </div>}
                             </div>
                           )

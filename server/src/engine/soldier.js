@@ -12,6 +12,8 @@ function Soldier(game, options) {
   let status = ['OK'];
   let healPower = 0;
 
+  let poisonedFor = 0;
+
   let tells = [];
 
   switch (options.type) {
@@ -54,6 +56,10 @@ function Soldier(game, options) {
     doAction.call(this, 'blind', target)
   }
 
+  const poison = (target) => {
+    doAction.call(this, 'poison', target)
+  }
+
   const canHit = (target) => {
     return !status.includes('BLIND');
   }
@@ -72,6 +78,10 @@ function Soldier(game, options) {
 
   const canBlind = () => {
     return type === 'pm' && !status.includes('SILENCED');
+  }
+
+  const canPoison = () => {
+    return type === 'mktg' && !status.includes('SILENCED');
   }
 
   const say = (message) => {
@@ -220,6 +230,35 @@ function Soldier(game, options) {
       }
     }
 
+    if (actionType === 'poison') {
+      if (canPoison()) {
+        if (target) {
+          const aliveOpponents = game.getAliveTroops(game.opponentPlayer.team);
+          const t = aliveOpponents.find(soldier => soldier.getId() === target.getId());
+
+          if (!t) {
+            message = `${name} trying to poison: invalid target`;
+            success = false;
+          } else {
+            message = `${name} poison opponent ${t.getName()}`;
+            if (!t.getStatus().includes('POISONED')) {
+              t.setHealth(t.getHealth() - 2);
+            }
+            t.addStatus('POISONED');
+            success = true;
+          }
+        } else {
+          message = `${name} can't poison - no target`;
+          success = false;
+        }
+
+      }
+      else {
+        message = `${name} can't poison, sorry! You lost an action!`;
+        success = false;
+      }
+    }
+
     game.currentPlayer.actionDone = {
       tells: tells.map(tell => tell),
       actor: id,
@@ -229,6 +268,9 @@ function Soldier(game, options) {
       message
     };
 
+    if (status.includes('POISONED')) {
+      health = health - 2;
+    }
 
     tells = [];
 
@@ -259,6 +301,10 @@ function Soldier(game, options) {
     if (!status.includes(s)) {
       status.push(s)
     }
+
+    if (s === 'POISONED') {
+      poisonedFor = 2;
+    }
   };
 
   const resetStatus = () => {
@@ -267,6 +313,12 @@ function Soldier(game, options) {
     }
     if (status.includes('BLIND')) {
       status.splice(status.indexOf('BLIND'), 1)
+    }
+    if (status.includes('POISONED')) {
+      poisonedFor--;
+      if (poisonedFor === 0) {
+        status.splice(status.indexOf('POISONED'), 1)
+      }
     }
   };
 
@@ -289,10 +341,12 @@ function Soldier(game, options) {
     cast,
     silence,
     blind,
+    poison,
     canHeal,
     canCast,
     canSilence,
     canBlind,
+    canPoison,
     say,
     // getters
     info,

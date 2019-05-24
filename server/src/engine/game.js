@@ -147,12 +147,25 @@ class Game {
   }
 
   getState() {
+
+    const lastTurn = this.history.state.turns[this.history.state.turns.length - 1];
+
+    const getSoldierHealthOfLastTurn = (soldierId, maxHealth) => {
+      if (lastTurn) {
+        const lastTurnState = this.history.state.turns[this.history.state.turns.length - 1].state;
+        const s = lastTurnState.teams[0][soldierId] || lastTurnState.teams[1][soldierId];
+        return s.health;
+      }
+      return maxHealth;
+    }
+
     return {
       teams: this.teams.map(team => {
         return team.troop.reduce((final, soldier) => {
           final[soldier.getId()] = {
             health: soldier.getHealth(),
-            status: soldier.getStatus()
+            status: soldier.getStatus(),
+            healthDiff: soldier.getHealth() - getSoldierHealthOfLastTurn(soldier.getId(), soldier.getMaxHealth())
           }
           return final;
         }, {})
@@ -202,9 +215,11 @@ class Game {
       cast: soldier.cast.bind(soldier),
       silence: soldier.silence.bind(soldier),
       blind: soldier.blind.bind(soldier),
+      poison: soldier.poison.bind(soldier),
       canHeal: soldier.canHeal.bind(soldier),
       canCast: soldier.canCast.bind(soldier),
       canSilence: soldier.canSilence.bind(soldier),
+      canPoison: soldier.canPoison.bind(soldier),
       say: soldier.say.bind(soldier),
       // getters
       getMotto: soldier.getMotto.bind(soldier),

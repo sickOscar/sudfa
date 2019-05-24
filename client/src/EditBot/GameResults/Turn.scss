@@ -77,6 +77,15 @@
           small {
             display: block;
           }
+
+          .cure-text {
+            font-weight: bold;
+            color: green;
+          }
+          .dmg-text {
+            font-weight: bold;
+            color: red;
+          }
         }
 
         &.actor {
@@ -149,6 +158,19 @@
           &.dead {
             &::after {
               background-color: #aaa;
+              content: "";
+              opacity: 0.7;
+              height: 33px;
+              z-index: 5;
+              display: block;
+              border-radius: 20px;
+              width: 33px;
+            }
+          }
+
+          &.poisoned {
+            &::after {
+              background-color: green;
               content: "";
               opacity: 0.7;
               height: 33px;

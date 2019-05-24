@@ -7,7 +7,7 @@ import {
   faPause,
   faFastForward,
   faRedo,
-  faKhanda,
+  faFistRaised,
   faQuestion,
   faBolt,
   faHospitalSymbol,
@@ -15,7 +15,8 @@ import {
   faTrophy,
   faEye,
   faCommentSlash,
-  faEyeSlash
+  faEyeSlash,
+  faSkullCrossbones
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faTimes);
@@ -24,7 +25,7 @@ library.add(faFastForward);
 library.add(faPause);
 library.add(faRedo);
 library.add(faRobot);
-library.add(faKhanda);
+library.add(faFistRaised);
 library.add(faQuestion);
 library.add(faBolt);
 library.add(faPlusSquare);
@@ -34,3 +35,4 @@ library.add(faTrophy);
 library.add(faEye);
 library.add(faEyeSlash);
 library.add(faCommentSlash);
+library.add(faSkullCrossbones);
