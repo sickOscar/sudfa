@@ -291,8 +291,8 @@ function Soldier(game, options) {
             message = `${name} poison opponent ${t.getName()}`;
             if (!t.getStatus().includes('POISONED')) {
 
-              if (!t.getStatus().includes('POISONED')) {
-                // do nothing
+              if (!t.getStatus().includes('PROTECTED')) {
+                t.removeStatus('PROTECTED')
               } else {
                 t.setHealth(t.getHealth() - 2);
               }

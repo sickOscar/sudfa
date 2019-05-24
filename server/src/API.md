@@ -20,6 +20,7 @@
 
 #### DEV (24HP)
 - **`hit(target)`**:*void* -> attacks (3dmg) a target (must be an enemy soldier)
+- **`protect(target)`**:*void* -> protects a target from the first hit or cast until he gets damage
 
 
 #### PM (20 HP)
