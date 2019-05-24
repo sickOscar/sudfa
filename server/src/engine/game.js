@@ -112,15 +112,26 @@ class Game {
         return context;
       }, {})
 
-
-      this.currentPlayer.run.call({
+      const context = {
         ...contextProperties,
         ...contextFunctions,
         game: runGameProxy(this.currentPlayer.game),
         team: {
           name: this.currentPlayer.team.name
         }
-      });
+      }
+
+      this.currentPlayer.run.call(context);
+
+      // add to current player properties modified or added during turn
+      const updatedContextProperties = Object.getOwnPropertyNames(context);
+      updatedContextProperties.forEach(propName => {
+        const propsToExclude = ['iteration', 'actionDone', 'game', 'team'];
+        if (!propsToExclude.includes(propName) && !(context[propName] instanceof Function)) {
+          this.currentPlayer[propName] = context[propName];
+        }
+      })
+
     }
 
     if (this.currentPlayer.actionDone) {
@@ -129,6 +140,8 @@ class Game {
 
     // reset player
     this.currentPlayer.actionDone = false;
+
+
 
     this.prevSoldier = currentSoldier;
   }

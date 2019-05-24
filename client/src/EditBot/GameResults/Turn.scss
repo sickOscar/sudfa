@@ -52,7 +52,7 @@
 
   .team-container {
     text-align: center;
-    margin-bottom: 10px;
+    //margin-bottom: 10px;
 
 
 
@@ -69,6 +69,31 @@
 
       .soldier-box {
         flex: 1;
+        padding-top: 10px;
+        border-radius: 10px;
+
+        .soldier-status {
+          border-radius: 10px;
+          small {
+            display: block;
+          }
+        }
+
+        &.actor {
+          background-color: #fff;
+          border: 1px solid map_get($theme-colors, 'primary');
+          .soldier-status {
+            font-weight: bold;
+          }
+        }
+
+        &.target {
+          background-color: #fff;
+          border: 1px solid rgba(255, 0, 0,1);
+          .soldier-status {
+            font-weight: bold;
+          }
+        }
 
         .soldier {
           display: inline-block;
@@ -81,7 +106,7 @@
 
           &.actor {
             border-radius: 20px;
-            border: 4px solid #fff; // map_get($theme-colors, 'primary') !important
+            border: 4px solid map_get($theme-colors, 'primary') !important
           }
 
           &.target {

@@ -182,7 +182,7 @@ const Turn = (props) => {
                       {
                         Object.keys(team).map(soldierId => {
                           return (
-                            <div className="soldier-box" key={soldierId}>
+                            <div className={`soldier-box ${getSoldierClassName(soldierId, turn, team[soldierId].status, getSoldierType(soldierId))}`}>
 
                               {i === 0 && <div className="soldier-status">
                                 {getSoldierName(soldierId)}
