@@ -69,7 +69,7 @@ function Soldier(game, options) {
   }
 
   const canProtect = (target) => {
-    return type === 'dev';
+    return type === 'dev' && !status.includes('SILENCED');
   }
 
   const canHeal = () => {
@@ -172,7 +172,7 @@ function Soldier(game, options) {
       }
     }
 
-    // HEAL
+    // PROTECT
     if (actionType === 'protect') {
       if (canProtect()) {
 
@@ -184,8 +184,13 @@ function Soldier(game, options) {
             message = `${name} trying to protect: invalid target`;
             success = false;
           } else {
-            message = `${name} protects companion ${t.getName()}`;
-            t.addStatus('PROTECTED');
+            if (!t.getStatus().includes('PROTECTED')) {
+              message = `${name} protects companion ${t.getName()}`;
+              t.addStatus('PROTECTED');
+            } else {
+              message = `${name} - ${t.getName()} already protected`;
+            }
+
             success = true;
           }
         } else {

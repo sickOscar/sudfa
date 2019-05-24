@@ -38,6 +38,8 @@
 - **`canHeal()`**:*boolean* -> check if soldier can heal
 - **`canCast()`**:*boolean* -> check if soldier can cast
 - **`canSilence()`**:*boolean* -> check if soldier can silence
+- **`canPoison()`**:*boolean* -> check if soldier can poison
+- **`canProtect()`**:*boolean* -> check if soldier can protect
 - **`canBlind()`**:*boolean* -> check if soldier can blind
 - **`getMotto()`**:*string* -> return soldier motto
 - **`getType()`**:*string* -> return soldier type
