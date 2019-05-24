@@ -68,7 +68,7 @@ export default class Bots extends React.Component {
                   <div className="card-body">
                     <h5 className="card-title">{bot.name}</h5>
                     <div className="icon-box">
-                      {bot.team.map((soldier, i) => {
+                      {bot.team && bot.team.map((soldier, i) => {
                         return (
                           <img key={i} src={this.icons[soldier]} alt={soldier}/>
                         )
