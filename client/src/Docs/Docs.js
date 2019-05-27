@@ -16,7 +16,7 @@ const Docs = (props) => (
       </div>
       <div className="col-sm-12">
         <p>
-          Super Ultra Dev Fight Arena (SUDFA) is a programming game.
+          Super Ultra Dev Fight Arena (SUDFA) is an AI programming game.
         </p>
       </div>
     </div>

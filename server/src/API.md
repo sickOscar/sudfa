@@ -22,7 +22,6 @@
 - **`hit(target)`**:*void* -> attacks (3dmg) a target (must be an enemy soldier)
 - **`protect(target)`**:*void* -> protects a target from the first hit or cast until he gets damage
 
-
 #### PM (20 HP)
 - **`hit(target)`**:*void* -> attacks (2dmg) a target (must be an enemy soldier)
 - **`heal(target)`**:*void* -> heals (5HP) a target (must be one of your soldiers)
@@ -52,6 +51,8 @@
   - OK: the soldier is alive
   - SILENCED: the soldier is silenced and can't cast, heal or silence
   - BLIND: the soldier can't do any physical attack
+  - POISONED: the soldier is poisoned, it will loose 2HP at the end of his next turn
+  - PROTECTED: the soldier is protected, the next attack will not harm him (hit or cast)
   - DEAD: the soldier is dead
 
 ### Enemy Soldier Api
