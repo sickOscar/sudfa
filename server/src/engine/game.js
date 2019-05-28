@@ -4,7 +4,7 @@ const History = require('./history');
 
 const LazySoldier = function(game, options) {
   this.getInstance = () => new Soldier(game, options);
-}
+};
 
 
 class Game {
@@ -101,7 +101,7 @@ class Game {
           context[funcName] = this.currentPlayer[funcName].bind(this.currentPlayer);
         }
         return context;
-      }, {})
+      }, {});
 
       const objectProperties = Object.getOwnPropertyNames(this.currentPlayer);
       const contextProperties = objectProperties.reduce((context, propName) => {
@@ -110,7 +110,7 @@ class Game {
           context[propName] = this.currentPlayer[propName]
         }
         return context;
-      }, {})
+      }, {});
 
       const context = {
         ...contextProperties,
@@ -119,7 +119,7 @@ class Game {
         team: {
           name: this.currentPlayer.team.name
         }
-      }
+      };
 
       this.currentPlayer.run.call(context);
 
@@ -135,13 +135,14 @@ class Game {
     }
 
     if (this.currentPlayer.actionDone) {
+      if (currentSoldier.getId() !== this.currentPlayer.actionDone.actor) {
+        throw new Error('Invalid action');
+      }
       this.history.addTurn(this.currentPlayer.actionDone, this.getState());
     }
 
     // reset player
     this.currentPlayer.actionDone = false;
-
-
 
     this.prevSoldier = currentSoldier;
   }
@@ -157,7 +158,7 @@ class Game {
         return s.health;
       }
       return maxHealth;
-    }
+    };
 
     return {
       teams: this.teams.map(team => {
@@ -166,7 +167,7 @@ class Game {
             health: soldier.getHealth(),
             status: soldier.getStatus(),
             healthDiff: soldier.getHealth() - getSoldierHealthOfLastTurn(soldier.getId(), soldier.getMaxHealth())
-          }
+          };
           return final;
         }, {})
       })
@@ -318,10 +319,7 @@ class Game {
     if (this.getAliveTroops(this.opponentPlayer.team).length === 0) {
       gameover = true;
     }
-    if (gameover) {
-      return true;
-    }
-    return false
+    return gameover;
   }
 
   checkWinner() {
@@ -333,8 +331,8 @@ class Game {
     if (player1AliveTroop.length === player2AliveTroop.length) {
 
 
-      const p1HealthSum = player1AliveTroop.reduce((sum, next) => sum + next.getHealth(), 0)
-      const p2HealthSum = player2AliveTroop.reduce((sum, next) => sum + next.getHealth(), 0)
+      const p1HealthSum = player1AliveTroop.reduce((sum, next) => sum + next.getHealth(), 0);
+      const p2HealthSum = player2AliveTroop.reduce((sum, next) => sum + next.getHealth(), 0);
 
       if (p1HealthSum === p2HealthSum) {
         // in caso di parità, vince il secondo

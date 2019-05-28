@@ -117,7 +117,9 @@ export default class League extends React.Component {
                 </div>
 
                 <div className="watch">
-                  {this.state.bots.length > 0 &&
+                  {console.log(this.state.bots)}
+                  {console.log(this.state.bots.map(b => b.botid), bot.botid   )}
+                  {this.state.bots.length > 0 && !(this.state.bots.find(b => b.botid === bot.botid)) &&
                   <span className="watch-container">
                       <OverlayTrigger  trigger="click" placement="right" overlay={this.createPopover(bot.botid)}>
                         <FontAwesomeIcon id={bot.botid + '-popover-placement'} className="watch-icon" icon="eye" />

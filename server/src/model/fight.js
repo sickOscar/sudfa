@@ -124,7 +124,7 @@ const FightModel = {
 
     const text = `
     SELECT
-        users.id, users.name as username, botid, league_bots.name, league_bots.team as team, ties.ties, ties.TIES_POINTS, wins.wins, wins.win_POINTS, COALESCE(wins.win_POINTS,0) + COALESCE(ties.TIES_POINTS, 0) as POINTS
+        users.id, users.name as username, league_bots.botid as botid, league_bots.name, league_bots.team as team, ties.ties, ties.TIES_POINTS, wins.wins, wins.win_POINTS, COALESCE(wins.win_POINTS,0) + COALESCE(ties.TIES_POINTS, 0) as POINTS
     FROM
         league_bots
         LEFT JOIN (
