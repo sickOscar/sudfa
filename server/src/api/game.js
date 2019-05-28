@@ -109,7 +109,10 @@ class GameApi {
           res.status(500).send({error: error});
         })
 
+    });
 
+    app.get('/queue', jwtCheck, (req, res) => {
+      
     });
 
     app.get('/leaderboard', (req, res) => {

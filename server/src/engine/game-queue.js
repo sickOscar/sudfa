@@ -5,11 +5,17 @@ class GameQueue {
 
   constructor() {
     this.timeout = 0;
+
+    this.tick();
   }
 
   async tick() {
-    const firstInQueue = await GameQueue.first()
+    console.log('tick');
+    const firstInQueue = await Queue.first();
     if (firstInQueue) {
+
+      console.log('got first');
+
       clearTimeout(this.timeout);
       this.startArena(firstInQueue);
     } else {
@@ -29,18 +35,29 @@ class GameQueue {
         user: firstInQueue.user
       });
 
-
+    await Queue.delete({
+      botid: firstInQueue.botid
+    });
 
     // start timeout
     this.tick();
   }
 
-  add(bot) {
+  async add(bot) {
     const {botid, source, user} = bot;
+
+    // check if already there
+    const botInQueue = await Queue.one({botid});
+
+    if (botInQueue) {
+      throw new Error('Already in queue');
+    }
+
     return Queue.add({
       id: `${(+new Date())}_${user}`,
       botid,
-      source
+      source,
+      user
     })
   }
 
