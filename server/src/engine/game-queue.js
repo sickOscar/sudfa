@@ -12,9 +12,17 @@ class GameQueue {
   async tick() {
     const firstInQueue = await Queue.first();
     if (firstInQueue) {
-      console.log('got first');
+
+      await Queue.update({
+        botid: firstInQueue.botid
+      }, {
+        started: true
+      })
+
       clearTimeout(this.timeout);
+
       this.startArena(firstInQueue);
+
     } else {
       this.timeout = setTimeout(() => {
         this.tick();
@@ -25,12 +33,16 @@ class GameQueue {
   async startArena(firstInQueue) {
     console.log('START ARENA FOR', JSON.stringify(firstInQueue));
 
-    // start arena
-    const arenaResults = await GameArena.start({
+    try {
+      // start arena
+      const arenaResults = await GameArena.start({
         source: firstInQueue.source,
         botid: firstInQueue.botid,
         user: firstInQueue.user
       });
+    } catch(error) {
+      console.error(error);
+    }
 
     await Queue.delete({
       botid: firstInQueue.botid

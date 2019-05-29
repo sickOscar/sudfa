@@ -29,7 +29,7 @@ const FightModel = {
 
   first: () => {
     const query = {
-      text: `SELECT * FROM queue ORDER BY timestamp DESC LIMIT 1`
+      text: `SELECT * FROM queue WHERE started != TRUE ORDER BY timestamp DESC LIMIT 1`
     };
 
     return clientConnected
@@ -58,6 +58,55 @@ const FightModel = {
     return clientConnected
       .then(() => client.query(query))
       .then(results => results.rows[0])
+  },
+
+  update: function(whereCondition, updates) {
+
+    if (!Object.keys(whereCondition) || !Object.keys(updates)) {
+      throw new Error('Invalid queue update');
+    }
+
+    let index = 1;
+    const values = [];
+
+    const whereFields = Object.keys(whereCondition);
+    const whereClause = [];
+
+    for (let i = 0; i < whereFields.length; i++) {
+      whereClause.push(`"${whereFields[i]}" = $${index}`);
+      values.push(whereCondition[whereFields[i]]);
+      index++;
+    }
+
+    const updateFields = Object.keys(updates);
+    const setClause = [];
+
+    for (let i = 0; i < updateFields.length; i++) {
+
+      let clause = `"${updateFields[i]}" = $${index}`;
+      if (updateFields[i] === 'timestamp') {
+        clause = `"${updateFields[i]}" = to_timestamp($${index})`;
+      }
+
+      setClause.push(clause);
+
+      let v = updates[updateFields[i]];
+      if (Array.isArray(v)) {
+        v = JSON.stringify(v)
+      }
+      values.push(v);
+
+      index++;
+    }
+
+    const text = `UPDATE queue SET ${setClause.join(', ')} WHERE ${whereClause.join(' AND ')} RETURNING *`;
+
+    const query = {text, values};
+
+    return clientConnected
+      .then(() => client.query(query))
+      .then(results => results.rows[0])
+
   },
 
   delete: params => {
