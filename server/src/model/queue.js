@@ -29,7 +29,7 @@ const FightModel = {
 
   first: () => {
     const query = {
-      text: `SELECT * FROM queue WHERE started != TRUE ORDER BY timestamp DESC LIMIT 1`
+      text: `SELECT * FROM queue WHERE started != TRUE ORDER BY "timestamp" DESC LIMIT 1`
     };
 
     return clientConnected

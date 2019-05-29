@@ -13,6 +13,8 @@ class GameQueue {
     const firstInQueue = await Queue.first();
     if (firstInQueue) {
 
+      console.log(`Found bot ${firstInQueue.botid} in queue for arena...`)
+
       await Queue.update({
         botid: firstInQueue.botid
       }, {
