@@ -151,7 +151,7 @@ class GameApi {
       res.send(fs.readFileSync('./src/API.md').toString());
     });
 
-    app.get('/queue/:boid', jwtCheck, (req, res) => {
+    app.get('/queue/:botid', jwtCheck, (req, res) => {
 
       Queue.one({
         user: req.user.sub,
