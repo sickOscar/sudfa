@@ -42,7 +42,7 @@ function Soldier(game, options) {
 
   const protect = (target) => {
     doAction.call(this, 'protect', target)
-  }
+  };
 
   const heal = (target) => {
     doAction.call(this, 'heal', target)
@@ -54,23 +54,23 @@ function Soldier(game, options) {
 
   const silence = (target) => {
     doAction.call(this, 'silence', target)
-  }
+  };
 
   const blind = (target) => {
     doAction.call(this, 'blind', target)
-  }
+  };
 
   const poison = (target) => {
     doAction.call(this, 'poison', target)
-  }
+  };
 
-  const canHit = (target) => {
+  const canHit = () => {
     return !status.includes('BLIND');
-  }
+  };
 
-  const canProtect = (target) => {
+  const canProtect = () => {
     return type === 'dev' && !status.includes('SILENCED');
-  }
+  };
 
   const canHeal = () => {
     return type === 'pm' && !status.includes('SILENCED');
@@ -82,15 +82,15 @@ function Soldier(game, options) {
 
   const canSilence = () => {
     return type === 'pm' && !status.includes('SILENCED');
-  }
+  };
 
   const canBlind = () => {
     return type === 'pm' && !status.includes('SILENCED');
-  }
+  };
 
   const canPoison = () => {
     return type === 'mktg' && !status.includes('SILENCED');
-  }
+  };
 
   const say = (message) => {
     if (tells.length < 10) {

@@ -1,12 +1,12 @@
-const GameLauncher = require('../engine/game-launcher');
 const {jwtCheck} = require('./auth');
 const GameArena = require('../engine/game-arena');
 const Bot = require('../model/bot');
 const League = require('../model/league');
+const GameQueue = require('../engine/game-queue');
 const Fight = require('../model/fight');
 const fs = require('fs');
 
-const botFolder = `${__dirname}/../bots/`;
+const queue = GameQueue.getInstance();
 
 class GameApi {
 
@@ -32,7 +32,7 @@ class GameApi {
           res.status(500).send(err);
         })
 
-    })
+    });
 
     /**
      *
@@ -56,13 +56,13 @@ class GameApi {
           botid,
           code,
           challenge
-        }
+        };
         return GameArena.singleChallengeFight(fightParams)
           .then(gameHistory => {
             res.json(gameHistory)
           })
           .catch(error => {
-            console.error(error)
+            console.error(error);
             res.send(error)
           })
 
@@ -73,19 +73,19 @@ class GameApi {
         botid,
         level,
         code
-      }
+      };
 
       return GameArena.singleBotFight(fightParams)
         .then(gameHistory => {
           res.json(gameHistory)
         })
         .catch(error => {
-          console.error(error)
+          console.error(error);
           res.send(error)
         })
 
 
-    })
+    });
 
     /**
      *
@@ -96,11 +96,11 @@ class GameApi {
       code = code.replace('/n', '');
       code = code.replace('/r', '');
 
-      GameArena.start({
-          source: code,
-          botid: req.body.botid,
-          user: req.user.sub
-        })
+      queue.add({
+        source: code,
+        botid: req.body.botid,
+        user: req.user.sub
+      })
         .then(response => {
           res.json(response)
         })
@@ -109,27 +109,30 @@ class GameApi {
           res.status(500).send({error: error});
         })
 
+    });
 
-    })
+    app.get('/queue', jwtCheck, (req, res) => {
+      
+    });
 
     app.get('/leaderboard', (req, res) => {
       res.json(JSON.parse(League.leaderboard()))
-    })
+    });
 
     app.get('/fight/:bot1/:bot2', (req, res) => {
 
       Promise.all([
-          Bot.one({botid: req.params.bot1}, 'league_bots'),
-          Bot.one({botid: req.params.bot2}, 'league_bots'),
-          Fight.one({
-            bot1: req.params.bot1,
-            bot2: req.params.bot2
-          }),
-          Fight.one({
-            bot1: req.params.bot2,
-            bot2: req.params.bot1
-          }),
-        ])
+        Bot.one({botid: req.params.bot1}, 'league_bots'),
+        Bot.one({botid: req.params.bot2}, 'league_bots'),
+        Fight.one({
+          bot1: req.params.bot1,
+          bot2: req.params.bot2
+        }),
+        Fight.one({
+          bot1: req.params.bot2,
+          bot2: req.params.bot1
+        }),
+      ])
         .then(results => {
 
           res.json({
@@ -140,15 +143,15 @@ class GameApi {
 
         })
         .catch(err => {
-          console.error(err)
+          console.error(err);
           res.status(500).send(err)
         })
 
-    })
+    });
 
     app.get('/API', (req, res) => {
       res.send(fs.readFileSync('./src/API.md').toString());
-    })
+    });
 
     app.get('/rerun', (req, res) => {
       GameArena.rerun()
@@ -167,17 +170,17 @@ class GameApi {
 
 module.exports = (function () {
 
-  let instance = null
+  let instance = null;
 
   const getInstance = function (app) {
     if (!instance) {
       instance = new GameApi(app);
     }
     return instance;
-  }
+  };
 
   return {
     getInstance
   }
 
-}())
+}());
