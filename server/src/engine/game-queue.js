@@ -10,7 +10,7 @@ class GameQueue {
   }
 
   async tick() {
-    console.log('ticking for arena');
+    // console.log('ticking for arena');
     const firstInQueue = await Queue.first();
     if (firstInQueue) {
 
