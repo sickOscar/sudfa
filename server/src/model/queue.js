@@ -14,7 +14,7 @@ const FightModel = {
   one: params => {
 
     const whereClause = Object.keys(params).map((key, i) => {
-      return `${key} = $${i + 1}`;
+      return `queue.${key} = $${i + 1}`;
     });
 
     const query = {

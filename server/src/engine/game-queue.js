@@ -37,6 +37,12 @@ class GameQueue {
     console.log('START ARENA FOR', firstInQueue.botid);
 
     try {
+
+
+      await new Promise(resolve => {
+        setTimeout(() => resolve(), 5000);
+      })
+
       // start arena
       const arenaResults = await GameArena.start({
         source: firstInQueue.source,
