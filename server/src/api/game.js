@@ -40,7 +40,6 @@ class GameApi {
      */
     app.post('/source', jwtCheck, (req, res) => {
 
-
       const userId = req.user.sub;
       const botid = req.body.bot;
       let code = req.body.source;
@@ -85,7 +84,6 @@ class GameApi {
           res.send(error)
         })
 
-
     });
 
     /**
@@ -114,7 +112,13 @@ class GameApi {
     });
 
     app.get('/leaderboard', (req, res) => {
-      res.json(JSON.parse(League.leaderboard()))
+      League.leaderboard()
+        .then(leaderboard => {
+          res.json(leaderboard)
+        })
+        .catch(error => {
+          res.status(500).send('Unable to load leaderboard');
+        })
     });
 
     app.get('/fight/:bot1/:bot2', (req, res) => {
@@ -148,7 +152,13 @@ class GameApi {
     });
 
     app.get('/API', (req, res) => {
-      res.send(fs.readFileSync('./src/API.md').toString());
+      fs.readFile('./src/API.md', (err, content) => {
+        if (err) {
+          return res.satus(500).send('Unabl to open API')
+        }
+        res.send(content.toString());
+      })
+
     });
 
     app.get('/queue/:botid', jwtCheck, (req, res) => {

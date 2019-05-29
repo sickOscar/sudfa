@@ -46,11 +46,10 @@ export default class League extends React.Component {
             setTimeout((() => {
               const el = document.querySelector(`#bot-${this.props.match.params.botid}`);
               window.scrollTo({
-                top: el.getBoundingClientRect().top - 100,
+                top: el ? el.getBoundingClientRect().top - 100 : 0,
                 behavior: 'smooth'
               });
-
-            }).bind(this), 1000)
+            }), 1000)
           }
 
         })

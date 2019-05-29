@@ -8,6 +8,10 @@ export default class Queue extends React.Component {
   constructor(props) {
     super(props);
     this.interval = 0;
+
+    this.state = {
+      showOverlay: false
+    }
   }
 
   tick() {
@@ -26,6 +30,13 @@ export default class Queue extends React.Component {
         if (results.exit === 'OK') {
           history.replace(`/league/${this.props.match.params.botid}`)
         } else {
+
+          if (results.exit === 'KO') {
+            this.setState({
+              showOverlay: true
+            })
+          }
+
           console.log('wait...');
         }
 
@@ -34,6 +45,13 @@ export default class Queue extends React.Component {
         console.error(err);
       })
 
+  }
+
+  closeOverlay() {
+    this.setState({
+      showOverlay: false
+    })
+    history.replace(`/edit/${this.props.match.params.botid}`)
   }
 
   componentDidMount() {
@@ -47,6 +65,27 @@ export default class Queue extends React.Component {
   render() {
     return (
       <div className="queue-container">
+
+        {this.state.showOverlay && (
+          <div className="overlay">
+            <div className="overlay-content">
+              <h3>Ok, let's face it,</h3>
+              <h2>Something went terribly wrong</h2>
+              <p>Maybe your code has errors, maybe our code has errors. Who knows?</p>
+
+              <p>Maybe this is all a nightmare and you will soon wake up all greasy and sweaty.</p>
+
+              <p>Only time will tell us</p>
+
+              <p><b>PS: Are you really sure your code is correct? Just saying...</b></p>
+
+              <button onClick={this.closeOverlay.bind(this)} className="btn btn-primary">
+                Back to editing
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="loader"></div>
         <h2>Your team is fighting...</h2>
         <p>Please wait</p>

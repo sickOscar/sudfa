@@ -33,7 +33,7 @@ const FightModel = {
         SELECT * 
         FROM queue 
         WHERE 
-              status IS NULL OR status != 'fail' OR status != 'started'
+              status IS NULL OR (status != 'fail' AND status != 'started')
         ORDER BY "timestamp" DESC LIMIT 1`
     };
 
@@ -106,6 +106,8 @@ const FightModel = {
 
     const text = `UPDATE queue SET ${setClause.join(', ')} WHERE ${whereClause.join(' AND ')} RETURNING *`;
 
+    console.log("text", text, values);
+    
     const query = {text, values};
 
     return clientConnected

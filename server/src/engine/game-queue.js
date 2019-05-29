@@ -17,7 +17,8 @@ class GameQueue {
       console.log(`Found bot ${firstInQueue.botid} in queue for arena...`)
 
       await Queue.update({
-        botid: firstInQueue.botid
+        botid: firstInQueue.botid,
+        user: firstInQueue.user
       }, {
         status: 'started'
       })
@@ -38,10 +39,10 @@ class GameQueue {
 
     try {
 
-
-      await new Promise(resolve => {
-        setTimeout(() => resolve(), 5000);
-      })
+      // DEBUG PURPOSE
+      // await new Promise(resolve => {
+      //   setTimeout(() => resolve(), 5000);
+      // })
 
       // start arena
       const arenaResults = await GameArena.start({
@@ -50,9 +51,20 @@ class GameQueue {
         user: firstInQueue.user
       });
 
-      await Queue.delete({
-        botid: firstInQueue.botid
-      });
+
+      if (arenaResults.exit === 'OK') {
+        await Queue.delete({
+          botid: firstInQueue.botid
+        });
+      } else {
+        await Queue.update({
+          botid: firstInQueue.botid,
+          user: firstInQueue.user
+        }, {
+          status: 'fail'
+        })
+      }
+
 
     } catch(error) {
       console.error(error);
@@ -74,10 +86,20 @@ class GameQueue {
     const {botid, source, user} = bot;
 
     // check if already there
-    const botInQueue = await Queue.one({botid});
+    const botInQueue = await Queue.one({
+      botid,
+      user
+    });
 
     if (botInQueue) {
-      throw new Error('Already in queue');
+      if (botInQueue.status === 'fail') {
+        await Queue.delete({
+          botid,
+          user
+        })
+      } else {
+        throw new Error('Already in queue');
+      }
     }
 
     return Queue.add({
