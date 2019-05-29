@@ -113,10 +113,6 @@ class GameApi {
 
     });
 
-    app.get('/queue', jwtCheck, (req, res) => {
-      
-    });
-
     app.get('/leaderboard', (req, res) => {
       res.json(JSON.parse(League.leaderboard()))
     });
@@ -162,8 +158,21 @@ class GameApi {
         botid: req.params.botid
       })
         .then(queueEl => {
+
+          console.log('GOT QUEUE EL', queueEl);
+
           if (queueEl) {
-            res.send(queueEl)
+
+            if (queueEl.status === 'started') {
+              res.send(queueEl)
+            }
+
+            if (queueEl.status === 'fail') {
+              res.send({
+                exit: 'KO'
+              })
+            }
+
           } else {
             res.send({
               exit: 'OK'

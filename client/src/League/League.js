@@ -44,12 +44,7 @@ export default class League extends React.Component {
 
           if (this.props.match.params.botid) {
             setTimeout((() => {
-
               const el = document.querySelector(`#bot-${this.props.match.params.botid}`);
-
-
-              console.log(el.getBoundingClientRect().top)
-
               window.scrollTo({
                 top: el.getBoundingClientRect().top - 100,
                 behavior: 'smooth'
@@ -137,8 +132,6 @@ export default class League extends React.Component {
                 </div>
 
                 <div className="watch">
-                  {console.log(this.state.bots)}
-                  {console.log(this.state.bots.map(b => b.botid), bot.botid   )}
                   {this.state.bots.length > 0 && !(this.state.bots.find(b => b.botid === bot.botid)) &&
                   <span className="watch-container">
                       <OverlayTrigger  trigger="click" placement="right" overlay={this.createPopover(bot.botid)}>
