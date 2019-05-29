@@ -5,7 +5,7 @@ create table if not exists public.queue
       primary key,
   botid varchar not null,
   source varchar not null,
-  started boolean,
+  started varchar,
   "user" varchar not null,
   "timestamp" timestamp with time zone DEFAULT now(),
   CONSTRAINT queue_fk FOREIGN KEY (botid) REFERENCES bots(botid),

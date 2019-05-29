@@ -19,7 +19,7 @@ class GameQueue {
       await Queue.update({
         botid: firstInQueue.botid
       }, {
-        started: true
+        status: 'started'
       })
 
       clearTimeout(this.timeout);
@@ -34,7 +34,7 @@ class GameQueue {
   }
 
   async startArena(firstInQueue) {
-    console.log('START ARENA FOR', JSON.stringify(firstInQueue));
+    console.log('START ARENA FOR', firstInQueue.botid);
 
     try {
       // start arena
@@ -43,13 +43,22 @@ class GameQueue {
         botid: firstInQueue.botid,
         user: firstInQueue.user
       });
+
+      await Queue.delete({
+        botid: firstInQueue.botid
+      });
+
     } catch(error) {
       console.error(error);
+
+      await Queue.update({
+        botid: firstInQueue.botid
+      }, {
+        status: 'fail'
+      })
+
     }
 
-    await Queue.delete({
-      botid: firstInQueue.botid
-    });
 
     // start timeout
     this.tick();

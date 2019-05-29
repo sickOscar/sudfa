@@ -29,7 +29,12 @@ const FightModel = {
 
   first: () => {
     const query = {
-      text: `SELECT * FROM queue WHERE started IS NULL ORDER BY "timestamp" DESC LIMIT 1`
+      text: `
+        SELECT * 
+        FROM queue 
+        WHERE 
+              status IS NULL OR status != 'fail' OR status != 'started'
+        ORDER BY "timestamp" DESC LIMIT 1`
     };
 
     return clientConnected
