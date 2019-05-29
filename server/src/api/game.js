@@ -152,6 +152,9 @@ class GameApi {
     });
 
     app.get('/queue/:botid', jwtCheck, (req, res) => {
+console.log('QUEUE REQEST');
+      console.log("req.params.botid", req.params.botid);
+      console.log("req.user.sub", req.user.sub);
 
       Queue.one({
         user: req.user.sub,
