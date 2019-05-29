@@ -41,6 +41,23 @@ export default class League extends React.Component {
         .then(response => response.json())
         .then(bots => {
           this.setState({bots})
+
+          if (this.props.match.params.botid) {
+            setTimeout((() => {
+
+              const el = document.querySelector(`#bot-${this.props.match.params.botid}`);
+
+
+              console.log(el.getBoundingClientRect().top)
+
+              window.scrollTo({
+                top: el.getBoundingClientRect().top - 100,
+                behavior: 'smooth'
+              });
+
+            }).bind(this), 1000)
+          }
+
         })
         .catch(err => console.error(err))
 
@@ -110,7 +127,10 @@ export default class League extends React.Component {
             </li>
 
             {this.state.leaderboard.map((bot, i) => {
-              return <li className="leaderboard-row" key={bot.botid}>
+              return <li className={this.props.match.params.botid && this.props.match.params.botid === bot.botid ? "leaderboard-row active" : "leaderboard-row"}
+                         key={bot.botid}
+                         id={`bot-${bot.botid}`}
+              >
 
                 <div className="position">
                   {i + 1}

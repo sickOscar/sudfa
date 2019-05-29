@@ -14,6 +14,7 @@ import Fight from './Fight/Fight';
 import Profile from './Profile/Profile'
 import Homepage from './Homepage/Homepage';
 import Docs from './Docs/Docs';
+import Queue from './Queue/Queue';
 
 const auth = new Auth();
 
@@ -54,7 +55,8 @@ export const makeMainRoutes = () => {
           <PrivateRoute path="/edit/:botid" component={EditBot}/>
           <PrivateRoute path="/profile" component={Profile} />
 
-          <Route path="/league" render={(props) => <League {...props} auth={auth} />} />
+          <Route path="/league/:botid?" render={(props) => <League {...props} auth={auth} />} />
+          <Route path="/queue/:botid" render={(props) => <Queue {...props} auth={auth} />} />
 
           <Route path="/fight/:bot1/:bot2" component={Fight}/>
 

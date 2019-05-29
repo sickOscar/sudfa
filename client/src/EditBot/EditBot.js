@@ -158,7 +158,7 @@ export default class Home extends Component {
           this.setState({
             loading: false
           })
-          history.replace('/league');
+          history.replace(`/queue/${this.props.match.params.botid}`)
         }
       })
       .catch(err => this.props.auth.logout())

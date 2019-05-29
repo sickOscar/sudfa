@@ -6,7 +6,15 @@
 
 }
 
-
+/* The animation code */
+@keyframes highlight {
+  0% {
+    background-color: white;
+  }
+  100% {
+    background-color: green;
+  }
+}
 
 .leaderboard-row {
   margin: 0;
@@ -15,6 +23,13 @@
 
   display: flex;
   flex-direction: row;
+
+  &.active {
+    background-color: green !important;
+    color: #fff;
+    animation-name: highlight;
+    animation-duration: 2s;
+  }
 
   .position {
     width: 60px;

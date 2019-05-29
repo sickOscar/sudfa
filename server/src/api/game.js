@@ -3,6 +3,7 @@ const GameArena = require('../engine/game-arena');
 const Bot = require('../model/bot');
 const League = require('../model/league');
 const GameQueue = require('../engine/game-queue');
+const Queue = require('../model/queue');
 const Fight = require('../model/fight');
 const fs = require('fs');
 
@@ -96,6 +97,7 @@ class GameApi {
       code = code.replace('/n', '');
       code = code.replace('/r', '');
 
+
       queue.add({
         source: code,
         botid: req.body.botid,
@@ -151,6 +153,24 @@ class GameApi {
 
     app.get('/API', (req, res) => {
       res.send(fs.readFileSync('./src/API.md').toString());
+    });
+
+    app.get('/queue/:boid', jwtCheck, (req, res) => {
+
+      Queue.one({
+        user: req.user.sub,
+        botid: req.params.botid
+      })
+        .then(queueEl => {
+          if (queueEl) {
+            res.send(queueEl)
+          } else {
+            res.send({
+              exit: 'OK'
+            })
+          }
+        })
+
     });
 
     app.get('/rerun', (req, res) => {

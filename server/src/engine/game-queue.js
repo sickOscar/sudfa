@@ -10,12 +10,9 @@ class GameQueue {
   }
 
   async tick() {
-    console.log('tick');
     const firstInQueue = await Queue.first();
     if (firstInQueue) {
-
       console.log('got first');
-
       clearTimeout(this.timeout);
       this.startArena(firstInQueue);
     } else {
