@@ -19,7 +19,7 @@ function Soldier(game, options) {
   switch (options.type) {
     case 'dev':
       health = maxHealth = 12 * 2;
-      attack = 3;
+      attack = 4;
       break;
     case 'pm':
       health = maxHealth = 10 * 2;
