@@ -20,15 +20,15 @@ function Soldier(game, options) {
   switch (options.type) {
     case 'dev':
       health = maxHealth = 24;
-      attack = 4;
+      attack = 3;
       break;
     case 'pm':
       health = maxHealth = 20;
       attack = 2;
-      healPower = 6;
+      healPower = 5;
       break;
     case 'mktg':
-      health = maxHealth = 20;
+      health = maxHealth = 16;
       attack = 1;
       // healPower = 1;
       magicPower = 2;
