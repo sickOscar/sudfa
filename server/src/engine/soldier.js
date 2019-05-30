@@ -11,6 +11,7 @@ function Soldier(game, options) {
   let maxHealth = 0;
   let status = ['OK'];
   let healPower = 0;
+  let poisonDamage = 0;
 
   let poisonedFor = 0;
 
@@ -18,19 +19,20 @@ function Soldier(game, options) {
 
   switch (options.type) {
     case 'dev':
-      health = maxHealth = 12 * 2;
-      attack = 4;
+      health = maxHealth = 24000;
+      attack = 3000;
       break;
     case 'pm':
-      health = maxHealth = 10 * 2;
-      attack = 2;
-      healPower = 5;
+      health = maxHealth = 20000;
+      attack = 2000;
+      healPower = 6000;
       break;
     case 'mktg':
-      health = maxHealth = 7 * 2;
-      attack = 1;
+      health = maxHealth = 14000;
+      attack = 1000;
       // healPower = 1;
-      magicPower = 2;
+      magicPower = 2000;
+      poisonDamage = 2000;
       break;
     default:
       throw new Error('Invalid soldier type')
@@ -299,7 +301,7 @@ function Soldier(game, options) {
               if (!t.getStatus().includes('PROTECTED')) {
                 t.removeStatus('PROTECTED')
               } else {
-                t.setHealth(t.getHealth() - 2);
+                t.setHealth(t.getHealth() - poisonDamage);
               }
             }
             t.addStatus('POISONED');
@@ -327,7 +329,7 @@ function Soldier(game, options) {
     };
 
     if (status.includes('POISONED')) {
-      health = health - 2;
+      health = health - poisonDamage;
     }
 
     tells = [];

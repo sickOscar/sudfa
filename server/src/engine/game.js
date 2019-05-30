@@ -275,7 +275,7 @@ class Game {
         return soldierProxy(strongest);
       },
       getWeakestSoldier: () => {
-        let weakest = {getAttack: () => 100};
+        let weakest = {getAttack: () => 100000};
         for (let i = 0; i < team.length; i++) {
           if (weakest.getAttack() > team[i].getAttack()) {
             weakest = team[i]
@@ -284,7 +284,7 @@ class Game {
         return soldierProxy(weakest);
       },
       getMostDamagedSoldier: () => {
-        let mostDamaged = {getHealth: () => 100};
+        let mostDamaged = {getHealth: () => 100000};
         for (let i = 0; i < team.length; i++) {
           if (team[i].getHealth() > 0 && mostDamaged.getHealth() > team[i].getHealth()) {
             mostDamaged = team[i]
