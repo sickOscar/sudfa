@@ -19,20 +19,20 @@ function Soldier(game, options) {
 
   switch (options.type) {
     case 'dev':
-      health = maxHealth = 24000;
-      attack = 3000;
+      health = maxHealth = 24;
+      attack = 4;
       break;
     case 'pm':
-      health = maxHealth = 20000;
-      attack = 2000;
-      healPower = 6000;
+      health = maxHealth = 18;
+      attack = 2;
+      healPower = 6;
       break;
     case 'mktg':
-      health = maxHealth = 14000;
-      attack = 1000;
+      health = maxHealth = 14;
+      attack = 1;
       // healPower = 1;
-      magicPower = 2000;
-      poisonDamage = 2000;
+      magicPower = 2;
+      poisonDamage = 2;
       break;
     default:
       throw new Error('Invalid soldier type')
