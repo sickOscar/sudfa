@@ -23,12 +23,12 @@ function Soldier(game, options) {
       attack = 4;
       break;
     case 'pm':
-      health = maxHealth = 18;
+      health = maxHealth = 20;
       attack = 2;
       healPower = 6;
       break;
     case 'mktg':
-      health = maxHealth = 14;
+      health = maxHealth = 16;
       attack = 1;
       // healPower = 1;
       magicPower = 2;
