@@ -202,6 +202,30 @@ class GameApi {
         })
     })
 
+    app.get('/db/:botid', (req, res) => {
+
+      if (!req.params.botid) {
+        res.send('NO BOT ID');
+      }
+
+      console.log('DELETING LEAGUE BOT', req.params.botid);
+
+      Promise.all([
+        Fight.delete({bot1: req.params.botid}),
+        Fight.delete({bot2: req.params.botid}),
+        ])
+        .then(async results => {
+          await Bot.delete({botid: req.params.botid}, 'league_bots')
+          return GameArena.rerun()
+        })
+        .then(response => {
+          res.send('OK')
+        })
+        .catch(error => {
+          res.status(500).send(error);
+        })
+    })
+
   }
 
 }
