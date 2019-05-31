@@ -2,9 +2,9 @@ const Soldier = require('./soldier');
 const History = require('./history');
 
 
-const LazySoldier = function(game, options) {
-  this.getInstance = () => new Soldier(game, options);
-};
+// const LazySoldier = function(game, options) {
+//   this.getInstance = () => new Soldier(game, options);
+// };
 
 
 class Game {
@@ -53,8 +53,8 @@ class Game {
   setupPlayers(player1, player2) {
 
     // remap lazy constructor
-    player1.team.troop = player1.team.troop.map(t => t.getInstance());
-    player2.team.troop = player2.team.troop.map(t => t.getInstance());
+    player1.team.troop = player1.team.troop.map(t => new Soldier(this, t));
+    player2.team.troop = player2.team.troop.map(t => new Soldier(this, t));
 
     this.registerTeam(player1.team);
     this.registerTeam(player2.team);
@@ -353,24 +353,36 @@ class Game {
   }
 
   Dev(options) {
-    return new LazySoldier(this, {
+    return {
       ...options,
       type: 'dev'
-    })
+    }
+    // return new LazySoldier(this, {
+    //   ...options,
+    //   type: 'dev'
+    // })
   }
 
   Pm(options) {
-    return new LazySoldier(this, {
+    // return new LazySoldier(this, {
+    //   ...options,
+    //   type: 'pm'
+    // })
+    return {
       ...options,
       type: 'pm'
-    })
+    }
   }
 
   Mktg(options) {
-    return new LazySoldier(this, {
+    // return new LazySoldier(this, {
+    //   ...options,
+    //   type: 'mktg'
+    // })
+    return {
       ...options,
       type: 'mktg'
-    })
+    }
   }
 
   // Hr(options) {
