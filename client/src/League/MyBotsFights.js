@@ -66,7 +66,7 @@ export default class MyBotsFights extends React.Component {
 
   render() {
     return <Popover title="Fights with your bots"
-                    style={{left: this.state.left + 30, top: this.state.top, width: '300px'}}>
+                    style={{left: this.state.left + 30, top: this.state.top, width: '300px', maxWidth: '300px'}}>
 
       <table className="table">
         <thead>
