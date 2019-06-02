@@ -6,14 +6,91 @@ Super Ultra Dev Fight Arena (SUDFA) is an AI programming game.
 The game lets you code your bots and challenge all other players 
 in a giant royal rumble arena, where only the best AI can thrive. 
 
-## Come funziona un combattimento?
-Ogni bot è composto da un team di tre personaggi, componibile a scelta 
-tra le classi disponibili. 
+## How does a fight work?
+Each bot is made up of a team of three characters, which can be combined as required between the available classes.
 
-Un combattimento di lega si svolge in 2 round,
-in modo che ogni bot abbia la possibilità di cominciare una volta per primo.
+A league fight takes place in 2 rounds,
+so that each team has a chance to start first.
 
-Un round è una serie di turni alternati (massimo 100), dove i componenti dei 
-due team si alternano e possono effettuare **una sola azione per turno**. 
+A round is a series of alternating rounds (maximum 100), where the components of the 
+two teams alternate and may perform **only one action per turn**. 
+If you have played a JRPG in the past, you will surely already be aware of the system.
+
+It is not possible to change the order of the soldiers on the field at runtime, so be careful not only 
+to whom you choose, but also to the order in which you arrange them! 
+
+## Team code
+
+A bot is a Javascript class (node version > 11). It must have a constructor and a `run()`method. 
+The constructor is executed only once at the start of the match; the run method instead is performed 
+at each player's turn. The available APIs allow you to have 
+references to your own team and to the opposing team and to perform all actions
+necessary to win the fight. 
+
+### Creation of the team
+Within the constructor you need to define a `team` object that must contain the name and shape of the team.
+
+```
+constructor(game) {
+
+  // ref to the game object
+  this.game = game;
+  
+  
+  this.team = {
+    name: 'Team name', // the name, you can change it anytime you want it
+    troops: [
+      game.Dev(), // 
+      game.Pm(),  // max 3 soldiers
+      game.Mktg() // 
+    ]
+  }
+
+}
+```
+
+### Turn execution
+At each turn of one of your team's soldiers, the `run()`method will be launched. 
+In it you have to put the execution code of the turn: you have to analyze the 
+state of your team and that of the opponent, identify the action to be 
+taken and finally perform the action chosen. You can only do one action per 
+turn: if you try to do two or more actions, the entire turn will be cancelled 
+and you will pass the hand to the opponent.
+
+
+#### Remember: it is a Javascript class like all the others 
+(note also the final `module.exports` syntax. which is mandatory). 
+You can use all the tools provided by the language, so don't be afraid 
+to create new methods and fields in the class to help you.
+
+
+### Test the code
+Before you send your team to fight furiously in the arena against all the 
+other teams of other players, you have 2 possibilities to test your code:
+
+- You can fight against bots programmed by the arena organizers. They are 
+some bots of increasing difficulty. Nothing unbeatable, but don't hope to 
+emerge victorious from the arena if your bot can't overcome all the enemies we've prepared.
+
+- You can fight against the bots of other players: select your enemy and test 
+your bot against it. You can test only one of the two fights that will take 
+place in the arena, which is where you're first to go. In any case, you will 
+have the opportunity to test your team with the top guys in the leaderboard. 
+Don't get down if at the  beginning it will seem to you an unbeatable challenge, 
+with time you will surely be able to improve
+
+
+## Classes
+
+### Developer
+
+
+### Project Manager
+
+
+### Marketing
+
+
+
   
 
