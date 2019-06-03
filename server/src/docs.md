@@ -83,12 +83,25 @@ with time you will surely be able to improve
 ## Classes
 
 ### Developer
+The Developer is a war machine. Its powerful attacks will make your opponents tremble with fear. It has many health points and the most powerful attack between classes. His actions are: 
 
+- Hit: Hits the target by inflicting 3 damage (physical attack).
+- Protect (target): Protects one of your companions for a turn. The protected companion may not suffer damage of any kind.
 
 ### Project Manager
-
+The project manager is your team's brain. Even if he has a discreet attack (2 damage) his main role is to heal his teammates and block the attacks of the opposing team. His actions are:
+ 
+ - hit: hits the target by inflicting 2 damage (physical attack)
+ - heal(target): Cure a teammate of 5 health points
+ - blind (target): blinds an enemy to prevent him from making a physical attack in his next turn
+ - silence(target): silence an enemy, in his next turn he cannot use a magic ability (cast or cure)
 
 ### Marketing
+The marketer is a smart and powerful character. Despite being the weakest and his physical attack is derisory (1dmg), he has magical abilities! He can hit all his enemies or use the poison to inflict a considerable amount of damage over a long period of time. His skills are:
+
+- Hit: Hits the target by inflicting 1 damage (physical attack).
+- cast(): hits the entire opposing team, inflicting 2 damage on all members
+- Poison (target): Poisons a member of the opposing team, inflicting 2 damage suffered and 4 damage distributed over the next 2 rounds. If the target is protected, it does not suffer the initial damage but extends the poisoning period.
 
 
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import './Homepage.scss';
-import {Link} from 'react-router-dom';
+import Footer from '../Footer/Footer.js';
 
 const Homepage = (props) => {
 
@@ -93,32 +93,7 @@ const Homepage = (props) => {
       </div>
 
 
-      <div className="row footer">
-        <div className="col-sm-12 text-center">
-          <h5>Super Ultra Dev Fight Arena</h5>
-        </div>
-
-        <div className="col-sm-6">
-          <nav>
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-              <li>
-                <Link to="/docs">Docs</Link>
-              </li>
-              <li>
-                <Link to="/league">Leaderboard</Link>
-              </li>
-              <li>
-                <Link to="/who">Who we are</Link>
-              </li>
-            </ul>
-          </nav>
-        </div>
-
-
-      </div>
+      <Footer></Footer>
 
 
     </React.Fragment>
