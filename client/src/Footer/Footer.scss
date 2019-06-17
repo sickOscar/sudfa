@@ -1,0 +1,27 @@
+
+@import '../variables';
+
+.footer-nav {
+
+  ul {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin: 2em 0;
+    font-size: 20px;
+
+
+    li {
+      flex: 1;
+      text-align: center;
+
+      a {
+        color: lighten(map_get($theme_colors, 'primary'), 20);
+      }
+
+    }
+  }
+
+
+}

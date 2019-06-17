@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import './App.scss';
-import logo from './images/logo.png';
+// import logo from './images/logo.png';
 import './icons';
 
 class App extends Component {
@@ -39,8 +39,8 @@ class App extends Component {
 
 
           <Link className="header-link" to="/">
-            <img src={logo} className="header-logo" alt="SUDFAπ"/>
-            Super Ultra Dev Fight Arena
+            {/*<img src={logo} className="header-logo" alt="SUDFAπ"/>*/}
+            Super Ultra Dev Fighter Arena <span className="badge badge-secondary">BETA</span>
           </Link>
 
 

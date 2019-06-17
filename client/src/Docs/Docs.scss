@@ -10,8 +10,12 @@
   color: #fafafa;
 }
 
-.nav-container .card{
-  position: fixed;
+.nav-list {
+  list-style: none;
+
+  li {
+    margin-top: 1em;
+  }
 }
 
 

@@ -18,7 +18,17 @@ export class GameResults extends Component {
           {
             target: '.game-results-container',
             content: "In this box you'll see the progression of the battle",
-            placement: "left"
+            placement: "top"
+          },
+          {
+            target: '.actions-container',
+            content: "Here you can pause the progress, go step-by-step, fast forward the match o reset from the beginning",
+            placement: "top"
+          },
+          {
+            target: '.turns-container',
+            content: "Every turn will show an icon for the type of action done, a simple description of the action and  the battlefield status after the action specified is completed",
+            placement: "top"
           }
         ]
       }
@@ -26,13 +36,18 @@ export class GameResults extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.results) {
-      this.setState({
-        resultsJoyride: {
-          ...this.state.resultsJoyride,
-          run: true
-        }
-      })
+    if (nextProps.results && !nextState.resultsJoyride.run) {
+
+      const j = localStorage.getItem('resultsJoyrideDone');
+      if (!j || j === "false") {
+        this.setState({
+          resultsJoyride: {
+            ...this.state.resultsJoyride,
+            run: true
+          }
+        })
+      }
+
     }
     return true;
   }
@@ -48,10 +63,11 @@ export class GameResults extends Component {
 
       <React.Fragment>
 
-        <Joyride
-          {...this.state.resultsJoyride}
-          callback={this.checkResultsJoyride.bind(this)}
-        />
+          <Joyride
+            {...this.state.resultsJoyride}
+            callback={this.checkResultsJoyride.bind(this)}
+          />
+
 
         <div className="game-results-container">
 

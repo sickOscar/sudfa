@@ -434,7 +434,8 @@ export default class Home extends Component {
                   bot={this.state.bot}
                   onChange={this.onCodeChange.bind(this)}/>
 
-          <SplitPane split="horizontal" defaultSize={'50%'}>
+          <SplitPane split="horizontal" defaultSize={'50%'}
+                     pane2Style={{overflow: 'hidden'}}>
 
             <Apis content={this.state.content}/>
 

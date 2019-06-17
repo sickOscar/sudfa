@@ -2,9 +2,9 @@ import React from 'react';
 import Footer from '../Footer/Footer';
 import './Docs.scss';
 
-import developer from '../images/pm.jpeg';
-import pm from '../images/pm.jpeg';
-import marketer from '../images/mktg.jpeg';
+import developer from '../images/personaggi/dev.png';
+import pm from '../images/personaggi/po.png';
+import marketer from '../images/personaggi/mktg.png';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
 const Docs = (props) => (
@@ -15,18 +15,18 @@ const Docs = (props) => (
 
       <div className="row">
         <div className="col-sm-12 section-title text-center">
-          <h1>Super Ultra Dev Fight Arena</h1>
+          <h1>Super Ultra Dev Fighter Arena</h1>
         </div>
       </div>
 
 
-      <div className="row">
+      <div className="row no-gutters">
 
         <div className="col-md-3 nav-container">
-          <div className="card p-3">
+          <div className="p-3">
 
             <nav>
-              <ul>
+              <ul className="nav-list">
                 <li>
                   <a href="#what-is-it">What is it?</a>
                 </li>
@@ -50,10 +50,9 @@ const Docs = (props) => (
         <div className="col-md-9">
           <div className="card p-3">
 
-            <a aria-label="what-is-it" name="what-is-it">#</a>
             <div className="row">
               <div className="col-sm-12">
-                <h2>What is it?</h2>
+                <h2 id="what-is-it">What is it?</h2>
               </div>
               <div className="col-sm-12">
                 <p>
@@ -67,10 +66,9 @@ const Docs = (props) => (
             </div>
 
 
-            <a name="how-does-it-work" />
             <div className="row">
               <div className="col-sm-12">
-                <h2>How does it work?</h2>
+                <h2 id="how-does-it-work">How does it work?</h2>
               </div>
               <div className="col-sm-12">
                 <p>
@@ -84,10 +82,9 @@ const Docs = (props) => (
               <FontAwesomeIcon icon="bolt"/>
             </div>
 
-            <a name="how-does-a-fight-work" />
             <div className="row">
               <div className="col-sm-12">
-                <h2>How does a fight work?</h2>
+                <h2 id="how-does-a-fight-work">How does a fight work?</h2>
               </div>
               <div className="col-sm-12">
                 <p>
@@ -116,10 +113,9 @@ const Docs = (props) => (
               <FontAwesomeIcon icon="skull-crossbones"/>
             </div>
 
-            <a name="the-code" />
             <div className="row">
               <div className="col-sm-12">
-                <h2>The code</h2>
+                <h2  id="the-code">The code</h2>
               </div>
               <div className="col-sm-12">
                 <p>
@@ -241,10 +237,9 @@ constructor(game) {
               <FontAwesomeIcon icon="hospital-symbol"/>
             </div>
 
-            <a name="classes" />
             <div className="row">
               <div className="col-sm-12">
-                <h2>Classes</h2>
+                <h2 id="classes">Classes</h2>
               </div>
               <div className="col-sm-12">
                 <p>

@@ -1,6 +1,13 @@
 import React from 'react';
 import './Homepage.scss';
 import Footer from '../Footer/Footer.js';
+import Terminal from './Terminal';
+
+import dev from '../images/personaggi/dev.png';
+import pm from '../images/personaggi/po.png';
+import mktg from '../images/personaggi/mktg.png';
+
+
 
 const Homepage = (props) => {
 
@@ -14,7 +21,10 @@ const Homepage = (props) => {
 
           <div className="row">
 
-            <div className="col-md-6 text-center">
+            <div className="col-sm-12 col-md-6 big-logo">
+            </div>
+
+            <div className="col-sm-12 col-md-6 text-center">
               <h1>Are you ready to fight?</h1>
 
               <div className="subtitle">
@@ -27,11 +37,6 @@ const Homepage = (props) => {
                   Start now!
                 </button>
               </div>
-
-            </div>
-
-            <div className="col-md-6">
-
             </div>
           </div>
 
@@ -40,9 +45,9 @@ const Homepage = (props) => {
       </div>
 
       <div className="container">
-        <div className="row claim-box">
-          <div className="col-md-6">
-            <h4>Build your team</h4>
+        <div className="row claim-box text-center">
+          <div className="col-md-6 d-flex flex-column justify-content-center">
+            <h3>Build your team</h3>
             <p>
               Choose three champions from the available classes.
               What do you think will be most useful to you: the cunning
@@ -50,13 +55,17 @@ const Homepage = (props) => {
               the subterfuges of a Marketer...
             </p>
           </div>
-          <div className="col-md-6"></div>
+          <div className="col-md-6 text-center">
+            <img src={dev} alt="Dev"/>
+          </div>
         </div>
 
-        <div className="row  claim-box">
-          <div className="col-md-6"></div>
-          <div className="col-md-6">
-            <h4>Program your AI</h4>
+        <div className="row claim-box text-center">
+          <div className="col-md-6 text-center">
+            <Terminal/>
+          </div>
+          <div className="col-md-6 d-flex flex-column justify-content-center">
+            <h3>Program your AI</h3>
             <p>
               A simple set of APIs will allow you to choose how your
               soldiers will fight in the arena.
@@ -66,22 +75,26 @@ const Homepage = (props) => {
 
         </div>
 
-        <div className="row claim-box">
-          <div className="col-md-6">
-            <h4>Test your bots</h4>
+        <div className="row claim-box text-center">
+          <div className="col-md-6 d-flex flex-column justify-content-center">
+            <h3>Test your bots</h3>
             <p>
               Test your team against all the available bots: if you can't
               beat them, it will be very difficult to reach a good
               position in the ranking
             </p>
           </div>
-          <div className="col-md-6"></div>
+          <div className="col-md-6 text-center">
+            <img src={mktg} alt="Mktg"/>
+          </div>
         </div>
 
         <div className="row claim-box">
-          <div className="col-md-6"></div>
-          <div className="col-md-6">
-            <h4>Be the best</h4>
+          <div className="col-md-6 text-center">
+            <img src={pm} alt="PM"/>
+          </div>
+          <div className="col-md-6 d-flex flex-column justify-content-center">
+            <h3>Be the best</h3>
             <p>
               Send your team into the arena to fight. It will fight against
               all the other players' teams twice. A net win is worth 3 points.
