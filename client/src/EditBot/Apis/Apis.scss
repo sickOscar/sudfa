@@ -1,0 +1,26 @@
+@import '../../variables.scss';
+
+.api-container {
+
+  .api-content {
+    padding: 1em;
+  }
+
+  .apis-title {
+    background-color: map_get($theme_colors, 'primary');
+    height: 40px;
+    color: #fff;
+    line-height: 40px;
+    padding-left: 1em;
+    font-size: 20px;
+  }
+
+  h3 {
+    font-size: 16px;
+  }
+
+  h4 {
+    font-size: 16px;
+  }
+
+}

@@ -5,6 +5,7 @@ import {GameResults} from './GameResults/GameResults';
 import Apis from './Apis/Apis';
 import history from '../history';
 import Env from '../env';
+import Joyride from 'react-joyride';
 
 import './EditBot.scss';
 
@@ -65,7 +66,36 @@ export default class Home extends Component {
       enemyBot: null,
       bots: [],
       loading: false,
-      showOverlay: false
+      showOverlay: false,
+      mainJoyride: {
+        showProgress: true,
+        debug: true,
+        continuous: true,
+        run: false,
+        steps: [
+          {
+            target: '.editor-container',
+            content: 'This is the editor, edit your code here',
+            placement: 'right'
+          },
+          {
+            target: '.api-container',
+            content: "Here you will find all the API docs you'll need to code your bot",
+            placement: 'left'
+          },
+          {
+            target: '.game-results-container',
+            content: "Once you'll start a test fight, you will see here the progress of the battle",
+            placement: 'left'
+          },
+          {
+            target: '.editor-actions',
+            content: "When your code is ready, click 'Fight' to choose a fight option. If you just want to save your bot for later, click 'Save Team' and go back to team selection",
+            placement: 'top'
+          }
+        ]
+      }
+
     }
   }
 
@@ -88,7 +118,7 @@ export default class Home extends Component {
     this.setState({
       error: null,
       loading: true
-    })
+    });
 
 
     fetch(`${Env.API_HOST}/source`, {
@@ -132,7 +162,7 @@ export default class Home extends Component {
     this.setState({
       loading: true,
       error: null
-    })
+    });
 
     fetch(`${Env.API_HOST}/league`, {
       method: 'POST',
@@ -157,7 +187,7 @@ export default class Home extends Component {
         } else {
           this.setState({
             loading: false
-          })
+          });
           history.replace(`/queue/${this.props.match.params.botid}`)
         }
       })
@@ -170,7 +200,7 @@ export default class Home extends Component {
 
     this.setState({
       loading: true
-    })
+    });
 
     fetch(`${Env.API_HOST}/bot/${this.props.match.params.botid}`, {
       method: 'POST',
@@ -188,7 +218,7 @@ export default class Home extends Component {
 
         this.setState({
           loading: false
-        })
+        });
 
         if (bot.error) {
           this.setState({
@@ -204,7 +234,7 @@ export default class Home extends Component {
 
         this.setState({
           loading: false
-        })
+        });
 
         console.error(err)
         // this.props.auth.logout()
@@ -230,9 +260,9 @@ export default class Home extends Component {
         })
       })
       .catch(err => {
-        console.error(err)
+        console.error(err);
         this.props.auth.logout()
-      })
+      });
 
     fetch(`${Env.API_HOST}/API`, {
       method: 'GET',
@@ -249,7 +279,7 @@ export default class Home extends Component {
       })
       .catch(err => {
         console.error(err)
-      })
+      });
 
     fetch(`${Env.API_HOST}/league_bots`, {
       method: 'GET',
@@ -267,7 +297,18 @@ export default class Home extends Component {
       })
       .catch(err => {
         console.error(err)
+      });
+
+    // RUN JOYRIDE IF FIRST ACCESS
+    const mainJoyrideDone = localStorage.getItem('mainJoyrideDone');
+    if (!mainJoyrideDone || mainJoyrideDone === 'false') {
+      this.setState({
+        mainJoyride: {
+          ...this.state.mainJoyride,
+          run: true
+        }
       })
+    }
 
 
   }
@@ -286,7 +327,7 @@ export default class Home extends Component {
     this.setState({
       error: null,
       loading: true
-    })
+    });
 
     fetch(`${Env.API_HOST}/source`, {
       method: 'POST',
@@ -330,6 +371,12 @@ export default class Home extends Component {
     })
   }
 
+  checkMainJoyride(state) {
+    if (state.action === 'reset') {
+      localStorage.setItem('mainJoyrideDone', 'true');
+    }
+  }
+
   render() {
 
     const splitPaneStyles = {
@@ -338,6 +385,13 @@ export default class Home extends Component {
 
     return (
       <div className="split-pane-container">
+
+        <Joyride
+          {...this.state.mainJoyride}
+          callback={this.checkMainJoyride.bind(this)}
+        />
+
+
 
         {this.state.showOverlay && (
           <div className="overlay">

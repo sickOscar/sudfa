@@ -1,5 +1,3 @@
-## APIS
-
 ### game
 
 - **`getCurrentSoldier()`**:*Soldier* -> get the current soldier

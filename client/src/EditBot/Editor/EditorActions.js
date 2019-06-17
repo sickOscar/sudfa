@@ -1,6 +1,7 @@
 import React from 'react';
 import './EditorActions.scss';
 import Select from 'react-select';
+import Joyride from 'react-joyride';
 
 export default class EditorActions extends React.Component {
 
@@ -10,7 +11,30 @@ export default class EditorActions extends React.Component {
     this.state = {
       selectOpen: false,
       timeToSendToLeague: 0,
-      tickInterval: 0
+      tickInterval: 0,
+      actionJoyride: {
+        showProgress: true,
+        debug: true,
+        continuous: true,
+        run: false,
+        steps: [
+          {
+            target: '.bot-selection-container',
+            content: "Here you can test your bot against one of our precoded bots. Don't even think to get to the arena without testing against these bots.",
+            placement: "right"
+          },
+          {
+            target: '.challenger-selection-container',
+            content: "Here you can have a test fight against another player's bot. Your bot will start first and fight only once; in the real arena you will fight against all other players' bots two times.",
+            placement: "right"
+          },
+          {
+            target: '.send-to-arena-container',
+            content: "When your bot is really ready, send it to the arena to fight against all other bots! You will have to wait a while for the fights to complete. (max 1 arena send every 5 minutes)",
+            placement: "right"
+          }
+        ]
+      }
     };
 
     this.levels = [
@@ -40,6 +64,17 @@ export default class EditorActions extends React.Component {
 
   componentDidMount() {
     this.startCounter();
+
+    // RUN JOYRIDE IF FIRST ACCESS
+    const actionJoyrideDone = localStorage.getItem('actionJoyrideDone');
+    if (!actionJoyrideDone || actionJoyrideDone === 'false') {
+      this.setState({
+        actionJoyride: {
+          ...this.state.actionJoyride,
+          run: true
+        }
+      })
+    }
   }
 
   componentWillUnmount() {
@@ -98,14 +133,25 @@ export default class EditorActions extends React.Component {
     return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
   }
 
+  checkMainJoyride(state) {
+    if (state.action === 'reset') {
+      localStorage.setItem('actionJoyrideDone', 'true');
+    }
+  }
+
   render() {
     return (
       <div className="editor-actions">
 
+        <Joyride
+          {...this.state.actionJoyride}
+          callback={this.checkMainJoyride.bind(this)}
+        />
+
         {this.state.selectOpen && (
           <div className="fight-select-pane">
 
-            <div className="row">
+            <div className="row bot-selection-container">
               <div className="col-sm-12">
                 <p>Challenge a bot</p>
               </div>
@@ -124,7 +170,7 @@ export default class EditorActions extends React.Component {
 
             </div>
 
-            <div className="row">
+            <div className="row challenger-selection-container">
               <div className="col-sm-12">
                 <p>Challenge another team</p>
               </div>
@@ -148,7 +194,7 @@ export default class EditorActions extends React.Component {
               </div>
             </div>
 
-            <div className="row">
+            <div className="row send-to-arena-container">
               <div className="col-sm-12">
                 <p>Send to arena</p>
               </div>
