@@ -18,8 +18,8 @@ export default class Auth {
   constructor() {
 
     this.auth0 = new auth0.WebAuth({
-      domain: 'codeinthedarkve.eu.auth0.com',
-      clientID: 'XIa57QS7CiWhoD5Oo0xR8H78MGdJ45jL',
+      domain: 'sudfa.eu.auth0.com',
+      clientID: 'ksXuneu15cJyv6ScLs4m8TBOGH2qFiMD',
       redirectUri: callbackUrl + '/callback',
       responseType: 'token id_token',
       scope: 'openid'
