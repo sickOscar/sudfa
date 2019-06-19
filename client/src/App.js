@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
 import './App.scss';
-// import logo from './images/logo.png';
+import logo from './images/cover/full_logo.png';
 import './icons';
+
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+import {Link} from "react-router-dom";
 
 class App extends Component {
 
@@ -34,67 +37,60 @@ class App extends Component {
 
     return (
 
-      <nav className="navbar navbar-expand-md navbar-dark bg-primary">
+      <Navbar bg="primary" expand="sm" variant="dark">
 
+        <Navbar.Brand href="/" className="header-link">
+          <img src={logo} className="header-logo" alt="SUDFAπ"/>
+          <span className="d-none d-sm-inline-block">
+              Super Ultra Dev Fighter Arena <span className="badge badge-secondary">BETA</span>
+          </span>
+        </Navbar.Brand>
 
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
-          <Link className="header-link" to="/">
-            {/*<img src={logo} className="header-logo" alt="SUDFAπ"/>*/}
-            Super Ultra Dev Fighter Arena <span className="badge badge-secondary">BETA</span>
-          </Link>
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="ml-auto">
 
-
-          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                  aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"/>
-          </button>
-
-
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <Link className="nav-link" to="/docs">
-                  <b>Docs</b>
+              <Link className="nav-link" to="/docs">
+                Docs
+              </Link>
+            {
+              isAuthenticated() && (
+                <Link className="nav-link" to="/profile">
+                  My Profile
                 </Link>
-              </li>
+              )
+            }
+            {
+              isAuthenticated() && (
+                <Link className="nav-link" to="/bots">
+                  My Bots
+                </Link>
+              )
+            }
+            <Link className="nav-link" to="/league">
+              Leaderboard
+            </Link>
+
+            <li className="nav-item">
               {
-                isAuthenticated() && (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/profile">My profile</Link>
-                  </li>
+                !isAuthenticated() && (
+                  <button className="btn btn-link nav-link" onClick={this.login.bind(this)}>
+                    Log In
+                  </button>
                 )
               }
               {
                 isAuthenticated() && (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/bots">My Bots</Link>
-                  </li>
+                  <button className="btn btn-link nav-link" onClick={this.logout.bind(this)}>
+                    Log Out
+                  </button>
                 )
               }
-              <li className="nav-item">
-                <Link className="nav-link" to="/league">Leaderboard</Link>
-              </li>
-              <li className="nav-item">
-                {
-                  !isAuthenticated() && (
-                    <button className="btn btn-link nav-link" onClick={this.login.bind(this)}>
-                      Log In
-                    </button>
-                  )
-                }
-                {
-                  isAuthenticated() && (
-                    <button className="btn btn-link nav-link" onClick={this.logout.bind(this)}>
-                      Log Out
-                    </button>
-                  )
-                }
-              </li>
-            </ul>
-          </div>
-
-      </nav>
-
+            </li>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
 
     )
   }

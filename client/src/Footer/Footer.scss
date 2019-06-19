@@ -1,22 +1,36 @@
 
 @import '../variables';
 
+.footer {
+  padding: 2rem 2rem;
+  background-color: map-get($theme-colors, 'primary');
+  color: #fff;
+  font-size: 0.7em;
+
+  nav {
+
+    ul {
+      list-style: none;
+    }
+
+    a {
+      color: white;
+    }
+
+  }
+}
+
 .footer-nav {
 
+  text-align: center;
+
   ul {
-    list-style: none;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    margin: 2em 0;
-    font-size: 20px;
 
 
     li {
-      flex: 1;
-      text-align: center;
 
       a {
+        font-size: 1.5em;
         color: lighten(map_get($theme_colors, 'primary'), 20);
       }
 

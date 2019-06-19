@@ -6,6 +6,7 @@ import Terminal from './Terminal';
 import dev from '../images/personaggi/dev.png';
 import pm from '../images/personaggi/po.png';
 import mktg from '../images/personaggi/mktg.png';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 
 
@@ -45,6 +46,7 @@ const Homepage = (props) => {
       </div>
 
       <div className="container">
+
         <div className="row claim-box text-center">
           <div className="col-md-6 d-flex flex-column justify-content-center">
             <h3>Build your team</h3>
@@ -60,11 +62,12 @@ const Homepage = (props) => {
           </div>
         </div>
 
+        <div className="font-row">
+          <FontAwesomeIcon icon="bolt"/>
+        </div>
+
         <div className="row claim-box text-center">
-          <div className="col-md-6 text-center">
-            <Terminal/>
-          </div>
-          <div className="col-md-6 d-flex flex-column justify-content-center">
+          <div className="col-md-6 order-md-last d-flex flex-column justify-content-center">
             <h3>Program your AI</h3>
             <p>
               A simple set of APIs will allow you to choose how your
@@ -72,7 +75,13 @@ const Homepage = (props) => {
               Remember, it's no place for a brat!
             </p>
           </div>
+          <div className="col-md-6 order-md-first text-center">
+            <Terminal/>
+          </div>
+        </div>
 
+        <div className="font-row">
+          <FontAwesomeIcon icon="skull-crossbones"/>
         </div>
 
         <div className="row claim-box text-center">
@@ -89,11 +98,12 @@ const Homepage = (props) => {
           </div>
         </div>
 
-        <div className="row claim-box">
-          <div className="col-md-6 text-center">
-            <img src={pm} alt="PM"/>
-          </div>
-          <div className="col-md-6 d-flex flex-column justify-content-center">
+        <div className="font-row">
+          <FontAwesomeIcon icon="hospital-symbol"/>
+        </div>
+
+        <div className="row claim-box text-center">
+          <div className="col-md-6 order-md-last d-flex flex-column justify-content-center">
             <h3>Be the best</h3>
             <p>
               Send your team into the arena to fight. It will fight against
@@ -101,8 +111,11 @@ const Homepage = (props) => {
               A draw won is worth 1 point. Which team will be the best?
             </p>
           </div>
-
+          <div className="col-md-6 order-md-first text-center">
+            <img src={pm} alt="PM"/>
+          </div>
         </div>
+
       </div>
 
 

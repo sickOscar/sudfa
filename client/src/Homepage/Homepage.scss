@@ -52,26 +52,14 @@
 
 .claim-box {
   margin: 2rem 0;
-}
 
-.footer {
-  padding: 2rem 4rem;
-  background-color: map-get($theme-colors, 'primary');
-  color: #fff;
-  font-size: 0.7em;
-
-  nav {
-
-    ul {
-      list-style: none;
-    }
-
-    a {
-      color: white;
-    }
-
+  img {
+    max-width: 100%;
   }
+
 }
+
+
 
 
 @keyframes bgrumble {
