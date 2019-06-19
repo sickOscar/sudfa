@@ -91,3 +91,5 @@ typings/
 data/
 
 ecosystem.deploy.js
+
+server/leaderboard.json
