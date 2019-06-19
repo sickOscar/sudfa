@@ -15,6 +15,7 @@ import Profile from './Profile/Profile'
 import Homepage from './Homepage/Homepage';
 import Docs from './Docs/Docs';
 import Queue from './Queue/Queue';
+import GoogleAnalytics from './GoogleAnalytics';
 
 const auth = new Auth();
 
@@ -65,7 +66,7 @@ export const makeMainRoutes = () => {
             return <Callback {...props} />
           }}/>
         </div>
-
+        <GoogleAnalytics />
       </Router>
 
   );
