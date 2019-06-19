@@ -1,4 +1,4 @@
-![Super Ultra Dev Fighter Arena](https://sudfa.eleet.dev/static/media/full_logo.07a661ac.png)
+![Super Ultra Dev Fighter Arena](https://sudfa.eleet.dev/public/full_logo.07a661ac.png)
 
 This is the source code for [Super Ultra Dev Fighter Arena](https://sudfa.eleet.dev).
 
