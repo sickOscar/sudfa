@@ -1,8 +1,32 @@
-.leaderboard {
+:root {
+  --black: 	#21252a;
+  --grey-1: #343A40;
+  --grey-2: #495057;
+  --grey-3: #868E96;
+  --grey-4: #ADB5BD;
+  --grey-5: #CED4DA;
+  --grey-6: #DEE2E6;
+  --grey-7: #E9ECEF;
+  --grey-8: #F1F3F5;
+  --grey-9: #F8F9FA;
+
+  --trans-black: rgba(33, 37, 42, .9);
+
+  --red: #e10600;
+
+  --gold: #ffda65;
+  --gold-dark: #a3862c;
+  --bronze: #c99355;
+  --bronze-dark: #80582c;
+}
+
+
+table.leaderboard {
+  width: 100%;
+  border-spacing: 0;
+  color: var(--grey-3);
   margin: 0;
   padding: 0;
-
-  list-style-type: none;
 
 }
 
@@ -17,18 +41,62 @@
 }
 
 .leaderboard-row {
-  margin: 0;
-  padding: 5px 0 5px 10px;
-  border-bottom: 1px solid gray;
 
-  display: flex;
-  flex-direction: row;
+  background: var(--grey-7);
+  transition: all 300ms ease;
+  cursor: pointer;
+
+  &:hover, &:focus {
+    transform: scale(1.05);
+    box-shadow: 0px 15px 28px rgba(black, .1), 0px 5px 12px rgba(black, .08);
+    transition: all 300ms ease;
+  }
+
+  &:not(:last-of-type) {
+    .list__cell {
+      box-shadow: 0px 2px 0px rgba(black, .08);
+    }
+  }
+
+  &:first-of-type {
+    color: var(--gold-dark);
+    background: var(--grey-9);
+    .list__cell:first-of-type {
+      background: var(--gold);
+      color: var(--gold-dark);
+    }
+  }
+  &:nth-of-type(2) {
+    color: var(--grey-2);
+    background: var(--grey-9);
+    .list__cell:first-of-type {
+      background: var(--grey-4);
+      color: var(--grey-2);
+    }
+  }
+  &:nth-of-type(3) {
+    color: var(--bronze-dark);
+    background: var(--grey-9);
+    .list__cell:first-of-type {
+      background: var(--bronze);
+      color: var(--bronze-dark);
+    }
+  }
 
   &.active {
     background-color: green !important;
     color: #fff;
     animation-name: highlight;
     animation-duration: 2s;
+  }
+
+  td {
+    padding:1rem;
+    &:first-of-type {
+      text-align: center;
+      padding: 1rem .2rem;
+      background: var(--grey-5);
+    }
   }
 
   .position {
@@ -42,9 +110,14 @@
   .name {
     flex: 1;
     display: flex;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
     .text {
       flex: 1;
+      line-height: 50px;
+      font-size: 20px;
     }
 
     .team {
@@ -73,7 +146,10 @@
   }
 
   .username {
-    flex: 1
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .wins {
@@ -84,35 +160,28 @@
   .ties {
     text-align: center;
     width: 60px;
+    &__value {
+      font-size: 18px;
+    }
+    &__label {
+      font-size: 10px;
+    }
   }
 
   .points {
     text-align: center;
     width: 80px;
+
+    &__value {
+      font-size: 18px;
+    }
+    &__label {
+      font-size: 10px;
+    }
   }
 
   /*display: block;*/
 }
-.leaderboard-row:first-child(2) {
-  //background-color: gold;
-  font-size: 20px;
-}
-
-.leaderboard-row:nth-child(2) {
-  background-color: gold;
-  font-size: 40px;
-}
-
-.leaderboard-row:nth-child(3) {
-  background-color: silver;
-  font-size: 30px;
-}
-
-.leaderboard-row:nth-child(4) {
-  background-color: goldenrod;
-  font-size: 25px;
-}
-
 
 .watch-container {
   .watch-icon {

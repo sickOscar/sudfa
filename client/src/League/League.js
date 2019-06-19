@@ -47,7 +47,7 @@ export default class League extends React.Component {
             setTimeout((() => {
               const el = document.querySelector(`#bot-${this.props.match.params.botid}`);
               window.scrollTo({
-                top: el ? el.getBoundingClientRect().top - 100 : 0,
+                top: el ? el.getBoundingClientRect().top - 200 : 0,
                 behavior: 'smooth'
               });
             }), 1000)
@@ -74,6 +74,10 @@ export default class League extends React.Component {
 
   }
 
+  showMoreInfo(bot) {
+    console.log('bot', bot);
+  }
+
 
   createPopover(botid) {
     return <MyBotsFights botid={botid} mybots={this.state.bots}/>;
@@ -91,63 +95,34 @@ export default class League extends React.Component {
             </div>
 
             <div className="col-sm-12">
-              <ol className="leaderboard">
-
-                <li className="leaderboard-row">
-                  <div className="position">
-                    POS
-                  </div>
-
-                  <div className="watch">
-                    STATS
-                  </div>
-
-                  <div className="name">
-                    BOT NAME
-                  </div>
-
-                  <div className="username">
-                    USER
-                  </div>
-
-                  <div className="wins">
-                    KO WINs
-                  </div>
-
-                  <div className="ties">
-                    TIES WINs
-                  </div>
-
-                  <div className="points">
-                    SCORE
-                  </div>
-
-                </li>
+              <table className="leaderboard">
+                <tbody>
 
                 {this.state.leaderboard.map((bot, i) => {
-                  return <li
+                  return <tr
+                    onClick={this.showMoreInfo.bind(this, bot)}
                     className={this.props.match.params.botid && this.props.match.params.botid === bot.botid ? "leaderboard-row active" : "leaderboard-row"}
                     key={bot.botid}
                     id={`bot-${bot.botid}`}
                   >
 
-                    <div className="position">
+                    <td className="position list__cell">
                       {i + 1}
-                    </div>
+                    </td>
 
-                    <div className="watch">
-                      {this.state.bots.length > 0 && !(this.state.bots.find(b => b.botid === bot.botid)) &&
-                      <span className="watch-container">
-                      <OverlayTrigger trigger="click" placement="right" overlay={this.createPopover(bot.botid)}>
-                        <FontAwesomeIcon id={bot.botid + '-popover-placement'} className="watch-icon" icon="eye"/>
-                      </OverlayTrigger>
-                    </span>
-                      }
-                    </div>
+                    {/*<td className="watch">*/}
+                    {/*  {this.state.bots.length > 0 && !(this.state.bots.find(b => b.botid === bot.botid)) &&*/}
+                    {/*  <span className="watch-container">*/}
+                    {/*  <OverlayTrigger trigger="click" placement="right" overlay={this.createPopover(bot.botid)}>*/}
+                    {/*    <FontAwesomeIcon id={bot.botid + '-popover-placement'} className="watch-icon" icon="eye"/>*/}
+                    {/*  </OverlayTrigger>*/}
+                    {/*</span>*/}
+                    {/*  }*/}
+                    {/*</td>*/}
 
-                    <div className="name">
-                      <span className="text">{bot.name}</span>
-                      <div className="team">
+                    <td className="name">
+                      <span className="text">{bot.name.substr(0, 40)}</span>
+                      <div className="team d-none d-sm-block">
                         {bot.team && bot.team.map((soldier, i) => {
                           return (
                             <div key={i} className="soldier">
@@ -156,33 +131,37 @@ export default class League extends React.Component {
                           )
                         })}
                       </div>
-                    </div>
+                    </td>
 
-                    <div className="username">
-                      {bot.username}
-                    </div>
+                    <td className="username">
+                      {bot.username.substr(0, 40)}
+                    </td>
 
-                    <div className="wins">
-                      {bot.wins || 0}
-                    </div>
+                    {/*<td className="wins">*/}
+                    {/*  <span className="wins__value">{bot.wins || 0}</span><br/>*/}
+                    {/*  <span className="wins__label">ko wins</span>*/}
+                    {/*</td>*/}
 
-                    <div className="ties">
-                      {bot.ties || 0}
-                    </div>
+                    {/*<td className="ties">*/}
+                    {/*  <span className="ties__value">{bot.ties || 0}</span><br/>*/}
+                    {/*  <span className="ties__label">ties wins</span>*/}
+                    {/*</td>*/}
 
-                    <div className="points">
-                      {bot.points || 0}
-                    </div>
+                    <td className="points">
+                      <span className="points__value">{bot.points || 0}</span><br/>
+                      <span className="points__label">points</span>
+                    </td>
 
-                  </li>
+                  </tr>
                 })}
-              </ol>
+                </tbody>
+              </table>
 
             </div>
 
           </div>
         </div>
-        <Footer></Footer>
+        <Footer />
       </React.Fragment>
 
     )
