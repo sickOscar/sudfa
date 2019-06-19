@@ -19,9 +19,7 @@ class GoogleAnalytics extends React.Component {
   }
 
   render () {
-    return (
-      <div>ASDASDASDD</div>
-    );
+    return null;
   }
 }
 
