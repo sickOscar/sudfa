@@ -8,7 +8,7 @@ import pm from '../images/personaggi/po.png';
 import mktg from '../images/personaggi/mktg.png';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
-
+import full_logo from '../images/cover/full_logo.png';
 
 const Homepage = (props) => {
 
@@ -18,11 +18,14 @@ const Homepage = (props) => {
     <React.Fragment>
       <div className="row head-box">
 
+        <div id="storm"></div>
+
         <div className="container">
 
-          <div className="row">
+          <div className="row my-5">
 
             <div className="col-sm-12 col-md-6 big-logo">
+              <img src={full_logo} alt="Super Ultra Dev Fighter Arena"/>
             </div>
 
             <div className="col-sm-12 col-md-6 text-center">

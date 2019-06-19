@@ -41,7 +41,7 @@ class App extends Component {
 
         <Navbar.Brand href="/" className="header-link">
           <img src={logo} className="header-logo" alt="SUDFAπ"/>
-          <span className="d-none d-sm-inline-block">
+          <span className="d-none d-sm-inline-block ml-2">
               Super Ultra Dev Fighter Arena <span className="badge badge-secondary">BETA</span>
           </span>
         </Navbar.Brand>

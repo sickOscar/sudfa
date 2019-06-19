@@ -2,7 +2,7 @@
 @import '../variables';
 
 .head-box {
-  padding: 2rem 4rem;
+  padding:0;
   background-color: map-get($theme-colors, 'primary');
   color: #fff;
   margin-bottom: 2rem;
@@ -16,17 +16,26 @@
   animation-iteration-count: infinite;
   animation-direction: alternate;
 
+  #storm {
+    position: absolute;
+    height: 100%;
+  }
+
   .big-logo {
     min-height: 170px;
-    background-image: url('../images/cover/full_logo.png');
-    background-size: auto 100%;
-    background-repeat: no-repeat;
-    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
+    img {
+      max-width: 100%;
+      width: 100%;
 
-    animation-name: logoshake;
-    animation-duration: 1s;
-    animation-delay: 2s;
+      animation-name: logoshake;
+      animation-duration: 1s;
+      animation-delay: 2s;
+    }
+
   }
 
   h1 {
