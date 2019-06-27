@@ -28,7 +28,7 @@ function Soldier(game, options) {
       healPower = 5;
       break;
     case 'mktg':
-      health = maxHealth = 16;
+      health = maxHealth = 15;
       attack = 1;
       // healPower = 1;
       magicPower = 2;
