@@ -2,11 +2,12 @@
 @import '../variables';
 
 .head-box {
+  position: relative;
   padding:0;
   background-color: map-get($theme-colors, 'primary');
   color: #fff;
   margin-bottom: 2rem;
-  background-image: url('../images/cover/header-bg.jpg');
+  //background-image: url('../images/cover/header-bg.jpg');
   background-size: 100% auto;
   background-repeat: no-repeat;
   background-position: top;
@@ -18,6 +19,8 @@
 
   #storm {
     position: absolute;
+    width: 100%;
+    max-width: 100%;
     height: 100%;
   }
 

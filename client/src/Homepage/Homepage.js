@@ -2,6 +2,7 @@ import React from 'react';
 import './Homepage.scss';
 import Footer from '../Footer/Footer.js';
 import Terminal from './Terminal';
+import Storm from './Storm';
 
 import dev from '../images/personaggi/dev.png';
 import pm from '../images/personaggi/po.png';
@@ -18,7 +19,7 @@ const Homepage = (props) => {
     <React.Fragment>
       <div className="row head-box">
 
-        <div id="storm"></div>
+        <Storm />
 
         <div className="container">
 
