@@ -5,6 +5,8 @@ import * as THREE from 'three';
 import noise from '../images/storm/noise.png';
 import clouds from '../images/storm/clouds-1-tile.jpg';
 
+let animationFrameRequest;
+
 export default class Storm extends React.Component {
 
 
@@ -38,7 +40,7 @@ export default class Storm extends React.Component {
   }
 
   componentWillUnmount() {
-    cancelAnimationFrame();
+    cancelAnimationFrame(animationFrameRequest);
   }
 
   render() {
@@ -180,7 +182,7 @@ const threeEntryPoint = (containerElement, texture, bg) => {
 
   function render(delta) {
     // console.log('render', scene)
-    requestAnimationFrame(render);
+    animationFrameRequest = requestAnimationFrame(render);
     uniforms.u_scroll.value = window.scrollY;
     uniforms.u_time.value = -1000 + delta * 0.0005;
 
