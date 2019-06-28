@@ -2,7 +2,7 @@ import React from 'react';
 import sudfateam from '../images/sudfateam.jpg';
 
 const WhoWeAre = props => (
-  <div className="mt-2">
+  <div className="mt-2 container">
     <img src={sudfateam} class="img-fluid" alt="Sudfa Team"/>
 
     <div className="text-center mt-3">
