@@ -9,7 +9,6 @@ export default class Storm extends React.Component {
 
 
   componentDidMount() {
-
     let loader = new THREE.TextureLoader();
     loader.setCrossOrigin("anonymous");
     loader.load(
@@ -28,9 +27,7 @@ export default class Storm extends React.Component {
             bg.minFilter = THREE.LinearFilter;
 
             setTimeout(() => {
-
               threeEntryPoint(this.threeRootElement, texture, bg);
-
               // animate();
             })
           }
@@ -38,8 +35,10 @@ export default class Storm extends React.Component {
       }
     );
 
+  }
 
-
+  componentWillUnmount() {
+    cancelAnimationFrame();
   }
 
   render() {

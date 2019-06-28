@@ -118,6 +118,14 @@ table.leaderboard {
       flex: 1;
       line-height: 50px;
 
+      @media only screen and (max-width: 600px) {
+        max-width: 210px;
+      }
+
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+
       .text {
         font-size: 20px;
       }
@@ -154,6 +162,14 @@ table.leaderboard {
               &.bot-name {
                 text-align: left;
                 background-color: transparent;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+
+                @media only screen and (max-width: 600px) {
+                  max-width: 50px;
+                }
+
               }
             }
           }
