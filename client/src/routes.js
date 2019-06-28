@@ -16,6 +16,7 @@ import Homepage from './Homepage/Homepage';
 import Docs from './Docs/Docs';
 import Queue from './Queue/Queue';
 import GoogleAnalytics from './GoogleAnalytics';
+import WhoWeAre from './Who/Who';
 
 const auth = new Auth();
 
@@ -60,6 +61,8 @@ export const makeMainRoutes = () => {
           <Route path="/queue/:botid" render={(props) => <Queue {...props} auth={auth} />} />
 
           <Route path="/fight/:bot1/:bot2" component={Fight}/>
+
+          <Route path="/who" component={WhoWeAre}/>
 
           <Route path="/callback" render={(props) => {
             handleAuthentication(props);

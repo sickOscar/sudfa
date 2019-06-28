@@ -122,7 +122,7 @@ export default class League extends React.Component {
 
                     <td className="name">
                       <span className="text">{bot.name.substr(0, 40)}</span>
-                      <div className="team d-none d-sm-block">
+                      <div className="team d-none d-sm-flex">
                         {bot.team && bot.team.map((soldier, i) => {
                           return (
                             <div key={i} className="soldier">
