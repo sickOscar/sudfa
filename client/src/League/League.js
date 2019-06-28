@@ -10,6 +10,7 @@ import mktg_icon from '../images/mktg_icon.jpeg';
 
 // import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import Footer from "../Footer/Footer";
+import {Helmet} from "react-helmet";
 
 export default class League extends React.Component {
 
@@ -105,6 +106,12 @@ export default class League extends React.Component {
     return (
 
       <React.Fragment>
+
+        <Helmet>
+          <title>Leaderboard - Super Ultra Dev Fighter Arena</title>
+          <meta name="description" content="How's your team doing? This is the full league leaderboard for the game." />
+        </Helmet>
+
         <div className="container">
           <div className="row">
 

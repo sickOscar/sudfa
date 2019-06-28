@@ -17,6 +17,7 @@
     "react-ace": "^6.5.0",
     "react-bootstrap": "^1.0.0-beta.8",
     "react-dom": "^16.8.6",
+    "react-helmet": "^5.2.1",
     "react-joyride": "^2.0.5",
     "react-markdown": "^4.0.8",
     "react-router": "^5.0.0",

@@ -1,4 +1,5 @@
 import React from 'react';
+import {Helmet} from 'react-helmet'
 import './Homepage.scss';
 import Footer from '../Footer/Footer.js';
 import Terminal from './Terminal';
@@ -17,6 +18,12 @@ const Homepage = (props) => {
 
   return (
     <React.Fragment>
+
+      <Helmet>
+        <title>Super Ultra Dev Fighter Arena</title>
+        <meta name="description" content="SUDFA is a competitive AI fighting game. Challenge the world. Be the best." />
+      </Helmet>
+
       <div className="row head-box">
 
         <Storm />

@@ -1,9 +1,16 @@
 import React from 'react';
 import sudfateam from '../images/sudfateam.jpg';
+import {Helmet} from "react-helmet";
 
 const WhoWeAre = props => (
   <div className="mt-2 container">
-    <img src={sudfateam} class="img-fluid" alt="Sudfa Team"/>
+
+    <Helmet>
+      <title>Who we are - Super Ultra Dev Fighter Arena</title>
+      <meta name="description" content="Do you want to meet us?" />
+    </Helmet>
+
+    <img src={sudfateam} className="img-fluid" alt="Sudfa Team"/>
 
     <div className="text-center mt-3">
 

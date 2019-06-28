@@ -6,9 +6,15 @@ import developer from '../images/personaggi/dev.png';
 import pm from '../images/personaggi/po.png';
 import marketer from '../images/personaggi/mktg.png';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {Helmet} from "react-helmet";
 
 const Docs = (props) => (
   <React.Fragment>
+
+    <Helmet>
+      <title>Docs - Super Ultra Dev Fighter Arena</title>
+      <meta name="description" content="Some hints on how the game works" />
+    </Helmet>
 
     <div className="container">
 
