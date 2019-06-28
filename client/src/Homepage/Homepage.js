@@ -4,12 +4,12 @@ import Footer from '../Footer/Footer.js';
 import Terminal from './Terminal';
 import Storm from './Storm';
 
-import dev from '../images/personaggi/dev.png';
 import pm from '../images/personaggi/po.png';
-import mktg from '../images/personaggi/mktg.png';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 import full_logo from '../images/cover/full_logo.png';
+import team from '../images/team.jpg';
+import vs from '../images/vs.png';
 
 const Homepage = (props) => {
 
@@ -62,7 +62,7 @@ const Homepage = (props) => {
             </p>
           </div>
           <div className="col-md-6 text-center">
-            <img src={dev} alt="Dev"/>
+            <img src={team} alt="Team"/>
           </div>
         </div>
 
@@ -98,7 +98,7 @@ const Homepage = (props) => {
             </p>
           </div>
           <div className="col-md-6 text-center">
-            <img src={mktg} alt="Mktg"/>
+            <img src={vs} alt="VS"/>
           </div>
         </div>
 

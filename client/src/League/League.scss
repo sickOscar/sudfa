@@ -114,10 +114,52 @@ table.leaderboard {
     text-overflow: ellipsis;
     white-space: nowrap;
 
-    .text {
+    .text-container {
       flex: 1;
       line-height: 50px;
-      font-size: 20px;
+
+      .text {
+        font-size: 20px;
+      }
+
+      .more-info {
+        font-size: 1rem;
+        display: block;
+        height: 0px;
+        overflow: hidden;
+        transition: all 1s;
+
+        &.open {
+          height: 180px;
+        }
+
+        .stats-container {
+          flex: 0.5;
+          line-height: 1.5em;
+        }
+
+        .your-bots-fights {
+          flex: 0.5;
+
+          table {
+            tr {
+              line-height: 2em;
+            }
+            td, th {
+              padding: 0;
+              max-height: 1.3em;
+              border: none;
+              font-size: 14px;
+
+              &.bot-name {
+                text-align: left;
+                background-color: transparent;
+              }
+            }
+          }
+        }
+
+      }
     }
 
     .team {
@@ -143,6 +185,21 @@ table.leaderboard {
         }
       }
     }
+
+    .wins {
+      &__value {
+
+        font-size: 14px;
+      }
+    }
+
+    .ties {
+      &__value {
+
+        font-size: 14px;
+      }
+    }
+
   }
 
   .username {
@@ -152,21 +209,9 @@ table.leaderboard {
     white-space: nowrap;
   }
 
-  .wins {
-    text-align: center;
-    width: 60px;
-  }
 
-  .ties {
-    text-align: center;
-    width: 60px;
-    &__value {
-      font-size: 18px;
-    }
-    &__label {
-      font-size: 10px;
-    }
-  }
+
+
 
   .points {
     text-align: center;

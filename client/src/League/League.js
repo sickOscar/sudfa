@@ -1,6 +1,6 @@
 import React from 'react';
 import './League.scss';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+// import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import MyBotsFights from './MyBotsFights';
 import Env from '../env';
 
@@ -8,7 +8,7 @@ import dev_icon from '../images/dev_icon.jpeg';
 import pm_icon from '../images/pm_icon.jpeg';
 import mktg_icon from '../images/mktg_icon.jpeg';
 
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+// import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import Footer from "../Footer/Footer";
 
 export default class League extends React.Component {
@@ -18,7 +18,8 @@ export default class League extends React.Component {
     this.state = {
       leaderboard: [],
       logged: false,
-      bots: []
+      bots: [],
+      openRows: []
     };
 
     this.icons = {
@@ -74,16 +75,33 @@ export default class League extends React.Component {
 
   }
 
-  showMoreInfo(bot) {
-    console.log('bot', bot);
+  toggleMoreInfo(bot) {
+
+    const index = this.state.openRows.indexOf(bot.botid);
+    if (index > -1) {
+      const newArray = Array.from(this.state.openRows)
+      newArray.splice(index, 1)
+
+      this.setState({
+        openRows: newArray
+      })
+    } else {
+      this.setState({
+        openRows: this.state.openRows.concat([bot.botid])
+      })
+    }
+
   }
 
 
-  createPopover(botid) {
-    return <MyBotsFights botid={botid} mybots={this.state.bots}/>;
-  }
+  // createPopover(botid) {
+  //   return <MyBotsFights botid={botid} mybots={this.state.bots}/>;
+  // }
 
   render() {
+
+    const moreInfoBaseClassList = 'more-info d-sm-flex justify-content-between';
+
     return (
 
       <React.Fragment>
@@ -100,7 +118,7 @@ export default class League extends React.Component {
 
                 {this.state.leaderboard.map((bot, i) => {
                   return <tr
-                    onClick={this.showMoreInfo.bind(this, bot)}
+                    onClick={this.toggleMoreInfo.bind(this, bot)}
                     className={this.props.match.params.botid && this.props.match.params.botid === bot.botid ? "leaderboard-row active" : "leaderboard-row"}
                     key={bot.botid}
                     id={`bot-${bot.botid}`}
@@ -121,7 +139,21 @@ export default class League extends React.Component {
                     {/*</td>*/}
 
                     <td className="name">
-                      <span className="text">{bot.name.substr(0, 40)}</span>
+                      <div className="text-container">
+                        <span className="text">{bot.name.substr(0, 40)}</span>
+                        <div className={this.state.openRows.includes(bot.botid) ? (moreInfoBaseClassList + ' open') : moreInfoBaseClassList} >
+                          <div className="stats-container">
+                            <span className="wins__value">Victories by defeat : {bot.wins || 0}</span><br/>
+                            <span className="ties__value">Victories by tie: {bot.ties || 0}</span>
+                          </div>
+                          {this.props.auth.isAuthenticated()
+                            && this.state.openRows.includes(bot.botid)
+                            && !(this.state.bots.find(b => b.botid === bot.botid))
+                            && <div className="your-bots-fights">
+                            <MyBotsFights botid={bot.botid} mybots={this.state.bots}/>
+                          </div>}
+                        </div>
+                      </div>
                       <div className="team d-none d-sm-flex">
                         {bot.team && bot.team.map((soldier, i) => {
                           return (
@@ -131,21 +163,13 @@ export default class League extends React.Component {
                           )
                         })}
                       </div>
+
                     </td>
 
-                    <td className="username">
+                    <td className="d-none d-sm-table-cell username">
                       {bot.username.substr(0, 40)}
                     </td>
 
-                    {/*<td className="wins">*/}
-                    {/*  <span className="wins__value">{bot.wins || 0}</span><br/>*/}
-                    {/*  <span className="wins__label">ko wins</span>*/}
-                    {/*</td>*/}
-
-                    {/*<td className="ties">*/}
-                    {/*  <span className="ties__value">{bot.ties || 0}</span><br/>*/}
-                    {/*  <span className="ties__label">ties wins</span>*/}
-                    {/*</td>*/}
 
                     <td className="points">
                       <span className="points__value">{bot.points || 0}</span><br/>

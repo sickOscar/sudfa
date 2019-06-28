@@ -1,5 +1,5 @@
 import React from 'react';
-import Popover from "react-bootstrap/Popover";
+// import Popover from "react-bootstrap/Popover";
 import {Link} from 'react-router-dom';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Env from '../env';
@@ -48,33 +48,34 @@ export default class MyBotsFights extends React.Component {
       .catch(err => console.error(err))
 
 
-    const popoverPlacement = document.getElementById(this.props.botid + '-popover-placement');
-    var rect = popoverPlacement.getBoundingClientRect();
-    const scrollTop = window.pageYOffset;
-
-
-    console.log("rect", rect, scrollTop);
-
-    this.setState({
-      top: rect.top + scrollTop,
-      right: rect.right,
-      bottom: rect.bottom,
-      left: rect.left
-    })
+    // const popoverPlacement = document.getElementById(this.props.botid + '-popover-placement');
+    // var rect = popoverPlacement.getBoundingClientRect();
+    // const scrollTop = window.pageYOffset;
+    //
+    //
+    // console.log("rect", rect, scrollTop);
+    //
+    // this.setState({
+    //   top: rect.top + scrollTop,
+    //   right: rect.right,
+    //   bottom: rect.bottom,
+    //   left: rect.left
+    // })
 
   }
 
   render() {
-    return <Popover title="Fights with your bots"
-                    style={{left: this.state.left + 30, top: this.state.top, width: '300px', maxWidth: '300px'}}>
-
-      <table className="table">
+    // return <Popover title="Fights with your bots"
+    //                 style={{left: this.state.left + 30, top: this.state.top, width: '300px', maxWidth: '300px'}}>
+    //
+      return (
+        <table className="table">
         <thead>
           <tr>
-            <th>Bot</th>
-            <th>W</th>
-            <th>T</th>
-            <th>L</th>
+            <th>Against</th>
+            <th className="text-center">W</th>
+            <th className="text-center">T</th>
+            <th className="text-center">L</th>
             <th></th>
           </tr>
         </thead>
@@ -82,11 +83,11 @@ export default class MyBotsFights extends React.Component {
         {this.props.mybots.map((mybot, i) => {
           return (
             <tr key={i}>
-              <td>{mybot.name}</td>
-              <td>{this.state.fights[mybot.botid] && this.state.fights[mybot.botid].w}</td>
-              <td>{this.state.fights[mybot.botid] && this.state.fights[mybot.botid].t}</td>
-              <td>{this.state.fights[mybot.botid] && this.state.fights[mybot.botid].l}</td>
-              <td>
+              <td className="bot-name">{mybot.name}</td>
+              <td className="text-center">{this.state.fights[mybot.botid] && this.state.fights[mybot.botid].w}</td>
+              <td className="text-center">{this.state.fights[mybot.botid] && this.state.fights[mybot.botid].t}</td>
+              <td className="text-center">{this.state.fights[mybot.botid] && this.state.fights[mybot.botid].l}</td>
+              <td className="text-center">
                 <Link to={`/fight/${mybot.botid}/${this.props.botid}`}>
                   <FontAwesomeIcon icon="eye" />
                 </Link>
@@ -95,8 +96,8 @@ export default class MyBotsFights extends React.Component {
         })}
         </tbody>
       </table>
-
-    </Popover>
+      )
+    // </Popover>
   }
 
 }
