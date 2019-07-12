@@ -98,18 +98,6 @@ const GameArena = {
       throw new Error('Invalid challenger');
     }
 
-    // const gameHistory = await GameLauncher.launch(
-    //   {
-    //     source: code,
-    //     user: userId,
-    //     botid: botid
-    //   },
-    //   {
-    //     source: enemyBot.source,
-    //     botid: challenge,
-    //     user: enemyBot.user
-    //   });
-
     const arenaUrl = `http://${process.env.ARENA_HOST}:${process.env.ARENA_PORT}/bot`
 
     const requestBody = {
