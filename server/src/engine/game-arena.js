@@ -4,6 +4,8 @@ const fs = require('fs');
 const Bots = require('../model/bot');
 const Fights = require('../model/fight');
 
+const request = require('request-promise');
+
 const LEAGUE_BOTS_TABLE = 'league_bots';
 const botFolder = `${__dirname}/../bots/`;
 
@@ -39,17 +41,26 @@ const GameArena = {
       })
     })
 
-    const gameHistory = await GameLauncher.launch(
-      {
+    const arenaUrl = `http://${process.env.ARENA_HOST}:${process.env.ARENA_PORT}/bot`
+
+    const requestBody = {
+      player: {
         source: code,
         user: userId,
         botid: botid
       },
-      {
+      bot: {
         source: pl2Source,
         botid: level
-      })
+      }
+    }
 
+    const gameHistory = await request({
+      method: 'POST',
+      uri: arenaUrl,
+      body: requestBody,
+      json: true
+    });
 
     if (gameHistory.error) {
       return gameHistory
@@ -87,17 +98,39 @@ const GameArena = {
       throw new Error('Invalid challenger');
     }
 
-    const gameHistory = await GameLauncher.launch(
-      {
+    // const gameHistory = await GameLauncher.launch(
+    //   {
+    //     source: code,
+    //     user: userId,
+    //     botid: botid
+    //   },
+    //   {
+    //     source: enemyBot.source,
+    //     botid: challenge,
+    //     user: enemyBot.user
+    //   });
+
+    const arenaUrl = `http://${process.env.ARENA_HOST}:${process.env.ARENA_PORT}/bot`
+
+    const requestBody = {
+      player: {
         source: code,
         user: userId,
         botid: botid
       },
-      {
+      bot: {
         source: enemyBot.source,
         botid: challenge,
         user: enemyBot.user
-      });
+      }
+    }
+
+    const gameHistory = await request({
+      method: 'POST',
+      uri: arenaUrl,
+      body: requestBody,
+      json: true
+    });
 
     if (gameHistory.error) {
       return gameHistory;

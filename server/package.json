@@ -19,6 +19,8 @@
     "lodash": "^4.17.11",
     "pg": "^7.11.0",
     "random": "^2.1.1",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
     "vm2": "^3.8.2"
   },
   "devDependencies": {
