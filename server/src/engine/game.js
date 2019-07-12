@@ -2,11 +2,6 @@ const Soldier = require('./soldier');
 const History = require('./history');
 
 
-// const LazySoldier = function(game, options) {
-//   this.getInstance = () => new Soldier(game, options);
-// };
-
-
 class Game {
 
   constructor() {
@@ -86,6 +81,8 @@ class Game {
       this.prevSoldier.resetStatus();
     }
 
+
+
     const aliveSoldiers = this.getCurrentTroops();
     let soldierIndex = this.currentPlayer.iteration % aliveSoldiers.length;
     const currentSoldier = aliveSoldiers[soldierIndex];
@@ -94,43 +91,36 @@ class Game {
       // do nothing
     } else {
 
-      // get prototype functions (ES6 class defined)
-      const protoFunctions = Object.getOwnPropertyNames(Object.getPrototypeOf(this.currentPlayer));
-      const contextFunctions = protoFunctions.reduce((context, funcName) => {
-        if (funcName !== 'constructor' && funcName !== 'run') {
-          context[funcName] = this.currentPlayer[funcName].bind(this.currentPlayer);
-        }
-        return context;
-      }, {});
 
-      const objectProperties = Object.getOwnPropertyNames(this.currentPlayer);
-      const contextProperties = objectProperties.reduce((context, propName) => {
-        const propsToExclude = ['iteration', 'actionDone'];
-        if (!propsToExclude.includes(propName) && !(this.currentPlayer[propName] instanceof Function)) {
-          context[propName] = this.currentPlayer[propName]
+      const gameProxyHandler = {
+        get: function(target, name) {
+          const allowedMethods = ['getCurrentSoldier', 'getEnemyTeam', 'getMyTeam'];
+          if (allowedMethods.includes(name)) {
+            return target[name];
+          }
+          return 'Nice try!';
+        },
+        set: function(obj, prop, value) {
+          return false;
         }
-        return context;
-      }, {});
+      }
 
-      const context = {
-        ...contextProperties,
-        ...contextFunctions,
-        game: runGameProxy(this.currentPlayer.game),
-        team: {
-          name: this.currentPlayer.team.name
+      const teamProxyHandler = {
+        // get: function(target, name) {
+        //   if (name === 'name') {
+        //     return target[name]
+        //   }
+        //   return 'Nice try!';
+        // },
+        set: function(obj, prop, value) {
+          return false;
         }
-      };
+      }
 
-      this.currentPlayer.run.call(context);
+      this.currentPlayer.game = new Proxy(this.currentPlayer.game, gameProxyHandler);
+      this.currentPlayer.team = new Proxy(this.currentPlayer.team, teamProxyHandler);
 
-      // add to current player properties modified or added during turn
-      const updatedContextProperties = Object.getOwnPropertyNames(context);
-      updatedContextProperties.forEach(propName => {
-        const propsToExclude = ['iteration', 'actionDone', 'game', 'team'];
-        if (!propsToExclude.includes(propName) && !(context[propName] instanceof Function)) {
-          this.currentPlayer[propName] = context[propName];
-        }
-      })
+      this.currentPlayer.run()
 
     }
 
@@ -357,17 +347,9 @@ class Game {
       ...options,
       type: 'dev'
     }
-    // return new LazySoldier(this, {
-    //   ...options,
-    //   type: 'dev'
-    // })
   }
 
   Pm(options) {
-    // return new LazySoldier(this, {
-    //   ...options,
-    //   type: 'pm'
-    // })
     return {
       ...options,
       type: 'pm'
@@ -375,10 +357,6 @@ class Game {
   }
 
   Mktg(options) {
-    // return new LazySoldier(this, {
-    //   ...options,
-    //   type: 'mktg'
-    // })
     return {
       ...options,
       type: 'mktg'
