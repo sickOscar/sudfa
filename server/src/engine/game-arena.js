@@ -1,4 +1,3 @@
-const GameLauncher = require('./game-launcher');
 const _ = require('lodash');
 const fs = require('fs');
 const Bots = require('../model/bot');
@@ -227,6 +226,7 @@ const GameArena = {
 
     // recupera tutti i bot in gioco
     const enemies = await Bots.all(LEAGUE_BOTS_TABLE);
+    const hrstart = process.hrtime();
 
     const fights = [];
 
@@ -257,10 +257,6 @@ const GameArena = {
           },
           json: true
         })
-
-
-        // const homeRun = await GameLauncher.launch(bot1, bot2);
-        // const awayRun = await GameLauncher.launch(bot2, bot1);
 
         if (homeRun.error || awayRun.error) {
           console.error(homeRun.error || awayRun.error);
@@ -293,7 +289,9 @@ const GameArena = {
 
     }
 
-    console.log(`Game arena rerun completed: ${fights.length} fights`)
+    const executionTime = process.hrtime(hrstart)
+    console.log(`Game arena completed in ${executionTime}s : ${fights.length} fights`)
+
 
     await Fights.truncate();
     await Fights.addMany(_.flatten(fights));
@@ -364,7 +362,7 @@ const GameArena = {
 
       const arenaUrl = `http://${process.env.ARENA_HOST}:${process.env.ARENA_PORT}/bot`
 
-      const homeRun = await request({
+      const homeRunPromise = request({
         method: 'POST',
         uri: arenaUrl,
         body: {
@@ -374,7 +372,7 @@ const GameArena = {
         json: true
       })
 
-      const awayRun = await request({
+      const awayRunPromise = request({
         method: 'POST',
         uri: arenaUrl,
         body: {
@@ -383,6 +381,8 @@ const GameArena = {
         },
         json: true
       })
+
+      const [homeRun, awayRun] = await Promise.all([homeRunPromise, awayRunPromise]);
 
       if (homeRun.error || awayRun.error) {
         console.error(homeRun.error || awayRun.error);
@@ -408,7 +408,6 @@ const GameArena = {
         by: awayRun.exit.by,
         time: Math.round((+new Date()) / 1000)
       };
-
 
       homeFightExample = homeFightExample || homeRun;
 

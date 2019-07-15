@@ -106,8 +106,7 @@ const FightModel = {
 
     const text = `UPDATE queue SET ${setClause.join(', ')} WHERE ${whereClause.join(' AND ')} RETURNING *`;
 
-    console.log("text", text, values);
-    
+
     const query = {text, values};
 
     return clientConnected

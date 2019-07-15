@@ -15,7 +15,7 @@ module.exports = {
     table = table || 'bots';
 
     const query = {
-      text: `SELECT * FROM ${table} WHERE "user" = $1`,
+      text: `SELECT * FROM ${table} WHERE "user" = $1 ORDER BY name`,
       values: [userId]
     };
 
