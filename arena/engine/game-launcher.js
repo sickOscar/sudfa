@@ -22,6 +22,8 @@ const launch = function(p1, p2) {
 
     })
 
+  } else {
+    throw new Error('Invalid fight launch from secondary thread')
   }
 
 };

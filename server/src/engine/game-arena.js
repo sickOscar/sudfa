@@ -236,8 +236,31 @@ const GameArena = {
         const bot1 = enemies[i];
         const bot2 = enemies[j];
 
-        const homeRun = await GameLauncher.launch(bot1, bot2);
-        const awayRun = await GameLauncher.launch(bot2, bot1);
+        const arenaUrl = `http://${process.env.ARENA_HOST}:${process.env.ARENA_PORT}/bot`
+
+        const homeRun = await request({
+          method: 'POST',
+          uri: arenaUrl,
+          body: {
+            player: bot1,
+            bot: bot2
+          },
+          json: true
+        })
+
+        const awayRun = await request({
+          method: 'POST',
+          uri: arenaUrl,
+          body: {
+            player: bot2,
+            bot: bot1
+          },
+          json: true
+        })
+
+
+        // const homeRun = await GameLauncher.launch(bot1, bot2);
+        // const awayRun = await GameLauncher.launch(bot2, bot1);
 
         if (homeRun.error || awayRun.error) {
           console.error(homeRun.error || awayRun.error);
@@ -328,6 +351,7 @@ const GameArena = {
 
     // recupera tutti i bot in gioco
     const enemies = await Bots.all(LEAGUE_BOTS_TABLE);
+    const hrstart = process.hrtime();
 
     const fights = [];
     let homeFightExample = undefined;
@@ -338,8 +362,27 @@ const GameArena = {
         continue;
       }
 
-      const homeRun = await GameLauncher.launch(bot, enemies[i]);
-      const awayRun = await GameLauncher.launch(enemies[i], bot);
+      const arenaUrl = `http://${process.env.ARENA_HOST}:${process.env.ARENA_PORT}/bot`
+
+      const homeRun = await request({
+        method: 'POST',
+        uri: arenaUrl,
+        body: {
+          player: bot,
+          bot: enemies[i]
+        },
+        json: true
+      })
+
+      const awayRun = await request({
+        method: 'POST',
+        uri: arenaUrl,
+        body: {
+          player: enemies[i],
+          bot: bot
+        },
+        json: true
+      })
 
       if (homeRun.error || awayRun.error) {
         console.error(homeRun.error || awayRun.error);
@@ -373,7 +416,9 @@ const GameArena = {
 
     }
 
-    console.log(`Game arena completed for ${bot.botid}: ${fights.length} fights`)
+    const executionTime = process.hrtime(hrstart)
+
+    console.log(`Game arena completed in ${executionTime}s for ${bot.botid}: ${fights.length} fights`)
 
     return {
       fights,
