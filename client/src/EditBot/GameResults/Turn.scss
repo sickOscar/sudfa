@@ -196,6 +196,23 @@
 
         }
 
+        .totem {
+          background-color: black;
+          border-radius: 1.5em;
+          display: inline-block;
+          height: 15px;
+          width: 15px;
+          margin: 0 0.5em;
+
+          &-attack {
+            background-color: red;
+          }
+
+          &-defense {
+            background-color: green;
+          }
+        }
+
       }
     }
   }

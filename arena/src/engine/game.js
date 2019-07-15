@@ -79,6 +79,7 @@ class Game {
     // reset status of previous soldier
     if (this.prevSoldier) {
       this.prevSoldier.resetStatus();
+      this.prevSoldier.updateTotems();
     }
 
 
@@ -156,6 +157,12 @@ class Game {
           final[soldier.getId()] = {
             health: soldier.getHealth(),
             status: soldier.getStatus(),
+            totems: soldier.getTotems().map(t => ({
+              health: t.getHealth(),
+              id: t.getId(),
+              type: t.getType(),
+              duration: t.getDuration()
+            })),
             healthDiff: soldier.getHealth() - getSoldierHealthOfLastTurn(soldier.getId(), soldier.getMaxHealth())
           };
           return final;
@@ -183,6 +190,10 @@ class Game {
     return this.currentPlayer.team.troop;
   }
 
+  getTroops(team) {
+    return team.troop.map(s => s);
+  }
+
   getAliveTroops(team) {
     let aliveTroops = [];
     for (let i = 0; i < team.troop.length; i++) {
@@ -191,6 +202,16 @@ class Game {
       }
     }
     return aliveTroops;
+  }
+
+  getDeadTroops(team) {
+    let deadTroops = [];
+    for (let i = 0; i < team.troop.length; i++) {
+      if (team.troop[i].getHealth() <= 0) {
+        deadTroops.push(team.troop[i])
+      }
+    }
+    return deadTroops;
   }
 
   getCurrentSoldier() {
@@ -208,11 +229,15 @@ class Game {
       blind: soldier.blind.bind(soldier),
       poison: soldier.poison.bind(soldier),
       protect: soldier.protect.bind(soldier),
+      ress: soldier.ress.bind(soldier),
+      summon: soldier.summon.bind(soldier),
       canHeal: soldier.canHeal.bind(soldier),
       canProtect: soldier.canProtect.bind(soldier),
       canCast: soldier.canCast.bind(soldier),
       canSilence: soldier.canSilence.bind(soldier),
       canPoison: soldier.canPoison.bind(soldier),
+      canRess: soldier.canRess.bind(soldier),
+      canSummon: soldier.canSummon.bind(soldier),
       say: soldier.say.bind(soldier),
       // getters
       getMotto: soldier.getMotto.bind(soldier),
@@ -222,7 +247,8 @@ class Game {
       getName: soldier.getName.bind(soldier),
       getId: soldier.getId.bind(soldier),
       getMaxHealth: soldier.getMaxHealth.bind(soldier),
-      getStatus: soldier.getStatus.bind(soldier)
+      getStatus: soldier.getStatus.bind(soldier),
+      getTotems: soldier.getTotems.bind(soldier)
     }
   }
 
@@ -234,7 +260,8 @@ class Game {
       getHealth: soldier.getHealth.bind(soldier),
       getAttack: soldier.getAttack.bind(soldier),
       getMaxHealth: soldier.getMaxHealth.bind(soldier),
-      getStatus: soldier.getStatus.bind(soldier)
+      getStatus: soldier.getStatus.bind(soldier),
+      getTotems: soldier.getTotems.bind(soldier)
     }
   }
 
@@ -248,6 +275,15 @@ class Game {
           }
         }
         return aliveTroops.map(soldier => soldierProxy(soldier));
+      },
+      getDeadSoldiers: () => {
+        let deadTroops = [];
+        for (let i = 0; i < team.length; i++) {
+          if (team[i].getHealth() <= 0) {
+            deadTroops.push(team[i])
+          }
+        }
+        return deadTroops.map(soldier => soldierProxy(soldier));
       },
       getFirstSoldier: () => {
         return soldierProxy(team[0]);
@@ -293,12 +329,12 @@ class Game {
   }
 
   getEnemyTeam() {
-    const enemyTeam = this.getAliveTroops(this.opponentPlayer.team);
+    const enemyTeam = this.getTroops(this.opponentPlayer.team);
     return this.teamProxy(enemyTeam, this.opponentSoldierProxy)
   }
 
   getMyTeam() {
-    const myTeam = this.getAliveTroops(this.currentPlayer.team);
+    const myTeam = this.getTroops(this.currentPlayer.team);
     return this.teamProxy(myTeam, this.mySoldierProxy)
   }
 
@@ -363,12 +399,12 @@ class Game {
     }
   }
 
-  // Hr(options) {
-  //   return new LazySoldier(this, {
-  //     ...options,
-  //     type: 'hr'
-  //   })
-  // }
+  Hr(options) {
+    return {
+      ...options,
+      type: 'hr'
+    }
+  }
 
 }
 

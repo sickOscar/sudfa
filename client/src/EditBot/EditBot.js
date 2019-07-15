@@ -69,7 +69,7 @@ export default class Home extends Component {
       showOverlay: false,
       mainJoyride: {
         showProgress: true,
-        debug: true,
+        // debug: true,
         continuous: true,
         run: false,
         steps: [

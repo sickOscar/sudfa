@@ -17,7 +17,9 @@ import {
   faCommentSlash,
   faEyeSlash,
   faSkullCrossbones,
-  faUserShield
+  faUserShield,
+  faDiagnoses,
+  faCross
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faTimes);
@@ -38,3 +40,5 @@ library.add(faEyeSlash);
 library.add(faCommentSlash);
 library.add(faSkullCrossbones);
 library.add(faUserShield);
+library.add(faCross);
+library.add(faDiagnoses);

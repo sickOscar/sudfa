@@ -6,7 +6,7 @@ class Runner {
     this.game = game;
 
     this.team = {
-      name: 'Nonno macchinista',
+      name: 'Guru',
       troop: [
         game.Dev(),
         game.Pm(),

@@ -1,3 +1,5 @@
+const Totem = require('./totem');
+
 function Soldier(game, options) {
 
   const id = Math.random().toString(36).substring(2);
@@ -17,6 +19,8 @@ function Soldier(game, options) {
 
   let tells = [];
 
+  let totems = [];
+
   switch (options.type) {
     case 'dev':
       health = maxHealth = 24;
@@ -26,6 +30,10 @@ function Soldier(game, options) {
       health = maxHealth = 20;
       attack = 2;
       healPower = 5;
+      break;
+    case 'hr':
+      health = maxHealth = 20;
+      attack = 1;
       break;
     case 'mktg':
       health = maxHealth = 15;
@@ -66,6 +74,14 @@ function Soldier(game, options) {
     doAction.call(this, 'poison', target)
   };
 
+  const ress = (target) => {
+    doAction.call(this, 'ress', target);
+  }
+
+  const summon = (totemType) => {
+    doAction.call(this, 'summon', game.getCurrentSoldier(), {totemType});
+  }
+
   const canHit = () => {
     return !status.includes('BLIND');
   };
@@ -94,6 +110,14 @@ function Soldier(game, options) {
     return type === 'mktg' && !status.includes('SILENCED');
   };
 
+  const canRess = () => {
+    return type === 'hr' && !status.includes('SILENCED');
+  }
+
+  const canSummon = () => {
+    return type === 'hr' && !status.includes('SILENCED') && totems.length < 3;
+  }
+
   const say = (message) => {
     if (tells.length < 10) {
       if (message === undefined || message === null) {
@@ -108,7 +132,7 @@ function Soldier(game, options) {
   };
 
 
-  const doAction = (actionType, target) => {
+  const doAction = (actionType, target, actionOptions) => {
 
     let success = false;
     let message = '';
@@ -125,15 +149,48 @@ function Soldier(game, options) {
           const aliveOpponents = game.getAliveTroops(game.opponentPlayer.team);
           const t = aliveOpponents.find(soldier => soldier.getId() === target.getId());
 
-          if (t.getStatus().includes('PROTECTED')) {
-            // remove protected
-            t.removeStatus('PROTECTED');
-            message = `${name} attacks ${t.getName()} - attack failed / active protection`;
-            success = true;
+          if (!t) {
+            message = `${name} fails to attack! Invalid target`;
+            success = false
           } else {
-            t.setHealth(t.getHealth() - attack);
-            message = `${name} attacks ${t.getName()} - ${attack} damage`;
-            success = true;
+
+            if (t.getStatus().includes('PROTECTED')) {
+              // remove protected
+              t.removeStatus('PROTECTED');
+              message = `${name} attacks ${t.getName()} - attack failed / active protection`;
+              success = true;
+            } else {
+
+              const aliveCompanions = game.getAliveTroops(game.currentPlayer.team);
+              const hrs = aliveCompanions.filter(s => s.canSummon())
+
+              let attackBuff = 0;
+              for (let i = 0; i < hrs.length; i++) {
+                const totems = hrs[i].getTotems();
+                totems.forEach(totem => {
+                  if (totem.getType() === 'attack') {
+                    attackBuff++;
+                  }
+                })
+              }
+
+              let attackNerf = 0;
+              aliveOpponents
+                .filter(s => s.canSummon())
+                .forEach(soldier => {
+                  soldier.getTotems().forEach(totem => {
+                    if (totem.getType() === 'defense') {
+                      attackNerf++;
+                    }
+                  })
+                })
+
+              const finalAttackValue = attack + attackBuff - attackNerf;
+              t.setHealth(t.getHealth() - finalAttackValue);
+              message = `${name} attacks ${t.getName()} - ${finalAttackValue} damage`;
+              success = true;
+            }
+
           }
 
         } else {
@@ -319,6 +376,50 @@ function Soldier(game, options) {
       }
     }
 
+    // RESS
+    if (actionType === 'ress') {
+      if (canRess()) {
+        if (target) {
+          const companions = game.getCurrentTroops();
+          const t = companions.find(soldier => soldier.getId() === target.getId());
+
+          if (!t) {
+            message = `${name} trying to ress: invalid target`;
+            success = false;
+          } else {
+
+            if (t.getHealth() > 0) {
+              message = `Can't ress alive companion :(`;
+              success = false;
+            } else {
+              message = `${name} ress companion ${t.getName()}`;
+              t.setHealth(Math.ceil(t.getMaxHealth() / 2));
+              success = true;
+            }
+
+          }
+        } else {
+          message = `${name} can't ress - no target`;
+          success = false;
+        }
+      }
+    }
+
+    // SUMMON
+    if (actionType === 'summon') {
+      if (canSummon()) {
+        const newTotem = Totem(actionOptions.totemType);
+
+        totems.push(newTotem);
+        message = `${name} summons totem`;
+        success = true;
+
+      } else {
+        message = `${name} can't summon now`;
+        success = false;
+      }
+    }
+
     game.currentPlayer.actionDone = {
       tells: tells.map(tell => tell),
       actor: id,
@@ -351,6 +452,17 @@ function Soldier(game, options) {
       return status.map(s => s)
     }
   };
+
+  const totemProxy = t => {
+    return {
+      getId: t.getId.bind(t),
+      getDuration: t.getDuration.bind(t),
+      getHealth: t.getHealth.bind(t),
+      getType: t.getType.bind(t)
+    }
+  }
+
+  const getTotems = () => totems.map(totemProxy);
 
   // setters
   const setHealth = value => {
@@ -386,6 +498,27 @@ function Soldier(game, options) {
     }
   };
 
+  const updateTotems = () => {
+
+    if (health <= 0) {
+      if (type === 'hr') {
+        console.log('reset totems ', health)
+      }
+
+      totems = [];
+    } else {
+      totems = totems
+        .map(t => {
+          t.setDuration(t.getDuration() - 1);
+          return t;
+        })
+        .filter(t => {
+          return t.getDuration() > 0;
+        })
+    }
+
+  }
+
   const info = () => ({
     id,
     type,
@@ -407,12 +540,16 @@ function Soldier(game, options) {
     blind,
     poison,
     protect,
+    ress,
+    summon,
     canHeal,
     canCast,
     canSilence,
     canBlind,
     canPoison,
     canProtect,
+    canRess,
+    canSummon,
     say,
     // getters
     info,
@@ -424,10 +561,12 @@ function Soldier(game, options) {
     getId,
     getMaxHealth,
     getStatus,
+    getTotems,
     // setters
     setHealth,
     addStatus,
     resetStatus,
+    updateTotems,
     removeStatus
   }
 

@@ -11,7 +11,7 @@ export class GameResults extends Component {
       starting: false,
       resultsJoyride : {
         showProgress: true,
-        debug: true,
+        // debug: true,
         continuous: true,
         run: false,
         steps: [

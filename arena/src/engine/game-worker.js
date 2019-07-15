@@ -22,6 +22,7 @@ parentPort.once('message', (message) => {
     parentPort.postMessage(JSON.stringify(results));
   } catch (error) {
     console.log('CODE ERROR', error.message);
+    console.error(error);
     parentPort.postMessage(JSON.stringify({
       error: error.message
     }));
@@ -106,7 +107,8 @@ const launch = function(p1, p2) {
     'getMyTeam': game.getMyTeam.bind(game),
     'Dev': game.Dev.bind(game),
     'Pm': game.Pm.bind(game),
-    'Mktg': game.Mktg.bind(game)
+    'Mktg': game.Mktg.bind(game),
+    'Hr': game.Hr.bind(game)
   }
 
   const Player1 = loadCode(p1.source, game.console);

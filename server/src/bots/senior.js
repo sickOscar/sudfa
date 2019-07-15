@@ -1,52 +1,58 @@
+
 class Runner {
 
-    constructor(game) {
-        // game instance
-        this.game = game;
-        // team definition
-        this.team = {
-            name: "Senior", 
-            troop: [
-                game.Mktg({
-                    // name: "???",                    
-                    // motto: ""
-                }),
-                game.Pm({
-                    
-                }),
-                game.Dev({
-                    
-                })
-            ]
-        }
+  constructor(game) {
+
+    this.game = game;
+
+    this.team = {
+      name: "Senior",
+      troop: [
+        game.Dev(),
+        game.Pm(),
+        game.Hr(),
+
+      ]
     }
 
-    
-    run() {
-        
-        // Your current soldier, which is acting in this turn
-        const soldier = this.game.getCurrentSoldier();
-        // Reference to the enemy team
-        const enemyTeam = this.game.getEnemyTeam();
-        // Reference to your team
-        const myTeam = this.game.getMyTeam();
-        
-        // Simple AI
-        if (soldier.canCast()) {
-            console.log('perchè')
-            // If the soldier can cast, then cast on all enemies
-            // soldier.cast();
-        } else if (soldier.canHeal()) {
-            // if the soldier can heal, then heal the most damaged of your team
-            const t = myTeam.getMostDamagedSoldier()
-            soldier.heal(t);
-        } else {
-            // make the soldier hit the most damaged enemy
-            const target = enemyTeam.getMostDamagedSoldier();
-            soldier.hit(target);
-        }
-        
+    this.turn = 0;
+
+  }
+
+
+  run() {
+
+
+    this.turn++;
+
+    // Your current soldier, which is acting in this turn
+    const soldier = this.game.getCurrentSoldier();
+    // Reference to the enemy team
+    const enemyTeam = this.game.getEnemyTeam();
+    // Reference to your team
+    const myTeam = this.game.getMyTeam();
+
+    if (soldier.canHeal()) {
+      const target = myTeam.getMostDamagedSoldier();
+      return soldier.heal(target);
     }
+
+    if (soldier.canRess()) {
+      const deadSoldiers = myTeam.getDeadSoldiers();
+
+      if (deadSoldiers.length > 0) {
+        return  soldier.ress(deadSoldiers[0])
+      } else {
+        const target = enemyTeam.getMostDamagedSoldier();
+        return soldier.hit(target)
+      }
+    }
+
+    const target = enemyTeam.getMostDamagedSoldier();
+    soldier.hit(target)
+
+
+  }
 
 }
 

@@ -38,6 +38,10 @@ const Turn = (props) => {
         return <FontAwesomeIcon icon="skull-crossbones"/>;
       case 'protect':
         return <FontAwesomeIcon icon="user-shield"/>;
+      case 'ress':
+        return <FontAwesomeIcon icon="cross"/>;
+      case 'summon':
+        return <FontAwesomeIcon icon="diagnoses"/>;
       default:
         return <FontAwesomeIcon icon="question"/>;
     }
@@ -59,6 +63,10 @@ const Turn = (props) => {
         return 'poison-text';
       case 'protect':
         return 'protect-text';
+      case 'ress':
+        return 'ress-text';
+      case 'summon':
+        return 'summon-text';
       default:
         return '';
     }
@@ -108,6 +116,17 @@ const Turn = (props) => {
       if (soldierId === turn.target) {
         className.push('target');
       }
+    }
+    if (turn.type === 'ress' && turn.success) {
+      if (soldierId === turn.target) {
+        className.push('target');
+      }
+    }
+
+    if (turn.type === 'summon' && turn.success) {
+      // if (soldierId === turn.target) {
+      //   className.push('target');
+      // }
     }
 
 
@@ -224,8 +243,16 @@ const Turn = (props) => {
                                 </small>
                               </div>}
 
-                              <div className={getSoldierClassName(soldierId, turn, team[soldierId].status, getSoldierType(soldierId))}
-                                style={{backgroundImage: `url(${icons[getSoldierType(soldierId)]})`}}/>
+                              <div>
+                                {i === 1 && <div className="totem-container">
+                                  {team[soldierId].totems.map(totem => (<div className={"totem totem-" + totem.type}></div>))}
+                                </div>}
+                                <div className={getSoldierClassName(soldierId, turn, team[soldierId].status, getSoldierType(soldierId))}
+                                  style={{backgroundImage: `url(${icons[getSoldierType(soldierId)]})`}}/>
+                                {i === 0 && <div className="totem-container">
+                                  {team[soldierId].totems.map(totem => (<div className={"totem totem-" + totem.type}></div>))}
+                                </div>}
+                              </div>
 
                               {i === 1 && <div className="soldier-status">
                                 {getSoldierName(soldierId)}

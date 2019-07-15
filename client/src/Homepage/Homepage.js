@@ -9,7 +9,7 @@ import pm from '../images/personaggi/po.png';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 import full_logo from '../images/cover/full_logo.png';
-import team from '../images/team.jpg';
+import team from '../images/team.png';
 import vs from '../images/vs.png';
 
 const Homepage = (props) => {
