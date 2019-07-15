@@ -501,10 +501,6 @@ function Soldier(game, options) {
   const updateTotems = () => {
 
     if (health <= 0) {
-      if (type === 'hr') {
-        console.log('reset totems ', health)
-      }
-
       totems = [];
     } else {
       totems = totems
