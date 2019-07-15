@@ -2,7 +2,7 @@ const app = require('express')();
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
-const GameLauncher = require('./engine/game-launcher');
+const GameLauncher = require('./src/engine/game-launcher');
 
 app.use(bodyParser.json());
 
