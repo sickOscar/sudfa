@@ -444,7 +444,7 @@ function Soldier(game, options) {
     // SUMMON
     if (actionType === 'summon') {
       if (canSummon()) {
-        const allowedTotems = ['physical_attack', 'phisical_defense', 'magic_attack', 'magic_defense'];
+        const allowedTotems = ['physical_attack', 'physical_defense', 'magic_attack', 'magic_defense'];
         if (allowedTotems.includes(actionOptions.totemType)) {
           const newTotem = Totem(actionOptions.totemType);
           totems.push(newTotem);
