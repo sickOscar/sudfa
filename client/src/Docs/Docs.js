@@ -5,6 +5,7 @@ import './Docs.scss';
 import developer from '../images/personaggi/dev.png';
 import pm from '../images/personaggi/po.png';
 import marketer from '../images/personaggi/mktg.png';
+import hr from '../images/personaggi/hr.png';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {Helmet} from "react-helmet";
 
@@ -335,6 +336,34 @@ constructor(game) {
                     <code>poison(target)</code>: Poisons a member of the opposing team, suddenly inflicting 2 damage and 4
                     damage distributed over the next 2 rounds. If the target is protected, it does not suffer the initial
                     damage but extends the poisoning period.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="row mt-3">
+              <div className="col-sm-12">
+                <h3>Human Resources Officer</h3>
+              </div>
+              <div className="col-sm-12">
+
+                <img className="class-image" src={hr} alt="Human Resources Officer"/>
+
+                <p>
+                  Are you afraid of loosing human resources? Do you need an help in the office but you can't afford to hire a new team member? Well
+                  the HR Officer is exactly what you need. It can bring back to life one of your dead team members and hire some interns to help you
+                  in your dalily routine. His skills are:
+                </p>
+                <ul>
+                  <li>
+                    <code>hit(target)</code>: Hits the target by inflicting 1 damage (physical attack).
+                  </li>
+                  <li>
+                    <code>ress(target)</code>: Brings a dead companion back to life with half of it's maximum health
+                  </li>
+                  <li>
+                    <code>summon('physical_attack'|'physical_defense'|'magic_attack'|'magic_defense')</code>: Summon an intern, boosting the stats of the entire team. It has 1HP,
+                    it can be killed by physical damage and lasts for 2 rounds.
                   </li>
                 </ul>
               </div>
