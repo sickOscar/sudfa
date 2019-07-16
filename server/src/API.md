@@ -31,10 +31,10 @@
 - **`cast()`**:*void* -> cast a spell (2dmg) on all enemies
 - **`poison(target)`**:*void* -> poison an enemy. Deals 2dmg, then 2dmg per turn for 2 turns. If the enemy is already poisoned, it doesn't deal initial damage but extends poison duration.
 
-#### HR (20HP)
+#### HR (18HP)
 - **`hit(target)`**:*void* -> attacks (1dmg) a target (must be an enemy soldier)
 - **`ress(target)`**:*void* -> ress a target (must be a companion) with half of his max health
-- **`summon('attack'|'defense')`**:*void* -> summons a totem (1 round duration) which boosts the stat corresponding to the parameter for the entire team. Max 3 totems.
+- **`summon('physical_attack'|'physical_defense'|'magic_attack'|'magic_defense')`**:*void* -> summons a totem (1 round duration) which boosts the stat corresponding to the parameter for the entire team. Max 3 totems. Totems can be targeted and damaged by physical attacks.
 
 #### COMMON TO ALL SOLDIERS
 - **`canHeal()`**:*boolean* -> check if soldier can heal
@@ -44,6 +44,7 @@
 - **`canProtect()`**:*boolean* -> check if soldier can protect
 - **`canBlind()`**:*boolean* -> check if soldier can blind
 - **`canRess()`**:*boolean* -> check if soldier can ress
+- **`canSummon()`**:*boolean* -> check if soldier can summon
 - **`getMotto()`**:*string* -> return soldier motto
 - **`getType()`**:*string* -> return soldier type
 - **`getHealth()`**:*int* -> return soldier health

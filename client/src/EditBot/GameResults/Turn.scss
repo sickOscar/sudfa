@@ -204,12 +204,20 @@
           width: 15px;
           margin: 0 0.5em;
 
-          &-attack {
+          &-physical_attack {
             background-color: red;
           }
 
-          &-defense {
+          &-physical_defense {
             background-color: green;
+          }
+
+          &-magic_attack {
+            background-color: blue;
+          }
+
+          &-magic_defense {
+            background-color: violet;
           }
         }
 

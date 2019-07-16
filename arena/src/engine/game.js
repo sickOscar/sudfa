@@ -79,9 +79,12 @@ class Game {
     // reset status of previous soldier
     if (this.prevSoldier) {
       this.prevSoldier.resetStatus();
-      this.prevSoldier.updateTotems();
+      this.prevSoldier.updateTotemsDurations();
     }
 
+    // update all totems
+    this.getCurrentTroops().forEach(s => s.updateTotems());
+    this.getTroops(this.opponentPlayer.team).forEach(s => s.updateTotems())
 
 
     const aliveSoldiers = this.getCurrentTroops();

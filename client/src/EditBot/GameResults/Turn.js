@@ -5,6 +5,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import dev_icon from '../../images/dev_icon.jpeg';
 import pm_icon from '../../images/pm_icon.jpeg';
 import mktg_icon from '../../images/mktg_icon.jpeg';
+import hr_icon from '../../images/hr_icon.png';
 
 const Turn = (props) => {
 
@@ -14,7 +15,8 @@ const Turn = (props) => {
   const icons = {
     'dev': dev_icon,
     'pm': pm_icon,
-    'mktg': mktg_icon
+    'mktg': mktg_icon,
+    'hr': hr_icon
   };
 
   const getIcon = (turn) => {
@@ -187,7 +189,7 @@ const Turn = (props) => {
   return (
     <div className="turn">
 
-      <p className="player-name">{index + 1} - {team.name}</p>
+      <p className="player-name">{team.name}</p>
 
       <div className="turn-base">
 
@@ -245,12 +247,12 @@ const Turn = (props) => {
 
                               <div>
                                 {i === 1 && <div className="totem-container">
-                                  {team[soldierId].totems.map(totem => (<div className={"totem totem-" + totem.type}></div>))}
+                                  {team[soldierId].totems.map((totem, j) => (<div key={`${j}-${totem.type}`} className={"totem totem-" + totem.type} title={totem.type + ' totem'}></div>))}
                                 </div>}
                                 <div className={getSoldierClassName(soldierId, turn, team[soldierId].status, getSoldierType(soldierId))}
                                   style={{backgroundImage: `url(${icons[getSoldierType(soldierId)]})`}}/>
                                 {i === 0 && <div className="totem-container">
-                                  {team[soldierId].totems.map(totem => (<div className={"totem totem-" + totem.type}></div>))}
+                                  {team[soldierId].totems.map((totem, j) => (<div  key={`${j}-${totem.type}`} className={"totem totem-" + totem.type} title={totem.type + ' totem'}></div>))}
                                 </div>}
                               </div>
 

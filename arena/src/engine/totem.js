@@ -9,16 +9,22 @@ function Totem(totemType) {
   const getId = () => id;
   const getDuration = () => duration;
   const getType = () => type;
+  const getName = () => `${type} totem`;
+  const getStatus = () => ['OK'];
 
   const setDuration = (v) => duration = v;
+  const setHealth = (v) => health = v;
 
   return {
     getId,
     getDuration,
     getHealth,
     getType,
+    getName,
+    getStatus,
 
-    setDuration
+    setDuration,
+    setHealth
   }
 }
 

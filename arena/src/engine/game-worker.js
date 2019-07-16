@@ -167,12 +167,10 @@ const launch = function(p1, p2) {
   if (game.turn === MAX_TURNS) {
 
     if (game.checkWinner()) {
-      console.log("TIE p2", player2.botid);
       game.history.setExit(player2.botid, 'TIE', {
         winnerName: game.opponentPlayer.team.name
       })
     } else {
-      console.log("TIE p1", player2.botid);
       game.history.setExit(player1.botid, 'TIE', {
         winnerName: game.currentPlayer.team.name
       })

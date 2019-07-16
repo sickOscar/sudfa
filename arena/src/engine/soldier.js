@@ -32,7 +32,7 @@ function Soldier(game, options) {
       healPower = 5;
       break;
     case 'hr':
-      health = maxHealth = 20;
+      health = maxHealth = 18;
       attack = 1;
       break;
     case 'mktg':
@@ -147,7 +147,17 @@ function Soldier(game, options) {
       if (canHit()) {
         if (target) {
           const aliveOpponents = game.getAliveTroops(game.opponentPlayer.team);
-          const t = aliveOpponents.find(soldier => soldier.getId() === target.getId());
+          let t = aliveOpponents.find(soldier => soldier.getId() === target.getId());
+
+          if (!t) {
+            // check if attacking a totem
+            const opponentTotems = aliveOpponents
+              .filter(opponent => opponent.getType() === 'hr')
+              .flatMap(hr => {
+                return hr.getFullTotems();
+              })
+            t = opponentTotems.find(totem => totem.getId() === target.getId());
+          }
 
           if (!t) {
             message = `${name} fails to attack! Invalid target`;
@@ -168,7 +178,7 @@ function Soldier(game, options) {
               for (let i = 0; i < hrs.length; i++) {
                 const totems = hrs[i].getTotems();
                 totems.forEach(totem => {
-                  if (totem.getType() === 'attack') {
+                  if (totem.getType() === 'physical_attack') {
                     attackBuff++;
                   }
                 })
@@ -179,13 +189,13 @@ function Soldier(game, options) {
                 .filter(s => s.canSummon())
                 .forEach(soldier => {
                   soldier.getTotems().forEach(totem => {
-                    if (totem.getType() === 'defense') {
+                    if (totem.getType() === 'physical_defense') {
                       attackNerf++;
                     }
                   })
                 })
 
-              const finalAttackValue = attack + attackBuff - attackNerf;
+              const finalAttackValue = Math.max(0, attack + attackBuff - attackNerf);
               t.setHealth(t.getHealth() - finalAttackValue);
               message = `${name} attacks ${t.getName()} - ${finalAttackValue} damage`;
               success = true;
@@ -276,7 +286,33 @@ function Soldier(game, options) {
             opponent.removeStatus('PROTECTED');
             // opponent.setHealth(opponent.getHealth() - Math.floor(magicPower /2))
           } else {
-            opponent.setHealth(opponent.getHealth() - magicPower)
+
+            const aliveCompanions = game.getAliveTroops(game.currentPlayer.team);
+            const hrs = aliveCompanions.filter(s => s.canSummon())
+
+            let attackBuff = 0;
+            for (let i = 0; i < hrs.length; i++) {
+              const totems = hrs[i].getTotems();
+              totems.forEach(totem => {
+                if (totem.getType() === 'magic_attack') {
+                  attackBuff++;
+                }
+              })
+            }
+
+            let attackNerf = 0;
+            aliveOpponents
+              .filter(s => s.canSummon())
+              .forEach(soldier => {
+                soldier.getTotems().forEach(totem => {
+                  if (totem.getType() === 'magic_defense') {
+                    attackNerf++;
+                  }
+                })
+              })
+
+            const magicDamage = Math.max(0, magicPower + attackBuff - attackNerf);
+            opponent.setHealth(opponent.getHealth() - magicDamage)
           }
         });
 
@@ -408,12 +444,16 @@ function Soldier(game, options) {
     // SUMMON
     if (actionType === 'summon') {
       if (canSummon()) {
-        const newTotem = Totem(actionOptions.totemType);
-
-        totems.push(newTotem);
-        message = `${name} summons totem`;
-        success = true;
-
+        const allowedTotems = ['physical_attack', 'phisical_defense', 'magic_attack', 'magic_defense'];
+        if (allowedTotems.includes(actionOptions.totemType)) {
+          const newTotem = Totem(actionOptions.totemType);
+          totems.push(newTotem);
+          message = `${name} summons totem`;
+          success = true;
+        } else {
+          message = `${name} tries to summon totem: invalid type`;
+          success = false;
+        }
       } else {
         message = `${name} can't summon now`;
         success = false;
@@ -458,11 +498,15 @@ function Soldier(game, options) {
       getId: t.getId.bind(t),
       getDuration: t.getDuration.bind(t),
       getHealth: t.getHealth.bind(t),
-      getType: t.getType.bind(t)
+      getType: t.getType.bind(t),
+      getName: t.getName.bind(t),
+      getStatus: t.getStatus.bind(t)
     }
   }
 
   const getTotems = () => totems.map(totemProxy);
+
+  const getFullTotems = () => totems;
 
   // setters
   const setHealth = value => {
@@ -498,21 +542,25 @@ function Soldier(game, options) {
     }
   };
 
+  const updateTotemsDurations = () => {
+    totems = totems
+      .map(t => {
+        t.setDuration(t.getDuration() - 1);
+        return t;
+      })
+  }
+
   const updateTotems = () => {
-
-    if (health <= 0) {
-      totems = [];
-    } else {
-      totems = totems
-        .map(t => {
-          t.setDuration(t.getDuration() - 1);
-          return t;
-        })
-        .filter(t => {
-          return t.getDuration() > 0;
-        })
+    if (type === 'hr') {
+      if (health <= 0) {
+        totems = [];
+      } else {
+        totems = totems
+          .filter(t => {
+            return t.getHealth() > 0 && t.getDuration() > 0;
+          })
+      }
     }
-
   }
 
   const info = () => ({
@@ -558,10 +606,12 @@ function Soldier(game, options) {
     getMaxHealth,
     getStatus,
     getTotems,
+    getFullTotems,
     // setters
     setHealth,
     addStatus,
     resetStatus,
+    updateTotemsDurations,
     updateTotems,
     removeStatus
   }
