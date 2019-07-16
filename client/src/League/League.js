@@ -7,6 +7,7 @@ import Env from '../env';
 import dev_icon from '../images/dev_icon.jpeg';
 import pm_icon from '../images/pm_icon.jpeg';
 import mktg_icon from '../images/mktg_icon.jpeg';
+import hr_icon from '../images/hr_icon.png';
 
 // import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import Footer from "../Footer/Footer";
@@ -26,7 +27,8 @@ export default class League extends React.Component {
     this.icons = {
       'dev': dev_icon,
       'pm': pm_icon,
-      'mktg': mktg_icon
+      'mktg': mktg_icon,
+      'hr': hr_icon
     }
   }
 
