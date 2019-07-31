@@ -39,7 +39,7 @@ function Soldier(game, options) {
       health = maxHealth = 15;
       attack = 1;
       // healPower = 1;
-      magicPower = 2;
+      magicPower = 1;
       poisonDamage = 2;
       break;
     default:

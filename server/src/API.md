@@ -28,7 +28,7 @@
 
 #### MKTG (15 HP)
 - **`hit(target)`**:*void* -> attacks (1dmg) a target (must be an enemy soldier)
-- **`cast()`**:*void* -> cast a spell (2dmg) on all enemies
+- **`cast()`**:*void* -> cast a spell (1dmg) on all enemies
 - **`poison(target)`**:*void* -> poison an enemy. Deals 2dmg, then 2dmg per turn for 2 turns. If the enemy is already poisoned, it doesn't deal initial damage but extends poison duration.
 
 #### HR (18HP)

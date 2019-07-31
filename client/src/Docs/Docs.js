@@ -103,7 +103,7 @@ const Docs = (props) => (
                   so that each team has a chance to start first.
                 </p>
                 <p>
-                  A round is a series of alternating rounds (maximum 100), where the components of the
+                  A round is a series of alternating turns (maximum 100), where the components of the
                   two teams alternate and may perform <b>only one action per turn</b>.
                   If you have played a JRPG in the past, you will surely already be aware of the system.
                 </p>
@@ -330,7 +330,7 @@ constructor(game) {
                     <code>hit(target)</code>: Hits the target by inflicting 1 damage (physical attack).
                   </li>
                   <li>
-                    <code>cast()</code>: hits the entire opposing team, inflicting 2 damage on all members
+                    <code>cast()</code>: hits the entire opposing team, inflicting 1 damage on all members
                   </li>
                   <li>
                     <code>poison(target)</code>: Poisons a member of the opposing team, suddenly inflicting 2 damage and 4
