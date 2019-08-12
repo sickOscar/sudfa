@@ -93,3 +93,5 @@ data/
 ecosystem.deploy.js
 
 server/leaderboard.json
+
+arena/bin
