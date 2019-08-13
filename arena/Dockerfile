@@ -2,6 +2,9 @@ FROM keymetrics/pm2:latest-alpine
 
 WORKDIR /opt/arena
 
+RUN groupadd -g 1001 arena && useradd -r -u 1001 -g arena arena
+USER arena
+
 # Bundle APP files
 COPY src src/
 COPY package.json .
