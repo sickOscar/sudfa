@@ -2,9 +2,9 @@ FROM keymetrics/pm2:latest-alpine
 
 WORKDIR /opt/arena
 
-RUN addgroup -g 1001 -S arena
-RUN adduser -h /opt/arena -u 1001 -G arena arena
-USER arena
+#RUN addgroup -g 1001 -S arena
+#RUN adduser -h /opt/arena -u 1001 -G arena arena
+#USER arena
 
 # Bundle APP files
 COPY src src/
