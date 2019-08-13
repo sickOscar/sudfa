@@ -1,5 +1,7 @@
 FROM keymetrics/pm2:latest-alpine
 
+WORKDIR /opt/arena
+
 # Bundle APP files
 COPY src src/
 COPY package.json .
