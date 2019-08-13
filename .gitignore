@@ -95,3 +95,4 @@ ecosystem.deploy.js
 server/leaderboard.json
 
 arena/bin
+server/bin
