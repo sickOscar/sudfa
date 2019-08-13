@@ -2,8 +2,8 @@ FROM keymetrics/pm2:latest-alpine
 
 WORKDIR /opt/arena
 
-RUN groupadd -g 1001 arena
-RUN useradd -r -u 1001 -g arena arena
+RUN addgroup -g 1001 -S arena
+RUN adduser -h /opt/arena -u 1001 -G arena arena
 USER arena
 
 # Bundle APP files
