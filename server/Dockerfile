@@ -1,5 +1,12 @@
 FROM keymetrics/pm2:latest-alpine
 
+
+WORKDIR /opt/runner
+
+RUN addgroup -g 1001 -S runner
+RUN adduser -h /opt/runner -u 1001 -D -G runner runner
+USER runner
+
 # Bundle APP files
 COPY src src/
 COPY package.json .
