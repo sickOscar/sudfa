@@ -19,7 +19,7 @@ const WhoWeAre = props => (
 
       <ul className="list-unstyled mt-2">
         <li>Oscar Chinellato (<a href="https://github.com/sickdevelopers" target="_blank" rel="noopener noreferrer">@sickDevelopers</a>)</li>
-        <li>Shotokan (<a href="https://aitch.me/" target="_blank" rel="noopener noreferrer">31337</a>)</li>
+        <li>Roberto "Shoto" Bindi (<a href="https://aitch.me/" target="_blank" rel="noopener noreferrer">Aitch.</a>)</li>
         <li>Roberto Cecchi (<a href="https://www.robertocecchi.com/" target="_blank" rel="noopener noreferrer">portfolio</a>)</li>
         <li>Gianluca Pericoli (<a href="https://github.com/gpericol" target="_blank" rel="noopener noreferrer">@gpericol</a>)</li>
       </ul>
