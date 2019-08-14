@@ -162,6 +162,7 @@ const threeEntryPoint = (containerElement, texture, bg) => {
 
   const renderer = new THREE.WebGLRenderer();
   renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.domElement.style = 'max-width: 100%';
 
   containerElement.appendChild( renderer.domElement );
 
