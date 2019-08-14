@@ -9,6 +9,8 @@ import hr from '../images/personaggi/hr.png';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {Helmet} from "react-helmet";
 
+import Highlight from 'react-highlight'
+
 const Docs = (props) => (
   <React.Fragment>
 
@@ -156,32 +158,39 @@ const Docs = (props) => (
                   Within the constructor you need to define a `team` object that must contain the name and shape of the
                   team.
                 </p>
-                <code>
-          <pre>
+
+                <Highlight language="javascript">
             {
               `
-constructor(game) {
+class Runner { 
+        
+    ...
+    
+    constructor(game) {
 
-  // ref to the game object
-  this.game = game;
+      // ref to the game object
+      this.game = game;
 
-  this.team = {
-    name: 'Team name', // the team name, you can change it anytime you want
-    troops: [
-      game.Dev({
-        name: "Imis Shortcollar", // optional, choose your own name. just for fun
-        motto: "My kung fu is better than yours!" // optional, just for fun, used only for events
-      }),
-      game.Pm(),
-      game.Mktg() // max 3 soldiers
-    ]
-  }
+      this.team = {
+        name: 'Team name', // the team name, you can change it anytime you want
+        troops: [
+          game.Dev({
+            name: "Imis Shortcollar", // optional, choose your own name. just for fun
+            motto: "My kung fu is better than yours!" // optional, just for fun, used only for events
+          }),
+          game.Pm(),
+          game.Mktg() // max 3 soldiers
+        ]
+      }
+
+    }
+
+    ...
 
 }
 `
             }
-          </pre>
-                </code>
+                </Highlight>
 
                 <p>
                   In this example we included a dev, a pm and a marketer. You can compose your team with the combination of classes you prefer

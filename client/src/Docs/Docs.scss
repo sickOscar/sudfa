@@ -19,22 +19,22 @@
 }
 
 
-pre{
-  counter-reset:line-numbering;
-  background:#2c3e50;
-  padding:12px 0px 14px 10px;
-  width:100%;
-  color:#ecf0f1;
-  line-height:140%;
-  .line::before {
-    content: counter(line-numbering);
-    counter-increment: line-numbering;
-    padding-right: 1em;
-    /* space after numbers */
-    padding-left:8px;
-    width: 1.5em;
-    text-align: right;
-    opacity: 0.5;
-    color:white;
-  }
-}
+//pre{
+//  counter-reset:line-numbering;
+//  background:#2c3e50;
+//  padding:12px 0px 14px 10px;
+//  width:100%;
+//  color:#ecf0f1;
+//  line-height:140%;
+//  .line::before {
+//    content: counter(line-numbering);
+//    counter-increment: line-numbering;
+//    padding-right: 1em;
+//    /* space after numbers */
+//    padding-left:8px;
+//    width: 1.5em;
+//    text-align: right;
+//    opacity: 0.5;
+//    color:white;
+//  }
+//}
