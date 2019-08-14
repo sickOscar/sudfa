@@ -161,8 +161,7 @@ const Docs = (props) => (
 
                 <Highlight language="javascript">
             {
-              `
-class Runner { 
+              `class Runner { 
         
     ...
     
@@ -172,17 +171,20 @@ class Runner {
       this.game = game;
 
       this.team = {
-        name: 'Team name', // the team name, you can change it anytime you want
+        // the team name, you can change it anytime you want
+        name: 'Team name',
         troops: [
           game.Dev({
-            name: "Imis Shortcollar", // optional, choose your own name. just for fun
-            motto: "My kung fu is better than yours!" // optional, just for fun, used only for events
+            // optional, choose your own name. just for fun
+            name: "Imis Shortcollar",
+            // optional, just for fun, used only for events
+            motto: "My kung fu is better than yours!"
           }),
           game.Pm(),
-          game.Mktg() // max 3 soldiers
+          game.Mktg()
+          // max 3 soldiers
         ]
       }
-
     }
 
     ...
