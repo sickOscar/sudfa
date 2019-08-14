@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "deploy": "pm2 deploy production"
   },
   "author": "",
   "license": "ISC",
@@ -15,5 +16,8 @@
     "lodash": "^4.17.14",
     "random": "^2.1.1",
     "vm2": "^3.8.2"
+  },
+  "devDependencies": {
+    "pm2": "^3.5.1"
   }
 }
