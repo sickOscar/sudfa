@@ -10,7 +10,7 @@ import hr_icon from '../../images/hr_icon.jpeg';
 const Turn = (props) => {
 
   const {turn: propsTurn} = props;
-  const {turn, team, state: status, index, players} = propsTurn;
+  const {turn, team, state: status, players} = propsTurn;
 
   const icons = {
     'dev': dev_icon,

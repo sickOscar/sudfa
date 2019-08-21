@@ -59,6 +59,7 @@
   - POISONED: the soldier is poisoned, it will loose 2HP at the end of his next turn
   - PROTECTED: the soldier is protected, the next attack will not harm him (hit or cast)
   - DEAD: the soldier is dead
+- **`getTotems()`**:*Array* -> return an array of the totems summoned by that soldier
 
 ### Enemy Soldier Api
 

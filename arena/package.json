@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "deploy": "pm2 deploy production"
+    "deploy": "pm2 deploy production",
+    "dev": "pm2 start ecosystem.config.js && pm2 logs"
   },
   "author": "",
   "license": "ISC",

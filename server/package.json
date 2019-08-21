@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha ./test --recursive",
     "start": "PORT=5000 node server.js",
-    "deploy": "pm2 deploy production"
+    "deploy": "pm2 deploy production",
+    "dev": "pm2 start ecosystem.config.js && pm2 logs"
   },
   "author": "",
   "license": "ISC",

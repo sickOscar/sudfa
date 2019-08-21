@@ -47,7 +47,6 @@ class Game {
 
   setupPlayers(player1, player2) {
 
-    // remap lazy constructor
     player1.team.troop = player1.team.troop.map(t => new Soldier(this, t));
     player2.team.troop = player2.team.troop.map(t => new Soldier(this, t));
 
