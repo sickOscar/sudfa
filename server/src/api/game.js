@@ -95,14 +95,23 @@ class GameApi {
       code = code.replace('/n', '');
       code = code.replace('/r', '');
 
-
-      queue.add({
-        source: code,
+      // exec a single fight to fulfill bot table
+      const fightParams = {
+        userId: req.user.sub,
         botid: req.body.botid,
-        user: req.user.sub
-      })
-        .then(response => {
-          res.json(response)
+        code: req.body.source,
+        level: 'junior'
+      };
+      GameArena.singleBotFight(fightParams)
+        .then(gameHistory => {
+          queue.add({
+              source: code,
+              botid: req.body.botid,
+              user: req.user.sub
+            })
+            .then(response => {
+              res.json(response)
+            })
         })
         .catch(error => {
           console.error(error);
