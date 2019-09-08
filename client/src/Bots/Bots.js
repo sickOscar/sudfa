@@ -17,7 +17,9 @@ export default class Bots extends React.Component {
 
     this.state = {
       user: this.props.auth.getUser(),
-      bots: []
+      bots: [],
+      addingGroup: false,
+      groupName: ''
     };
 
     this.icons = {
@@ -25,7 +27,11 @@ export default class Bots extends React.Component {
       'pm': pm_icon,
       'mktg': mktg_icon,
       'hr': hr_icon
-    }
+    };
+
+    this.toggleAddGroup = this.toggleAddGroup.bind(this);
+    this.handleGroupNameChange = this.handleGroupNameChange.bind(this);
+    this.submitAddGroupForm = this.submitAddGroupForm.bind(this);
 
   }
 
@@ -46,6 +52,22 @@ export default class Bots extends React.Component {
       .catch(err => console.error(err))
   }
 
+  toggleAddGroup() {
+    this.setState({
+      addingGroup: !this.state.addingGroup
+    })
+  }
+
+  handleGroupNameChange(event) {
+    this.setState({
+      groupName: event.target.value
+    })
+  }
+
+  submitAddGroupForm(event) {
+
+  }
+
   render() {
 
     const newBotId = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
@@ -60,7 +82,6 @@ export default class Bots extends React.Component {
         </div>
 
         <div className="row">
-
 
           {this.state.bots.map(bot => {
             const link = `edit/${bot.botid}`;
@@ -102,6 +123,31 @@ export default class Bots extends React.Component {
           </div>
           }
 
+        </div>
+
+        <div className="row">
+          <div className="col-sm-12 text-center section-title">
+            <h1>{this.state.user ? this.state.user.name : ''}'s groups</h1>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-sm-12 text center">
+            <button onClick={this.toggleAddGroup}>New Group</button>
+          </div>
+        </div>
+
+        <div className="row">
+          <form className="col-sm-12" onSubmit={this.submitAddGroupForm}>
+            <div className="form-group">
+              <label htmlFor="name">Group Name</label>
+              <input className="form-control" type="text"
+                     onChange={this.handleGroupNameChange}
+                     value={this.state.groupName}/>
+              
+              <button type="submit">Add Group</button>
+            </div>
+          </form>
         </div>
 
 

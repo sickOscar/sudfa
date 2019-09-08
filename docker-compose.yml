@@ -5,9 +5,10 @@ services:
     build:
       context: ./client
       dockerfile: dev.Dockerfile
-    network_mode: host
+    networks:
+      - sudfa
     ports:
-      - "80:80"
+      - "3000:3000"
     volumes:
       - ./client/src:/usr/src/app/src
       - ./client/public:/usr/src/app/public
@@ -16,7 +17,8 @@ services:
     build:
       context: ./server
       dockerfile: dev.Dockerfile
-    network_mode: host
+    networks:
+      - sudfa
     ports:
       - "5000:5000"
     volumes:
@@ -30,7 +32,8 @@ services:
     build:
       context: ./arena
       dockerfile: dev.Dockerfile
-    network_mode: host
+    networks:
+      - sudfa
     ports:
       - "5001:5001"
     volumes:
@@ -42,9 +45,13 @@ services:
     image: postgres
     environment:
       - POSTGRES_PASSWORD=password
-    network_mode: host
+    networks:
+      - sudfa
     ports:
       - "5432:5432"
     volumes:
       - ${PWD}/data:/var/lib/postgresql/data
 
+
+networks:
+  sudfa:
