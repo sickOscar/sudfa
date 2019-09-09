@@ -5,11 +5,13 @@ class GroupsApi {
 
   constructor(app) {
 
-    app.get('/my-groups', jwtCheck, (req, res) => {
+    app.get('/mygroups', jwtCheck, (req, res) => {
       const userId = req.user.sub;
       // get groups
       Groups.userGroups(userId)
-        .then(res.json)
+        .then(groups => {
+          res.json(groups);
+        })
         .catch(error => {
           res.sendStatus(500);
           res.send(error);
@@ -21,20 +23,24 @@ class GroupsApi {
       const userId = req.user.sub;
       const groupModel = {
         ...req.body,
+        leaderboard: [],
+        is_public: req.body.is_public || false,
         owner: userId
       };
       Groups.add(groupModel)
-        .then(res.json)
+        .then(group => {
+          res.json(group)
+        })
         .catch(error => {
           res.sendStatus(500);
           res.send(error);
         })
     });
 
-    app.post('/groups/user-join/:groupId', jwtCheck, (req, res) => {
+    app.post('/groups/user-join', jwtCheck, (req, res) => {
       // join user to group
       const userId = req.user.sub;
-      Groups.addUserToGroup(req.params.groupId, userId)
+      Groups.addUserToGroup(req.body.name, userId)
         .then(res.json)
         .catch(error => {
           res.sendStatus(500);

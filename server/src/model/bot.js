@@ -15,7 +15,7 @@ module.exports = {
     table = table || 'bots';
 
     const query = {
-      text: `SELECT * FROM ${table} WHERE "user" = $1 ORDER BY name`,
+      text: `SELECT * FROM ${table} WHERE "user" = $1 AND "group" IS NULL ORDER BY name`,
       values: [userId]
     };
 
@@ -73,14 +73,21 @@ module.exports = {
       .then(results => results.rows[0])
   },
 
-  all: function (table) {
+  all: function (table, params) {
 
     table = table || 'bots';
 
-    const query = {
-      text: `SELECT *
-      FROM ${table}`
-    };
+    const whereClause = Object.keys(params).map((key, i) => {
+      return `"${key}" = $${i + 1}`;
+    });
+
+    let text = `SELECT * FROM ${table}`
+    if (params) {
+      text += `WHERE ${whereClause.join(' AND ')}`;
+    }
+    const values = Object.values(params);
+
+    const query = {text, values}
 
     return clientConnected
       .then(() => client.query(query))

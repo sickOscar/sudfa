@@ -5,6 +5,7 @@ create table if not exists public.league_bots
       primary key,
   name varchar not null,
   source varchar not null,
+  "group" uuid,
   "user" varchar not null
     constraint league_bots_fk
       references public.users,

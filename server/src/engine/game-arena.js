@@ -12,7 +12,7 @@ const GameArena = {
 
   singleBotFight: async function (fightParams) {
 
-    const {level, userId, botid, code} = fightParams;
+    const {level, userId, botid, code, group} = fightParams;
 
     let filename = `junior.js`;
 
@@ -73,8 +73,11 @@ const GameArena = {
       user: userId,
       source: code,
       name: botName,
+      group,
       team
     }
+
+    console.log("updatedBot", updatedBot);
 
     await GameArena.saveBotAfterSingleFight(updatedBot);
 
@@ -142,11 +145,16 @@ const GameArena = {
 
   saveBotAfterSingleFight: async function (bot) {
 
-    const userBot = await Bots.one({botid: bot.botid});
+    let userBot;
+    if (bot.group) {
+      userBot = await Bots.one({botid: bot.botid, group: bot.group});
+    } else {
+      userBot = await Bots.one({botid: bot.botid});
+    }
 
     // se non esiste, lo creo al volo
     if (!userBot) {
-      
+
       const newBot = {
         botid: bot.botid,
         user: bot.user,
@@ -154,6 +162,10 @@ const GameArena = {
         name: bot.name,
         team: bot.team
       };
+
+      if (bot.group) {
+        newBot.group = bot.group;
+      }
 
       return await Bots.add(newBot);
     }
@@ -169,7 +181,7 @@ const GameArena = {
     }
 
     // bot non dell'utente che sta facendo la richiesta
-    throw new Error('These are not the droids your looking for')
+    throw new Error('These are not the droids you\'re looking for')
 
   },
 

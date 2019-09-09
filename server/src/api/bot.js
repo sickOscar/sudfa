@@ -62,7 +62,8 @@ class BotApi {
         userId: user,
         botid: req.params.id,
         level: 'junior',
-        code: req.body.source
+        code: req.body.source,
+        group: req.body.group
       }
 
       return GameArena.singleBotFight(fightParams)

@@ -55,6 +55,7 @@ export const makeMainRoutes = () => {
 
           <PrivateRoute path="/bots" component={Bots}/>
           <PrivateRoute path="/edit/:botid" component={EditBot}/>
+          <PrivateRoute path="/edit-group/:botid/:groupid" component={EditBot}/>
           <PrivateRoute path="/profile" component={Profile} />
 
           <Route path="/league/:botid?" render={(props) => <League {...props} auth={auth} />} />

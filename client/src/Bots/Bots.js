@@ -19,7 +19,9 @@ export default class Bots extends React.Component {
       user: this.props.auth.getUser(),
       bots: [],
       addingGroup: false,
-      groupName: ''
+      groups: [],
+      groupName: '',
+      joinGroup: ''
     };
 
     this.icons = {
@@ -32,11 +34,17 @@ export default class Bots extends React.Component {
     this.toggleAddGroup = this.toggleAddGroup.bind(this);
     this.handleGroupNameChange = this.handleGroupNameChange.bind(this);
     this.submitAddGroupForm = this.submitAddGroupForm.bind(this);
+    this.handleJoinGroupChange = this.handleJoinGroupChange.bind(this);
+    this.submitJoinGroupForm = this.submitJoinGroupForm.bind(this);
 
   }
 
   componentDidMount() {
+    this.getBots();
+    this.getGroups();
+  }
 
+  getBots() {
     fetch(`${Env.API_HOST}/mybots`, {
       method: 'GET',
       headers: {
@@ -48,6 +56,22 @@ export default class Bots extends React.Component {
       .then(response => response.json())
       .then(results => {
         this.setState({bots: results})
+      })
+      .catch(err => console.error(err))
+  }
+
+  getGroups() {
+    fetch(`${Env.API_HOST}/mygroups`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.props.auth.getToken()}`
+      }
+    })
+      .then(response => response.json())
+      .then(results => {
+        this.setState({groups: results})
       })
       .catch(err => console.error(err))
   }
@@ -64,13 +88,64 @@ export default class Bots extends React.Component {
     })
   }
 
-  submitAddGroupForm(event) {
+  handleJoinGroupChange(event) {
+    this.setState({
+      joinGroup: event.target.value
+    })
+  }
 
+  submitAddGroupForm(event) {
+    event.preventDefault();
+    fetch(`${Env.API_HOST}/groups`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.props.auth.getToken()}`
+      },
+      body: JSON.stringify({
+        name: this.state.groupName,
+        is_public: true
+      })
+    })
+      .then(response => response.json())
+      .then(results => {
+        this.getGroups();
+      })
+      .catch(err => console.error(err))
+  }
+
+  submitJoinGroupForm(event) {
+    event.preventDefault();
+    fetch(`${Env.API_HOST}/groups/user-join`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.props.auth.getToken()}`
+      },
+      body: JSON.stringify({
+        name: this.state.joinGroup
+      })
+    })
+      .then(response => response.json())
+      .then(results => {
+        this.getGroups();
+      })
+      .catch(err => console.error(err))
+  }
+
+  botSubmitted(group) {
+    return group.bots.find(bot => bot.user === this.state.user.id)
+  }
+
+  addBotToGroup(groupId) {
+    console.log("add bot to group", groupId);
   }
 
   render() {
 
-    const newBotId = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
+    const newBotId = window.encodeURIComponent(this.state.user.name) + '_' + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
     const newBotLink = `edit/${newBotId}`;
 
     return (
@@ -138,16 +213,84 @@ export default class Bots extends React.Component {
         </div>
 
         <div className="row">
-          <form className="col-sm-12" onSubmit={this.submitAddGroupForm}>
+          <form className="col-sm-6" onSubmit={this.submitAddGroupForm}>
             <div className="form-group">
               <label htmlFor="name">Group Name</label>
               <input className="form-control" type="text"
                      onChange={this.handleGroupNameChange}
                      value={this.state.groupName}/>
-              
+
               <button type="submit">Add Group</button>
             </div>
           </form>
+
+          <form className="col-sm-6" onSubmit={this.submitJoinGroupForm}>
+            <div className="form-group">
+              <label htmlFor="name">Group Name</label>
+              <input className="form-control" type="text"
+                     onChange={this.handleJoinGroupChange}
+                     value={this.state.joinGroup}/>
+
+              <button type="submit">Join Group</button>
+            </div>
+          </form>
+
+        </div>
+
+        <div className="row">
+
+            {this.state.groups.map((group, i) => {
+              const userBotForThisGroup = this.botSubmitted(group);
+              return (
+                <div className="group-container col-sm-12 col-md-6" key={i}>
+                  <div className="card">
+                    <div className="card-body">
+                      <h3 className="text-center">
+                        {group.name}
+                      </h3>
+                      <p className="text-center">{group.players} players</p>
+
+                      <div className="group-bot-container">
+                        {!userBotForThisGroup
+                          ? (
+                            <Link to={`edit-group/${newBotId}/${group.id}`}
+                                  className="btn btn-primary">
+                              Join this fight!
+                            </Link>
+                          )
+                          :
+                          (
+                            <div className="bot-card">
+                              <h5 className="card-title">{userBotForThisGroup.name}</h5>
+                              <div className="icon-box">
+                                {userBotForThisGroup.team && userBotForThisGroup.team.map((soldier, i) => {
+                                  return (
+                                    <img key={i} src={this.icons[soldier]} alt={soldier}/>
+                                  )
+                                })}
+                              </div>
+
+                              <Link to={`edit-group/${userBotForThisGroup.botid}/${group.id}`}
+                                    className="btn btn-primary">
+                                Edit this bot
+                              </Link>
+                            </div>
+
+                          )}
+                      </div>
+
+                      <div className="group-leaderboard-container">
+                        {group.leaderboard.length === 0
+                          ? <div>Still no leaderboard :-(</div>
+                          : <div>{group.leaderboard}</div>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+
         </div>
 
 

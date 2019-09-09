@@ -7,6 +7,7 @@ CREATE TABLE public.bots (
 	"name" varchar NOT NULL,
 	"source" varchar NOT NULL,
 	"user" varchar NOT NULL,
+    "group" uuid,
 	"timestamp" timestamp with time zone default now(),
 	team json,
 	CONSTRAINT bots_pk PRIMARY KEY (botid),

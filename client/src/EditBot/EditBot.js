@@ -39,6 +39,7 @@ class Runner {
         const myTeam = this.game.getMyTeam();
         
         // Simple AI
+        // always hits the most damaged enemy soldier
         const target = enemyTeam.getMostDamagedSoldier();
         soldier.hit(target);
 
@@ -131,7 +132,8 @@ export default class Home extends Component {
       body: JSON.stringify({
         bot: this.props.match.params.botid,
         source: this.state.code,
-        level: this.state.selectedLevel
+        level: this.state.selectedLevel,
+        group: this.props.match.params.groupid
       })
     })
       .then(response => response.json())
@@ -173,7 +175,8 @@ export default class Home extends Component {
       },
       body: JSON.stringify({
         botid: this.props.match.params.botid,
-        source: this.state.code
+        source: this.state.code,
+        group: this.props.match.params.groupid
       })
     })
       .then(response => response.json())
@@ -205,7 +208,8 @@ export default class Home extends Component {
     fetch(`${Env.API_HOST}/bot/${this.props.match.params.botid}`, {
       method: 'POST',
       body: JSON.stringify({
-        source: this.state.code
+        source: this.state.code,
+        group: this.props.match.params.groupid
       }),
       headers: {
         'Accept': 'application/json',
@@ -339,8 +343,8 @@ export default class Home extends Component {
       body: JSON.stringify({
         bot: this.props.match.params.botid,
         source: this.state.code,
-        // level: this.state.selectedLevel,
-        challenge: this.state.enemyBot.botid
+        challenge: this.state.enemyBot.botid,
+        group: this.props.match.params.groupId
       })
     })
       .then(response => response.json())
