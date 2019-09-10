@@ -1,5 +1,4 @@
 import React from 'react';
-import {Link} from 'react-router-dom'
 import './Bots.scss';
 import Env from '../env';
 
@@ -8,7 +7,9 @@ import pm_icon from '../images/pm_icon.jpeg';
 import mktg_icon from '../images/mktg_icon.jpeg';
 import hr_icon from '../images/hr_icon.jpeg';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {Frame, Button, Header, Heading} from "arwes";
+import {MainLeagueBots} from "./MainLeagueBots";
+import {CustomLeagueBots} from "./CustomLeagueBots";
 
 export default class Bots extends React.Component {
 
@@ -21,7 +22,8 @@ export default class Bots extends React.Component {
       addingGroup: false,
       groups: [],
       groupName: '',
-      joinGroup: ''
+      joinGroup: '',
+      openLeague: 'main'
     };
 
     this.icons = {
@@ -36,6 +38,7 @@ export default class Bots extends React.Component {
     this.submitAddGroupForm = this.submitAddGroupForm.bind(this);
     this.handleJoinGroupChange = this.handleJoinGroupChange.bind(this);
     this.submitJoinGroupForm = this.submitJoinGroupForm.bind(this);
+    this.openGroup = this.openGroup.bind(this);
 
   }
 
@@ -143,6 +146,26 @@ export default class Bots extends React.Component {
     console.log("add bot to group", groupId);
   }
 
+  openGroup(groupId) {
+    this.setState({
+      openLeague: groupId
+    })
+  }
+
+  renderCustomLeagueBots() {
+    if ((this.state.openLeague !== 'main')) {
+      const currentGroup = this.state.groups.find(g => g.id === this.state.openLeague)
+      const userBotForThisGroup = this.botSubmitted(currentGroup);
+
+      const newBotId = window.encodeURIComponent(this.state.user.name) + '_' + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
+
+      return ((
+        <CustomLeagueBots group={currentGroup} user={this.state.user} bot={userBotForThisGroup} newBotId={newBotId}/>
+      ))
+    }
+    return null;
+  }
+
   render() {
 
     const newBotId = window.encodeURIComponent(this.state.user.name) + '_' + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
@@ -150,149 +173,102 @@ export default class Bots extends React.Component {
 
     return (
       <React.Fragment>
+
         <div className="row">
-          <div className="col-sm-12 text-center section-title">
-            <h1>{this.state.user ? this.state.user.name : ''}'s teams</h1>
+
+          <div className="col-sm-8">
+            <Frame
+              show
+              animate
+              level={3}
+              corners={4}
+              layer='primary'
+              className="p-3"
+            >
+              {this.state.openLeague === 'main' && <MainLeagueBots bots={this.state.bots} newBotLink={newBotLink}/>}
+              {this.renderCustomLeagueBots()}
+            </Frame>
           </div>
-        </div>
 
-        <div className="row">
+          <div className="col-sm-4">
+            <Frame show animate level={3} corners={4} layer='primary' className="p-3">
 
-          {this.state.bots.map(bot => {
-            const link = `edit/${bot.botid}`;
-            return (
-              <div className="col-sm-4" key={bot.botid}>
-                <div className="card bot-card">
-                  <div className="card-body">
-                    <h5 className="card-title">{bot.name}</h5>
-                    <div className="icon-box">
-                      {bot.team && bot.team.map((soldier, i) => {
-                        return (
-                          <img key={i} src={this.icons[soldier]} alt={soldier}/>
-                        )
-                      })}
-                    </div>
-                    <Link to={link} className="btn btn-primary">
-                      Edit team
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            )
-          })}
+              <Header animate className="mb-2">
+                <Heading node="h3">Leagues</Heading>
+              </Header>
 
-          {this.state.bots.length < 3 && <div className="col-sm-4">
-            <div className="card bot-card">
-              <div className="card-body">
-                <h5 className="card-title">New Bot</h5>
-                <div className="icon-box">
-                  <Link to={newBotLink}>
-                    <FontAwesomeIcon icon="plus-square"/>
-                  </Link>
-                </div>
-                <Link to={newBotLink} className="btn btn-primary">
-                  Create new team
-                </Link>
-              </div>
-            </div>
-          </div>
-          }
+              <Frame className={`mb-2 league-button ${this.state.openLeague === 'main' && 'active'}`}
+                     onClick={() => this.openGroup('main')}
+                      layer={this.state.openLeague === 'main' ? 'secondary' : 'primary'}
+              >
+                <Header animate>
+                  <Heading node="h4">Main League</Heading>
+                </Header>
+              </Frame>
 
-        </div>
+              {this.state.groups.map((group, i) => {
 
-        <div className="row">
-          <div className="col-sm-12 text-center section-title">
-            <h1>{this.state.user ? this.state.user.name : ''}'s groups</h1>
-          </div>
-        </div>
+                return (
+                  <Frame className={`mb-2 league-button ${this.state.openLeague === group.id && 'active'}`}
+                         onClick={() => this.openGroup(group.id)}
+                         layer={this.state.openLeague === group.id ? 'secondary' : 'primary'}
+                         key={i}>
+                    <Header animate>
+                      <Heading node="h4">{group.name}</Heading>
+                    </Header>
+                  </Frame>
+                )
+              })}
 
-        <div className="row">
-          <div className="col-sm-12 text center">
-            <button onClick={this.toggleAddGroup}>New Group</button>
-          </div>
-        </div>
-
-        <div className="row">
-          <form className="col-sm-6" onSubmit={this.submitAddGroupForm}>
-            <div className="form-group">
-              <label htmlFor="name">Group Name</label>
-              <input className="form-control" type="text"
-                     onChange={this.handleGroupNameChange}
-                     value={this.state.groupName}/>
-
-              <button type="submit">Add Group</button>
-            </div>
-          </form>
-
-          <form className="col-sm-6" onSubmit={this.submitJoinGroupForm}>
-            <div className="form-group">
-              <label htmlFor="name">Group Name</label>
-              <input className="form-control" type="text"
-                     onChange={this.handleJoinGroupChange}
-                     value={this.state.joinGroup}/>
-
-              <button type="submit">Join Group</button>
-            </div>
-          </form>
-
-        </div>
-
-        <div className="row">
-
-            {this.state.groups.map((group, i) => {
-              const userBotForThisGroup = this.botSubmitted(group);
-              return (
-                <div className="group-container col-sm-12 col-md-6" key={i}>
-                  <div className="card">
-                    <div className="card-body">
-                      <h3 className="text-center">
-                        {group.name}
-                      </h3>
-                      <p className="text-center">{group.players} players</p>
-
-                      <div className="group-bot-container">
-                        {!userBotForThisGroup
-                          ? (
-                            <Link to={`edit-group/${newBotId}/${group.id}`}
-                                  className="btn btn-primary">
-                              Join this fight!
-                            </Link>
-                          )
-                          :
-                          (
-                            <div className="bot-card">
-                              <h5 className="card-title">{userBotForThisGroup.name}</h5>
-                              <div className="icon-box">
-                                {userBotForThisGroup.team && userBotForThisGroup.team.map((soldier, i) => {
-                                  return (
-                                    <img key={i} src={this.icons[soldier]} alt={soldier}/>
-                                  )
-                                })}
-                              </div>
-
-                              <Link to={`edit-group/${userBotForThisGroup.botid}/${group.id}`}
-                                    className="btn btn-primary">
-                                Edit this bot
-                              </Link>
-                            </div>
-
-                          )}
+              <Frame className="mb-2" show animate level={3} corners={4} layer='primary'>
+                <form onSubmit={this.submitAddGroupForm}>
+                  <div className="form-group">
+                    <Header animate>
+                      <Heading node="h4">Create a new league</Heading>
+                    </Header>
+                    <div className="row p-2">
+                      <div className="col-sm-8">
+                        <input className="form-control" type="text"
+                               onChange={this.handleGroupNameChange}
+                               placeholder="league name"
+                               value={this.state.groupName}/>
                       </div>
+                      <div className="col-sm-4">
+                        <Button type="submit">Create</Button>
+                      </div>
+                    </div>
 
-                      <div className="group-leaderboard-container">
-                        {group.leaderboard.length === 0
-                          ? <div>Still no leaderboard :-(</div>
-                          : <div>{group.leaderboard}</div>
-                        }
+
+                  </div>
+                </form>
+              </Frame>
+
+              <Frame className="mb-2" show animate level={3} corners={4} layer='primary'>
+                <form onSubmit={this.submitJoinGroupForm}>
+                  <div className="form-group">
+                    <Header animate>
+                      <Heading node="h4">Join an existing league</Heading>
+                    </Header>
+                    <div className="row p-2">
+                      <div className="col-sm-8">
+                        <input className="form-control" type="text"
+                               placeholder="league name"
+                               onChange={this.handleJoinGroupChange}
+                               value={this.state.joinGroup}/>
+                      </div>
+                      <div className="col-sm-4">
+                        <Button type="submit">Join</Button>
                       </div>
                     </div>
                   </div>
-                </div>
-              )
-            })}
+                </form>
+              </Frame>
+
+            </Frame>
+
+          </div>
 
         </div>
-
 
       </React.Fragment>
     )

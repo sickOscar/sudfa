@@ -4,7 +4,7 @@
 .head-box {
   position: relative;
   padding:0;
-  background-color: map-get($theme-colors, 'primary');
+  //background-color: map-get($theme-colors, 'primary');
   color: #fff;
   margin-bottom: 2rem;
   //background-image: url('../images/cover/header-bg.jpg');
@@ -42,11 +42,11 @@
   }
 
   h1 {
-    font-family: Bungee, sans-serif;
+    font-family: 'Electrolize', sans-serif;
   }
 
   button {
-    font-family: Bungee, sans-serif;
+    font-family: 'Titillium Web', sans-serif;
   }
 
   .subtitle {

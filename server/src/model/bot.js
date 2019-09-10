@@ -5,6 +5,7 @@ const client = new Client({
   database: process.env.DB_DATABASE,
   password: process.env.DB_PASSWORD,
 });
+const _ = require('lodash');
 
 const clientConnected = client.connect();
 
@@ -43,9 +44,17 @@ module.exports = {
     table = table || 'bots';
 
     const query = {
-      text: `SELECT count(*)
-      FROM ${table}`,
+      text: `SELECT count(*) FROM ${table}`,
     };
+
+    let whereClause = Object.keys(params).map((key, i) => {
+      return `"${key}" = $${i + 1}`;
+    });
+
+    if (Object.keys(_.omitBy(params, _.isNil)).length > 0) {
+      query.text += ' WHERE ' + whereClause.join('AND');
+      query.values = Object.values(params);
+    }
 
     return clientConnected
       .then(() => client.query(query))
@@ -77,15 +86,17 @@ module.exports = {
 
     table = table || 'bots';
 
-    const whereClause = Object.keys(params).map((key, i) => {
+    const hasValidParams = Object.keys(_.omitBy(params, _.isNil)).length > 0;
+
+    const whereClause = Object.keys(_.omitBy(params, _.isNil)).map((key, i) => {
       return `"${key}" = $${i + 1}`;
     });
 
     let text = `SELECT * FROM ${table}`
-    if (params) {
-      text += `WHERE ${whereClause.join(' AND ')}`;
+    if (hasValidParams) {
+      text += ` WHERE ${whereClause.join(' AND ')}`;
     }
-    const values = Object.values(params);
+    const values = hasValidParams ? Object.values(params) : [];
 
     const query = {text, values}
 

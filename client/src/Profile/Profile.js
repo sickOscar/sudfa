@@ -1,6 +1,8 @@
 import React from 'react';
 import './Profile.scss';
 
+import {Button} from 'arwes';
+
 export default class Profile extends React.Component {
 
   constructor(props) {
@@ -55,11 +57,10 @@ export default class Profile extends React.Component {
           </div>
 
           <div className="col-sm-12 mt-4">
-            <button className="btn btn-primary btn-lg"
-                    onClick={saveProfile}
+            <Button onClick={saveProfile}
                     disabled={!this.state.name || !(this.state.name.trim().length > 3) }>
               Save
-            </button>
+            </Button>
           </div>
         </div>
       </div>

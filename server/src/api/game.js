@@ -100,6 +100,7 @@ class GameApi {
         userId: req.user.sub,
         botid: req.body.botid,
         code: req.body.source,
+        group: req.body.group,
         level: 'junior'
       };
       GameArena.singleBotFight(fightParams)
@@ -107,7 +108,8 @@ class GameApi {
           queue.add({
               source: code,
               botid: req.body.botid,
-              user: req.user.sub
+              user: req.user.sub,
+              group: req.body.group
             })
             .then(response => {
               res.json(response)
@@ -120,8 +122,8 @@ class GameApi {
 
     });
 
-    app.get('/leaderboard', (req, res) => {
-      League.leaderboard()
+    app.get('/leaderboard/:group?', (req, res) => {
+      League.leaderboard(req.params.group)
         .then(leaderboard => {
           res.json(leaderboard)
         })

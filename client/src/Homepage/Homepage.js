@@ -3,10 +3,12 @@ import {Helmet} from 'react-helmet'
 import './Homepage.scss';
 import Footer from '../Footer/Footer.js';
 import Terminal from './Terminal';
-import Storm from './Storm';
+// import Storm from './Storm';
 
 import pm from '../images/personaggi/po.png';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+
+import {  Heading, Button, Words } from 'arwes';
 
 import full_logo from '../images/cover/full_logo.png';
 import team from '../images/team.png';
@@ -26,7 +28,7 @@ const Homepage = (props) => {
 
       <div className="row head-box">
 
-        <Storm />
+        {/*<Storm />*/}
 
         <div className="container">
 
@@ -37,17 +39,21 @@ const Homepage = (props) => {
             </div>
 
             <div className="col-sm-12 col-md-6 text-center">
-              <h1>Are you ready to fight?</h1>
+              <Heading node="h1">Are you ready to fight?</Heading>
 
               <div className="subtitle">
                 <p>
-                  SUDFA is a competitive AI fighting game.<br/>
+                  <Words animate={true}>
+                  SUDFA is a competitive AI fighting game.
+                  </Words>
+                  <Words animate={true}>
                   Challenge the world. Be the best.
+                  </Words>
                 </p>
 
-                <button onClick={login} className="btn btn-secondary">
+                <Button onClick={login}>
                   Start now!
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -62,10 +68,12 @@ const Homepage = (props) => {
           <div className="col-md-6 d-flex flex-column justify-content-center">
             <h3>Build your team</h3>
             <p>
-              Choose three champions from the available classes.
-              What do you think will be most useful to you: the cunning
-              of a Project Manager or the brute force of a Dev? Perhaps
-              the subterfuges of a Marketer...
+              <Words>
+                Choose three champions from the available classes.
+                What do you think will be most useful to you: the cunning
+                of a Project Manager or the brute force of a Dev? Perhaps
+                the subterfuges of a Marketer...
+              </Words>
             </p>
           </div>
           <div className="col-md-6 text-center">

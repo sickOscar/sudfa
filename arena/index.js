@@ -14,7 +14,7 @@ app.post('/bot', (req, res) => {
       res.json(gameResults)
     })
     .catch(error => {
-      console.error(error);
+      console.error("Arena Error", error);
       res.sendStatus(500)
     })
 

@@ -8,6 +8,7 @@ CREATE TABLE public.fights (
    bot2 varchar NOT NULL,
    history varchar NOT NULL,
    winner varchar NULL,
+   "group" uuid,
    "by" varchar NULL,
    "timestamp" timestamp with time zone default now(),
    CONSTRAINT fights_pk PRIMARY KEY (id),

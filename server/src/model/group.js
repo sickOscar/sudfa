@@ -5,7 +5,7 @@ const client = new Client({
   database: process.env.DB_DATABASE,
   password: process.env.DB_PASSWORD,
 });
-
+const _ = require('lodash');
 const clientConnected = client.connect();
 
 module.exports = class Groups {
@@ -121,6 +121,57 @@ module.exports = class Groups {
     return clientConnected
       .then(() => client.query(query))
       .then(results => results.rows[0])
+  }
+
+  static update(whereCondition, updates) {
+
+    const table = 'groups';
+
+    const sanitizedWhere = _.omitBy(whereCondition, _.isNil);
+    const sanitizedUpdates = _.omitBy(updates, _.isNil);
+
+    if (!Object.keys(sanitizedWhere) || !Object.keys(sanitizedUpdates)) {
+      throw new Error('Invalid group update');
+    }
+
+    let index = 1;
+    const values = [];
+
+    const whereFields = Object.keys(whereCondition);
+    const whereClause = [];
+
+    for (let i = 0; i < whereFields.length; i++) {
+      whereClause.push(`"${whereFields[i]}" = $${index}`);
+      values.push(whereCondition[whereFields[i]]);
+      index++;
+    }
+
+    const updateFields = Object.keys(updates);
+    const setClause = [];
+
+    for (let i = 0; i < updateFields.length; i++) {
+
+      let clause = `"${updateFields[i]}" = $${index}`;
+
+      setClause.push(clause);
+
+      let v = updates[updateFields[i]];
+      if (Array.isArray(v)) {
+        v = JSON.stringify(v)
+      }
+      values.push(v);
+
+      index++;
+    }
+
+    const text = `UPDATE ${table} SET ${setClause.join(', ')} WHERE ${whereClause.join(' AND ')} RETURNING *`;
+
+    const query = {text, values};
+
+    return clientConnected
+      .then(() => client.query(query))
+      .then(results => results.rows[0])
+
   }
 
 

@@ -8,10 +8,12 @@
 
 
   button {
-    display: block;
-    flex: 1;
-    border-radius: 0;
-    border: 1px solid lighten(map_get($theme-colors, 'primary'), 10%);
+    //display: block;
+    //flex: 1;
+    //border-radius: 0;
+    //border: 1px solid lighten(map_get($theme-colors, 'primary'), 10%);
+    text-align: center;
+    width: 100%;
 
     &.btn-selected {
       background-color: darken(map_get($theme-colors, 'primary'), 10%);
@@ -31,19 +33,19 @@
 
     z-index: 10;
     position: absolute;
-    margin-top: -300px;
-    height: 300px;
+    margin-top: -500px;
+    height: 500px;
     width: 100%;
     background: map_get($theme-colors, 'primary');
     color: #fff;
     display: flex;
     flex-direction: column;
-
+    overflow: hidden;
 
 
     > div {
       flex: 1;
-      padding: 1em;
+      //padding: 1em;
       border-top: 1px solid lighten(map_get($theme-colors, 'primary'), 10%);
       border-bottom: 1px solid darken(map_get($theme-colors, 'primary'), 10%);
 
@@ -55,7 +57,7 @@
         margin-bottom: 0;
         //text-transform: uppercase;
         //font-weight: bold;
-        font-family: Bungee;
+        font-family: 'Titillium Web';
         color: lighten(map_get($theme-colors, 'primary'), 50%);
 
         .ready {

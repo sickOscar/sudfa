@@ -1,24 +1,19 @@
-.bot-card {
-  margin-bottom: 10px;
-  text-align:center;
+.icon-box {
+  color: #eeeeee;
+  font-size: 4em;
+  text-align: center;
+
+  img{
+    width: 80px;
+    height: 80px;
+    margin: 10px
+  }
 
   a {
-    font-family: Bungee, sans-serif;
+    color: #eee;
   }
+}
 
-  .icon-box {
-    color: #eeeeee;
-    font-size: 4em;
-    text-align: center;
-
-    img{
-      width: 80px;
-      height: 80px;
-      margin: 10px
-    }
-
-    a {
-      color: #eee;
-    }
-  }
+.league-button {
+  cursor: pointer;
 }

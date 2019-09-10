@@ -1,4 +1,4 @@
-const Queue  = require('../model/queue');
+const Queue = require('../model/queue');
 const GameArena = require('./game-arena');
 
 class GameQueue {
@@ -48,7 +48,8 @@ class GameQueue {
       const arenaResults = await GameArena.start({
         source: firstInQueue.source,
         botid: firstInQueue.botid,
-        user: firstInQueue.user
+        user: firstInQueue.user,
+        group: firstInQueue.group
       });
 
 
@@ -66,7 +67,7 @@ class GameQueue {
       }
 
 
-    } catch(error) {
+    } catch (error) {
       console.error(error);
 
       await Queue.update({
@@ -83,7 +84,7 @@ class GameQueue {
   }
 
   async add(bot) {
-    const {botid, source, user} = bot;
+    const {botid, source, user, group} = bot;
 
     // check if already there
     const botInQueue = await Queue.one({
@@ -106,13 +107,14 @@ class GameQueue {
       id: `${(+new Date())}_${user}`,
       botid,
       source,
-      user
+      user,
+      group
     })
   }
 
 }
 
-module.exports = (function() {
+module.exports = (function () {
 
   let instance = null;
 

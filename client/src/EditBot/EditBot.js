@@ -72,6 +72,7 @@ export default class Home extends Component {
         showProgress: true,
         // debug: true,
         continuous: true,
+        disableScrolling: false,
         run: false,
         steps: [
           {

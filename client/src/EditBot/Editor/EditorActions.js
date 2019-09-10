@@ -2,6 +2,7 @@ import React from 'react';
 import './EditorActions.scss';
 import Select from 'react-select';
 import Joyride from 'react-joyride';
+import {Button, Header, Heading, Words} from 'arwes';
 
 export default class EditorActions extends React.Component {
 
@@ -57,7 +58,6 @@ export default class EditorActions extends React.Component {
     ];
 
     this.toggleSelectPane = this.toggleSelectPane.bind(this);
-
 
 
   }
@@ -151,79 +151,88 @@ export default class EditorActions extends React.Component {
         {this.state.selectOpen && (
           <div className="fight-select-pane">
 
-            <div className="row bot-selection-container">
-              <div className="col-sm-12">
-                <p>Challenge a bot</p>
-              </div>
+            <div className="bot-selection-container">
+              <Header animate className="mb-2">
+                <Heading node="h4">Challenge a Bot</Heading>
+              </Header>
 
-              <div className="col-sm-8">
-                <select className="form-control" onChange={this.props.onLevelChange}>
-                  {this.levels.map(level => {
-                    return <option key={level.label} value={level.value}>{level.label}</option>
-                  })}
-                </select>
-              </div>
-              <div className="col-sm-4">
-                <button className="btn btn-primary" onClick={this.closePane.bind(this, this.props.onTestCode)}>Fight!
-                </button>
+              <Words animate>
+                Test your bot's skills sgaint one of our bots!
+              </Words>
+
+              <div className="d-flex">
+                <div style={{'flex': 1}}>
+                  <select className="form-control" onChange={this.props.onLevelChange}>
+                    {this.levels.map(level => {
+                      return <option key={level.label} value={level.value}>{level.label}</option>
+                    })}
+                  </select>
+                </div>
+                <div style={{'flex': 1}}>
+                  <Button animate onClick={this.closePane.bind(this, this.props.onTestCode)}>
+                    Fight!
+                  </Button>
+                </div>
               </div>
 
             </div>
 
-            <div className="row challenger-selection-container">
-              <div className="col-sm-12">
-                <p>Challenge another team</p>
-              </div>
+            <div className="challenger-selection-container">
 
-              <div className="col-sm-8">
-                <Select classNamePrefix="select"
-                        onChange={this.props.onChallengeTeamSelection}
-                        value={this.props.enemyBot && {
-                          value: this.props.enemyBot.botid,
-                          label: this.props.enemyBot.name
-                        }}
-                        options={
-                          this.props.bots.map(bot => ({value: bot.botid, label: bot.name}))
-                        }/>
-              </div>
+              <Header animate className="mb-2">
+                <Heading node="h4">Challenge another team</Heading>
+              </Header>
 
-              <div className="col-sm-4">
-                <button className="btn btn-primary" disabled={!this.props.enemyBot}
-                        onClick={this.closePane.bind(this, this.props.challenge)}>Fight!
-                </button>
+              <div className="d-flex">
+                <div style={{'flex': 1}}>
+                  <Select classNamePrefix="select"
+                          onChange={this.props.onChallengeTeamSelection}
+                          value={this.props.enemyBot && {
+                            value: this.props.enemyBot.botid,
+                            label: this.props.enemyBot.name
+                          }}
+                          options={
+                            this.props.bots.map(bot => ({value: bot.botid, label: bot.name}))
+                          }/>
+                </div>
+                <div style={{'flex': 1}}>
+                  <Button animate className="btn btn-primary" disabled={!this.props.enemyBot}
+                          onClick={this.closePane.bind(this, this.props.challenge)}>Fight!
+                  </Button>
+                </div>
               </div>
             </div>
 
-            <div className="row send-to-arena-container">
-              <div className="col-sm-12">
-                <p>Send to arena</p>
-              </div>
+            <div className="send-to-arena-container">
 
-              <div className="col-sm-8">
-                <p>Ready to rumble? {}</p>
-              </div>
+              <Header animate className="mb-2">
+                <Heading node="h4">Send to arena</Heading>
+              </Header>
 
-              <div className="col-sm-4">
-                {this.canSendToArena()
-                  ? <button className="btn btn-primary"
-                            onClick={this.closePane.bind(this, this.props.sendToLeague)}>Fight!
-                  </button>
-                  : <p>wait {this.formatTime(this.state.timeToSendToLeague)}</p>
-                }
+              <div className="d-flex">
+                <div style={{'flex': 1}}>
+                  {this.canSendToArena()
+                    ? <Button animate
+                              onClick={this.closePane.bind(this, this.props.sendToLeague)}>Fight!
+                    </Button>
+                    : <p>wait {this.formatTime(this.state.timeToSendToLeague)}</p>
+                  }
+                </div>
               </div>
-
 
             </div>
           </div>
         )}
 
-        <button className={this.state.selectOpen ? "btn btn-primary btn-selected" : "btn btn-primary"}
+
+        <Button style={{'flex': 1}} className={this.state.selectOpen ? "btn-selected" : ""}
                 disabled={this.props.loading} onClick={this.toggleSelectPane}>
           {this.props.loading ? 'Fighting...' : 'Fight!'}
-        </button>
-        <button className="btn btn-primary" disabled={this.props.loading} onClick={this.props.saveBot}>
+        </Button>
+        <Button style={{'flex': 1}} disabled={this.props.loading} onClick={this.props.saveBot}>
           Save Team
-        </button>
+        </Button>
+
 
       </div>
     )

@@ -14,7 +14,7 @@ const Terminal = (props) => (
     </div>
     <div className="code-content">
       <code>
-        <pre class="code">
+        <pre className="code">
           {`
 const enemyTeam = this.game.getEnemyTeam();
 

@@ -2,7 +2,7 @@ const _ = require('lodash');
 const fs = require('fs');
 const Bots = require('../model/bot');
 const Fights = require('../model/fight');
-
+const Groups = require('../model/group');
 const request = require('request-promise');
 
 const LEAGUE_BOTS_TABLE = 'league_bots';
@@ -77,8 +77,6 @@ const GameArena = {
       team
     }
 
-    console.log("updatedBot", updatedBot);
-
     await GameArena.saveBotAfterSingleFight(updatedBot);
 
     return gameHistory;
@@ -91,7 +89,8 @@ const GameArena = {
       challenge,
       code,
       userId,
-      botid
+      botid,
+      group
     } = fightParams;
 
     const enemyBot = await Bots.one({botid: challenge}, LEAGUE_BOTS_TABLE);
@@ -134,6 +133,7 @@ const GameArena = {
       user: userId,
       source: code,
       name: botName,
+      group,
       team
     };
 
@@ -194,6 +194,8 @@ const GameArena = {
 
     try {
 
+      console.log('starting arena...')
+
       // CHECK TIMESTAMPS
       await GameArena.canRun(bot);
 
@@ -204,15 +206,21 @@ const GameArena = {
       await GameArena.saveBot(bot, fights, homeFightExample);
 
       // SAVE FIGHTS
-      await GameArena.saveFights(fights, bot.botid);
+      await GameArena.saveFights(fights, bot.botid, bot.group);
 
       // WRITE LEADERBOARD
-      const leaderboard = await Fights.computeLeaderboard();
-      await new Promise((resolve, reject) => {
-        fs.writeFile('./leaderboard.json', JSON.stringify(leaderboard), (err) => {
-          return err ? reject(err) : resolve()
+      const leaderboard = await Fights.computeLeaderboard(bot.group);
+
+      if (!bot.group) {
+        await new Promise((resolve, reject) => {
+          fs.writeFile('./leaderboard.json', JSON.stringify(leaderboard), (err) => {
+            return err ? reject(err) : resolve()
+          });
         });
-      });
+      } else {
+        // save group leaderboard
+        await Groups.update({id: bot.group}, {leaderboard:JSON.stringify(leaderboard)})
+      }
 
       return {
         exit: 'OK'
@@ -341,11 +349,11 @@ const GameArena = {
 
   },
 
-  saveFights: async function(fights, botId) {
+  saveFights: async function(fights, botId, group) {
 
     await Promise.all([
-      Fights.delete({bot1: botId}),
-      Fights.delete({bot2: botId}),
+      Fights.delete({bot1: botId, group}),
+      Fights.delete({bot2: botId, group}),
     ]);
 
     return await Fights.addMany(_.flatten(fights));
@@ -360,7 +368,8 @@ const GameArena = {
   fight: async function (bot) {
 
     // recupera tutti i bot in gioco
-    const enemies = await Bots.all(LEAGUE_BOTS_TABLE);
+
+    const enemies = await Bots.all(LEAGUE_BOTS_TABLE, {group: bot.group});
     const hrstart = process.hrtime();
 
     const fights = [];
@@ -397,28 +406,31 @@ const GameArena = {
       const [homeRun, awayRun] = await Promise.all([homeRunPromise, awayRunPromise]);
 
       if (homeRun.error || awayRun.error) {
+        console.log('""""""""""""""""""""""""""""""""""""""""""""""""');
         console.error(homeRun.error || awayRun.error);
         throw new Error(homeRun.error || awayRun.error);
       }
 
       const home = {
-        id: `${bot.botid}${enemies[i].botid}`,
+        id: bot.group ? `${bot.group}${bot.botid}${enemies[i].botid}` : `${bot.botid}${enemies[i].botid}`,
         bot1: bot.botid,
         bot2: enemies[i].botid,
         history: homeRun,
         winner: homeRun.exit.winner,
         by: homeRun.exit.by,
-        timestamp: Math.round((+new Date()) / 1000)
+        timestamp: Math.round((+new Date()) / 1000),
+        group: bot.group
       };
 
       const away = {
-        id: `${enemies[i].botid}${bot.botid}`,
+        id: bot.group ? `${bot.group}${enemies[i].botid}${bot.botid}` : `${enemies[i].botid}${bot.botid}`,
         bot1: enemies[i].botid,
         bot2: bot.botid,
         history: awayRun,
         winner: awayRun.exit.winner,
         by: awayRun.exit.by,
-        time: Math.round((+new Date()) / 1000)
+        time: Math.round((+new Date()) / 1000),
+        group: bot.group
       };
 
       homeFightExample = homeFightExample || homeRun;
@@ -429,7 +441,7 @@ const GameArena = {
 
     const executionTime = process.hrtime(hrstart)
 
-    console.log(`Game arena completed in ${executionTime}s for ${bot.botid}: ${fights.length} fights`)
+    console.log(`Game arena (${bot.group ? bot.group : 'no group'}) completed in ${executionTime}s for ${bot.botid}: ${fights.length} fights`)
 
     return {
       fights,
@@ -452,7 +464,11 @@ const GameArena = {
       console.log('Well, no fights, maybe first run.');
 
       // get league bots,
-      const leagueBotsCount = parseInt(await Bots.count({}, LEAGUE_BOTS_TABLE), 10);
+      const leagueBotsCount = parseInt(await Bots.count({
+        group: bot.group
+      }, LEAGUE_BOTS_TABLE), 10);
+
+      console.log("leagueBotsCount", leagueBotsCount);
 
       // if 0 add bot anyway
       if (leagueBotsCount === 0) {
@@ -463,6 +479,7 @@ const GameArena = {
           // il bot corrente combatte per primo in casa
           name: 'firstBot',
           user: bot.user,
+          group: bot.group,
           team: []
         }, LEAGUE_BOTS_TABLE)
       }

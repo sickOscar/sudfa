@@ -3,9 +3,9 @@ import './App.scss';
 import logo from './images/cover/full_logo.png';
 import './icons';
 
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import {Link} from "react-router-dom";
+import { Heading, Button} from 'arwes';
+
+import {CustomLink} from './CustomLink';
 
 class App extends Component {
 
@@ -37,60 +37,66 @@ class App extends Component {
 
     return (
 
-      <Navbar bg="primary" expand="sm" variant="dark">
+      <header>
 
-        <Navbar.Brand href="/" className="header-link">
+        <CustomLink to="/">
           <img src={logo} className="header-logo" alt="SUDFAπ"/>
-          <span className="d-none d-sm-inline-block ml-2">
-              Super Ultra Dev Fighter Arena <span className="badge badge-secondary">BETA</span>
-          </span>
-        </Navbar.Brand>
+          <Heading node='h3' className="d-none d-sm-inline-block ml-2">
+              Super Ultra Dev Fighter Arena
+            {/*<span className="badge badge-secondary">BETA</span>*/}
+          </Heading>
+        </CustomLink>
 
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ml-auto">
+          <ul>
 
-              <Link className="nav-link" to="/docs">
-                Docs
-              </Link>
+            <li>
+            <CustomLink to="/docs">
+              Docs
+            </CustomLink>
+            </li>
             {
               isAuthenticated() && (
-                <Link className="nav-link" to="/profile">
+                <li>
+                <CustomLink to="/profile">
                   My Profile
-                </Link>
+                </CustomLink>
+                </li>
               )
             }
             {
               isAuthenticated() && (
-                <Link className="nav-link" to="/bots">
+                <li>
+                <CustomLink to="/bots">
                   My Bots
-                </Link>
+                </CustomLink>
+                </li>
               )
             }
-            <Link className="nav-link" to="/league">
+            <li>
+            <CustomLink to="/league">
               Leaderboard
-            </Link>
+            </CustomLink>
+            </li>
 
-            <li className="nav-item">
+            <li>
               {
                 !isAuthenticated() && (
-                  <button className="btn btn-link nav-link" onClick={this.login.bind(this)}>
+                  <Button animate onClick={this.login.bind(this)}>
                     Log In
-                  </button>
+                  </Button>
                 )
               }
               {
                 isAuthenticated() && (
-                  <button className="btn btn-link nav-link" onClick={this.logout.bind(this)}>
+                  <Button animate onClick={this.logout.bind(this)}>
                     Log Out
-                  </button>
+                  </Button>
                 )
               }
             </li>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
+          </ul>
+      </header>
 
     )
   }

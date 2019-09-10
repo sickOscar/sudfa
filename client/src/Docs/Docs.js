@@ -9,6 +9,8 @@ import hr from '../images/personaggi/hr.png';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {Helmet} from "react-helmet";
 
+import {Link, Frame} from 'arwes';
+
 import Highlight from 'react-highlight'
 
 const Docs = (props) => (
@@ -32,31 +34,48 @@ const Docs = (props) => (
       <div className="row no-gutters">
 
         <div className="col-md-3 nav-container">
-          <div className="p-3">
+          <div className="px-3">
 
+            <Frame
+              show
+              animate
+              level={3}
+              corners={4}
+              layer='primary'
+            >
             <nav>
               <ul className="nav-list">
                 <li>
-                  <a href="#what-is-it">What is it?</a>
+                  <Link href="#what-is-it">What is it?</Link>
                 </li>
                 <li>
-                  <a href="#how-does-it-work">How does it work?</a>
+                  <Link href="#how-does-it-work">How does it work?</Link>
                 </li>
                 <li>
-                  <a href="#how-does-a-fight-work">How does a fight work?</a>
+                  <Link href="#how-does-a-fight-work">How does a fight work?</Link>
                 </li>
                 <li>
-                  <a href="#the-code">The code</a>
+                  <Link href="#the-code">The code</Link>
                 </li>
                 <li>
-                  <a href="#classes">Classes</a>
+                  <Link href="#classes">Classes</Link>
                 </li>
               </ul>
             </nav>
+            </Frame>
 
           </div>
         </div>
         <div className="col-md-9">
+
+          <Frame
+            show
+            animate
+            level={3}
+            corners={4}
+            layer='primary'
+          >
+
           <div className="card p-3">
 
             <div className="row">
@@ -381,6 +400,8 @@ const Docs = (props) => (
             </div>
 
           </div>
+
+          </Frame>
         </div>
       </div>
 

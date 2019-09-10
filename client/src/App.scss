@@ -1,29 +1,29 @@
-
-.header-link {
-
-  text-decoration: none;
-  font-family: Bungee, sans-serif;
-  color: #fff;
-
-  &:hover {
-    text-decoration: none;
-    color: #fff;
-  }
+header {
+  padding: 0.5em 0.5em 0;
+  display: flex;
 
   .header-logo {
     height: 40px;
   }
 
-}
+  ul {
+    display: flex;
+    justify-content: flex-end;
+    flex: 1 0 0;
 
-.navbar {
-  b {
-    font-weight: normal;
-    color: #fff;
+    li {
+      margin: 0 0.5em;
+      list-style: none;
+    }
   }
 
-  .navbar-brand {
-    font-size: 1em;
-  }
 }
+
+.Arwes-main-0-1-5 {
+  display: flex !important;
+  flex-direction: column;
+  // hack for react-joyride
+  overflow-y: scroll !important;
+}
+
 

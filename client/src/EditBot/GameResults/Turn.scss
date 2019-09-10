@@ -1,12 +1,13 @@
-@import '../../variables';
 
+
+@import '../../variables';
 
 .turn {
   border-bottom: 1px solid lighten(gray, 10%);
   border-top: 1px solid lighten(map_get($theme-colors, 'primary'), 10%);
 
   .player-name {
-    font-family: Bungee, sans-serif;
+    font-family: 'Titillium Web', sans-serif;
     padding: 5px;
     color: #fff;
     background-color: map_get($theme-colors, 'primary');
