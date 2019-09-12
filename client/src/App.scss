@@ -19,11 +19,20 @@ header {
 
 }
 
-.Arwes-main-0-1-5 {
+//.Arwes-main-0-1-5 {
+//  display: flex !important;
+//  flex-direction: column;
+//  // hack for react-joyride
+//  overflow-y: scroll !important;
+//}
+//
+.arwes-edit-bot {
   display: flex !important;
   flex-direction: column;
   // hack for react-joyride
+  overflow: hidden !important;
   overflow-y: scroll !important;
+
 }
 
 code {

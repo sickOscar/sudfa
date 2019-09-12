@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 import SplitPane from 'react-split-pane'
 import {Editor} from './Editor/Editor';
 import {GameResults} from './GameResults/GameResults';
@@ -274,6 +275,8 @@ export default class Home extends Component {
       })
     }
 
+    const mainContainer = ReactDOM.findDOMNode(this).parentNode.parentNode
+    mainContainer.classList.add('arwes-edit-bot');
   }
 
   getBot() {

@@ -20,7 +20,7 @@ export class Editor extends Component {
     this.saveTimeout = setInterval(() => {
       console.log('saving code');
       this.props.onChange(code)
-    }, 2000)
+    }, 2000);
   }
 
   componentWillUnmount() {

@@ -46,7 +46,7 @@ function PrivateRoute({component: Component, ...rest}) {
 export const makeMainRoutes = () => {
   return (
     <ThemeProvider theme={createTheme()}>
-      <Arwes animate show background={background} pattern={glow}>
+      <Arwes animate show background={background} pattern={glow} className="lololololo">
 
         <Router history={history}>
 
