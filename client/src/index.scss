@@ -55,7 +55,7 @@ code {
     display: block;
     width: 6px;
     height: 6px;
-    background-color: map_get($theme-colors, 'primary');
+    background-color: map_get($theme-colors, 'theme_clear');
     border-radius: 50%;
     offset-path: path("M23.71 5.21l17.58 17.58a12.43 12.43 0 0 0 17.57 0 12.43 12.43 0 0 0 0-17.57 12.43 12.43 0 0 0-17.57 0L23.71 22.79a12.43 12.43 0 0 1-17.57 0 12.43 12.43 0 0 1 0-17.57 12.43 12.43 0 0 1 17.57-.01z");
     animation: loader 1000ms cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
