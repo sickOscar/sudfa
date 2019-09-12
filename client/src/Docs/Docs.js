@@ -9,9 +9,7 @@ import hr from '../images/personaggi/hr.png';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {Helmet} from "react-helmet";
 
-import {Link, Frame} from 'arwes';
-
-import Highlight from 'react-highlight'
+import {Link, Frame, Code} from 'arwes';
 
 const Docs = (props) => (
   <React.Fragment>
@@ -178,7 +176,8 @@ const Docs = (props) => (
                   team.
                 </p>
 
-                <Highlight language="javascript">
+
+                  <Code style={{'width': '100%'}}>
             {
               `class Runner { 
         
@@ -211,7 +210,8 @@ const Docs = (props) => (
 }
 `
             }
-                </Highlight>
+                  </Code>
+
 
                 <p>
                   In this example we included a dev, a pm and a marketer. You can compose your team with the combination of classes you prefer

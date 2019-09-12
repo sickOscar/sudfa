@@ -31,7 +31,6 @@ const handleAuthentication = (nextState, replace) => {
   }
 }
 
-
 function PrivateRoute({component: Component, ...rest}) {
   return (
     <Route {...rest} render={(props) => {
@@ -48,6 +47,7 @@ export const makeMainRoutes = () => {
   return (
     <ThemeProvider theme={createTheme()}>
       <Arwes animate show background={background} pattern={glow}>
+
         <Router history={history}>
 
           <Route path="/" render={(props) => <App {...props} auth={auth}/>}/>
@@ -64,8 +64,10 @@ export const makeMainRoutes = () => {
             <PrivateRoute path="/edit-group/:botid/:groupid" component={EditBot}/>
             <PrivateRoute path="/profile" component={Profile} />
 
-            <Route path="/league/:botid?" render={(props) => <League {...props} auth={auth} />} />
+            {/*<Route path="/league/:botid?" render={(props) => <League {...props} auth={auth} />} />*/}
+            <Route path="/league/:botid?/:groupid?" render={(props) => <League {...props} auth={auth} />} />
             <Route path="/queue/:botid" render={(props) => <Queue {...props} auth={auth} />} />
+            <Route path="/queue/:botid/:groupid" render={(props) => <Queue {...props} auth={auth} />} />
 
             <Route path="/fight/:bot1/:bot2" component={Fight}/>
 
@@ -78,6 +80,7 @@ export const makeMainRoutes = () => {
           </div>
           <GoogleAnalytics />
         </Router>
+
       </Arwes>
     </ThemeProvider>
   );

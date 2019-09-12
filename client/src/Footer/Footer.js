@@ -1,7 +1,8 @@
-import {Link} from 'react-router-dom';
 import React from 'react';
 import './Footer.scss';
 import logo from '../images/cover/full_logo.png';
+
+import {CustomLink} from "../CustomLink";
 
 const Footer = (props) => (
   <div className="row footer mt-5">
@@ -13,16 +14,16 @@ const Footer = (props) => (
       <nav className="footer-nav">
         <ul className="list-unstyled list-inline">
           <li className="list-inline-item">
-            <Link to="/">Home</Link>
+            <CustomLink to="/">Home</CustomLink>
           </li>
           <li className="list-inline-item">
-            <Link to="/docs">Docs</Link>
+            <CustomLink to="/docs">Docs</CustomLink>
           </li>
           <li className="list-inline-item">
-            <Link to="/league">Leaderboard</Link>
+            <CustomLink to="/league">Leaderboard</CustomLink>
           </li>
           <li className="list-inline-item">
-            <Link to="/who">Who we are</Link>
+            <CustomLink to="/who">Who we are</CustomLink>
           </li>
         </ul>
       </nav>

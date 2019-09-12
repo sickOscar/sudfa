@@ -12,6 +12,12 @@
     .end-fight-container {
       margin-left: 0;
       margin-right: 0;
+      transition: color 250ms ease-out;
+      text-shadow: 0 0 4px rgba(161,236,251,0.65);
+
+      .winner-name {
+        text-transform: uppercase;
+      }
     }
   }
 

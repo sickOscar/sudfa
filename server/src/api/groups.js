@@ -13,8 +13,19 @@ class GroupsApi {
           res.json(groups);
         })
         .catch(error => {
-          res.sendStatus(500);
-          res.send(error);
+          res.status(500).json(error);
+        })
+    });
+
+    app.get('/group/:id', jwtCheck, (req, res) => {
+      const userId = req.user.sub;
+      // get groups
+      Groups.one({id:req.params.id})
+        .then(group => {
+          res.json(group);
+        })
+        .catch(error => {
+          res.status(500).json(error);
         })
     });
 
@@ -32,8 +43,10 @@ class GroupsApi {
           res.json(group)
         })
         .catch(error => {
-          res.sendStatus(500);
-          res.send(error);
+          console.error(error);
+          res.status(500).send({
+            message: error.message
+          });
         })
     });
 
@@ -41,20 +54,33 @@ class GroupsApi {
       // join user to group
       const userId = req.user.sub;
       Groups.addUserToGroup(req.body.name, userId)
-        .then(res.json)
+        .then(response => {
+          res.json(response);
+        })
         .catch(error => {
-          res.sendStatus(500);
-          res.send(error);
+          res.status(500).json({
+            message: error.message
+          });
         })
     });
 
-    app.post('/groups/bot-join/:groupId/:botId', (req, res) => {
+    app.post('/groups/bot-join/:groupId/:botId', jwtCheck, (req, res) => {
       const userId = req.user.sub;
       Groups.addBotToGroup(req.params.groupId, req.params.botId)
         .then(res.json)
         .catch(error => {
-          res.sendStatus(500);
-          res.send(error);
+          res.status(500).json(error);
+        })
+    })
+
+    app.delete('/groups/:id', jwtCheck, (req, res) => {
+      const userId = req.user.sub;
+      Groups.delete(req.params.id, userId)
+        .then(response => {
+          res.json(response);
+        })
+        .catch(error => {
+          res.status(500).json(error);
         })
     })
 

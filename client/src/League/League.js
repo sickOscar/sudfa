@@ -12,15 +12,19 @@ import hr_icon from '../images/hr_icon.jpeg';
 // import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import Footer from "../Footer/Footer";
 import {Helmet} from "react-helmet";
+import Leaderboard from "../Leaderboard/Leaderboard";
+
+import {Frame} from 'arwes';
 
 export default class League extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      leaderboard: [],
+      leaderboard: null,
       logged: false,
       bots: [],
+      group: null,
       openRows: []
     };
 
@@ -32,37 +36,60 @@ export default class League extends React.Component {
     }
   }
 
-  componentDidMount() {
-
-    if (this.props.auth.isAuthenticated()) {
-      fetch(`${Env.API_HOST}/myleaguebots`, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.props.auth.getToken()}`
-        }
-      })
-        .then(response => response.json())
-        .then(bots => {
-          this.setState({bots})
-
-          if (this.props.match.params.botid) {
-            setTimeout((() => {
-              const el = document.querySelector(`#bot-${this.props.match.params.botid}`);
-              window.scrollTo({
-                top: el ? el.getBoundingClientRect().top - 200 : 0,
-                behavior: 'smooth'
-              });
-            }), 1000)
-          }
-
-        })
-        .catch(err => console.error(err))
-
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    console.log("prevProps", prevProps);
+    console.log("this.props.group", this.props.match.params.groupid);
+    if (
+      (!prevProps.match.params.groupid && this.props.match.params.groupid)
+      || (prevProps.match.params.groupid && !this.props.match.params.groupid)
+    ) {
+      this.reloadData();
     }
+  }
 
+  componentDidMount() {
+    this.reloadData()
+  }
 
+  reloadData() {
+    if (this.props.match.params.groupid) {
+      this.getGroup();
+    } else {
+
+      this.setState({group: null});
+      this.getMainLeaderboard()
+
+      if (this.props.auth.isAuthenticated()) {
+        fetch(`${Env.API_HOST}/myleaguebots`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.props.auth.getToken()}`
+          }
+        })
+          .then(response => response.json())
+          .then(bots => {
+            this.setState({bots})
+
+            if (this.props.match.params.botid) {
+              setTimeout((() => {
+                const el = document.querySelector(`#bot-${this.props.match.params.botid}`);
+                window.scrollTo({
+                  top: el ? el.getBoundingClientRect().top - 200 : 0,
+                  behavior: 'smooth'
+                });
+              }), 1000)
+            }
+
+          })
+          .catch(err => console.error(err))
+
+      }
+    }
+  }
+
+  getMainLeaderboard() {
     fetch(`${Env.API_HOST}/leaderboard`, {
       method: 'GET',
       headers: {
@@ -75,7 +102,24 @@ export default class League extends React.Component {
         this.setState({leaderboard})
       })
       .catch(err => console.error(err))
+  }
 
+  getGroup() {
+    fetch(`${Env.API_HOST}/group/${this.props.match.params.groupid}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.props.auth.getToken()}`
+      }
+    })
+      .then(response => response.json())
+      .then(group => {
+        this.setState({
+          group,
+          leaderboard: group.leaderboard
+        })
+      })
   }
 
   toggleMoreInfo(bot) {
@@ -96,11 +140,6 @@ export default class League extends React.Component {
 
   }
 
-
-  // createPopover(botid) {
-  //   return <MyBotsFights botid={botid} mybots={this.state.bots}/>;
-  // }
-
   render() {
 
     const moreInfoBaseClassList = 'more-info d-sm-flex justify-content-between';
@@ -111,90 +150,37 @@ export default class League extends React.Component {
 
         <Helmet>
           <title>Leaderboard - Super Ultra Dev Fighter Arena</title>
-          <meta name="description" content="How's your team doing? This is the full league leaderboard for the game." />
+          <meta name="description" content="How's your team doing? This is the full league leaderboard for the game."/>
         </Helmet>
 
         <div className="container">
           <div className="row">
 
             <div className="col-sm-12 text-center section-title">
-              <h1>League leaderboard</h1>
+              <h1>
+                {this.state.group ? `${this.state.group.name} League Leaderboard` : 'Main League Leaderboard'}
+              </h1>
             </div>
-
             <div className="col-sm-12">
-              <table className="leaderboard">
-                <tbody>
-
-                {this.state.leaderboard.map((bot, i) => {
-                  return <tr
-                    onClick={this.toggleMoreInfo.bind(this, bot)}
-                    className={this.props.match.params.botid && this.props.match.params.botid === bot.botid ? "leaderboard-row active" : "leaderboard-row"}
-                    key={bot.botid}
-                    id={`bot-${bot.botid}`}
-                  >
-
-                    <td className="position list__cell">
-                      {i + 1}
-                    </td>
-
-                    {/*<td className="watch">*/}
-                    {/*  {this.state.bots.length > 0 && !(this.state.bots.find(b => b.botid === bot.botid)) &&*/}
-                    {/*  <span className="watch-container">*/}
-                    {/*  <OverlayTrigger trigger="click" placement="right" overlay={this.createPopover(bot.botid)}>*/}
-                    {/*    <FontAwesomeIcon id={bot.botid + '-popover-placement'} className="watch-icon" icon="eye"/>*/}
-                    {/*  </OverlayTrigger>*/}
-                    {/*</span>*/}
-                    {/*  }*/}
-                    {/*</td>*/}
-
-                    <td className="name">
-                      <div className="text-container">
-                        <span className="text">{bot.name.substr(0, 40)}</span>
-                        <div className={this.state.openRows.includes(bot.botid) ? (moreInfoBaseClassList + ' open') : moreInfoBaseClassList} >
-                          <div className="stats-container">
-                            <span className="wins__value">Victories by defeat : {bot.wins || 0}</span><br/>
-                            <span className="ties__value">Victories by tie: {bot.ties || 0}</span>
-                          </div>
-                          {this.props.auth.isAuthenticated()
-                            && this.state.openRows.includes(bot.botid)
-                            && !(this.state.bots.find(b => b.botid === bot.botid))
-                            && <div className="your-bots-fights">
-                            <MyBotsFights botid={bot.botid} mybots={this.state.bots}/>
-                          </div>}
-                        </div>
-                      </div>
-                      <div className="team d-none d-sm-flex">
-                        {bot.team && bot.team.map((soldier, i) => {
-                          return (
-                            <div key={i} className="soldier">
-                              <img src={this.icons[soldier]} alt={soldier}/>
-                            </div>
-                          )
-                        })}
-                      </div>
-
-                    </td>
-
-                    <td className="d-none d-sm-table-cell username">
-                      {bot.username.substr(0, 40)}
-                    </td>
+              <Frame corners={4} className="p-3">
 
 
-                    <td className="points">
-                      <span className="points__value">{bot.points || 0}</span><br/>
-                      <span className="points__label">points</span>
-                    </td>
+                {this.state.group && this.state.leaderboard ? (
+                    <Leaderboard auth={this.props.auth}
+                                 board={this.state.leaderboard}
+                                 group={this.state.group}/>
+                  )
+                  : (
+                    <Leaderboard auth={this.props.auth}
+                                 board={this.state.leaderboard}/>
+                  )
+                }
 
-                  </tr>
-                })}
-                </tbody>
-              </table>
-
+              </Frame>
             </div>
-
           </div>
         </div>
-        <Footer />
+        <Footer/>
       </React.Fragment>
 
     )

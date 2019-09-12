@@ -10,5 +10,6 @@ CREATE TABLE public.groups (
    is_public boolean NOT NULL,
    created_on timestamp with time zone default now(),
    CONSTRAINT groups_pk PRIMARY KEY (id),
+   CONSTRAINT name_uniq UNIQUE (name),
    CONSTRAINT groups_fk FOREIGN KEY (owner) REFERENCES users(id)
 );

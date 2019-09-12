@@ -1,11 +1,19 @@
 @import '../../variables.scss';
 
 .api-container {
+  font-size: 16px;
 
 
   .api-content {
     padding: 1em;
+    background-color: rgba(0,0,0,0.5);
   }
+
+  code {
+    //color: map_get($theme_colors, 'theme_clear')
+    color: #fff;
+  }
+
 
   .apis-title {
     background-color: map_get($theme_colors, 'primary');

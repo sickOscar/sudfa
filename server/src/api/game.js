@@ -41,10 +41,13 @@ class GameApi {
     app.post('/source', jwtCheck, (req, res) => {
 
       const userId = req.user.sub;
-      const botid = req.body.bot;
-      let code = req.body.source;
-      const level = req.body.level;
-      const challenge = req.body.challenge;
+      // const botid = req.body.bot;
+      // let code = req.body.source;
+      // const level = req.body.level;
+      // const challenge = req.body.challenge;
+
+      let {bot : botid, source: code, level, challenge, group} = req.body;
+      // let code = source;
 
       code = code.replace('/n', '');
       code = code.replace('/r', '');
@@ -55,6 +58,7 @@ class GameApi {
           userId,
           botid,
           code,
+          group,
           challenge
         };
         return GameArena.singleChallengeFight(fightParams)
@@ -63,7 +67,7 @@ class GameApi {
           })
           .catch(error => {
             console.error(error);
-            res.send(error)
+            res.sendStatus(500)
           })
 
       }
@@ -72,6 +76,7 @@ class GameApi {
         userId,
         botid,
         level,
+        group,
         code
       };
 
@@ -81,7 +86,7 @@ class GameApi {
         })
         .catch(error => {
           console.error(error);
-          res.send(error)
+          res.sendStatus(500);
         })
 
     });

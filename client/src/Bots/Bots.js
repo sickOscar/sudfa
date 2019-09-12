@@ -23,7 +23,9 @@ export default class Bots extends React.Component {
       groups: [],
       groupName: '',
       joinGroup: '',
-      openLeague: 'main'
+      openLeague: 'main',
+      createGroupError: null,
+      joinGroupError: null
     };
 
     this.icons = {
@@ -39,6 +41,7 @@ export default class Bots extends React.Component {
     this.handleJoinGroupChange = this.handleJoinGroupChange.bind(this);
     this.submitJoinGroupForm = this.submitJoinGroupForm.bind(this);
     this.openGroup = this.openGroup.bind(this);
+    this.deleteGroup = this.deleteGroup.bind(this);
 
   }
 
@@ -99,6 +102,9 @@ export default class Bots extends React.Component {
 
   submitAddGroupForm(event) {
     event.preventDefault();
+    this.setState({
+      createGroupError: null
+    })
     fetch(`${Env.API_HOST}/groups`, {
       method: 'POST',
       headers: {
@@ -111,15 +117,27 @@ export default class Bots extends React.Component {
         is_public: true
       })
     })
-      .then(response => response.json())
-      .then(results => {
-        this.getGroups();
+      .then(response => {
+        if (!response.ok) {
+          response.json().then((err) => {
+            this.setState({
+              createGroupError: err.message
+            })
+          })
+        } else {
+          response.json().then(() => {
+            this.getGroups();
+          })
+        }
       })
-      .catch(err => console.error(err))
+
   }
 
   submitJoinGroupForm(event) {
     event.preventDefault();
+    this.setState({
+      joinGroupError: null
+    })
     fetch(`${Env.API_HOST}/groups/user-join`, {
       method: 'POST',
       headers: {
@@ -131,11 +149,19 @@ export default class Bots extends React.Component {
         name: this.state.joinGroup
       })
     })
-      .then(response => response.json())
-      .then(results => {
-        this.getGroups();
+      .then(response => {
+        if (!response.ok) {
+          response.json().then((err) => {
+            this.setState({
+              joinGroupError: err.message
+            })
+          })
+        } else {
+          response.json().then(() => {
+            this.getGroups();
+          })
+        }
       })
-      .catch(err => console.error(err))
   }
 
   botSubmitted(group) {
@@ -152,15 +178,37 @@ export default class Bots extends React.Component {
     })
   }
 
+  deleteGroup(groupId) {
+    fetch(`${Env.API_HOST}/groups/${groupId}`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.props.auth.getToken()}`
+      }
+    })
+      .then(response => response.json())
+      .then(results => {
+        this.setState({
+          groups: this.state.groups.filter(g => g.id !== groupId),
+          openLeague: 'main'
+        })
+      })
+      .catch(err => console.error(err))
+  }
+
   renderCustomLeagueBots() {
     if ((this.state.openLeague !== 'main')) {
       const currentGroup = this.state.groups.find(g => g.id === this.state.openLeague)
       const userBotForThisGroup = this.botSubmitted(currentGroup);
-
       const newBotId = window.encodeURIComponent(this.state.user.name) + '_' + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
-
       return ((
-        <CustomLeagueBots group={currentGroup} user={this.state.user} bot={userBotForThisGroup} newBotId={newBotId}/>
+        <CustomLeagueBots group={currentGroup}
+                          user={this.state.user}
+                          bot={userBotForThisGroup}
+                          auth={this.props.auth}
+                          deleteGroup={() => this.deleteGroup(currentGroup.id)}
+                          newBotId={newBotId}/>
       ))
     }
     return null;
@@ -206,7 +254,7 @@ export default class Bots extends React.Component {
                 </Header>
               </Frame>
 
-              {this.state.groups.map((group, i) => {
+              { this.state.groups.map((group, i) => {
 
                 return (
                   <Frame className={`mb-2 league-button ${this.state.openLeague === group.id && 'active'}`}
@@ -220,7 +268,7 @@ export default class Bots extends React.Component {
                 )
               })}
 
-              <Frame className="mb-2" show animate level={3} corners={4} layer='primary'>
+              {this.state.groups.length < 3 &&<Frame className="mb-2" show animate level={3} corners={4} layer='primary'>
                 <form onSubmit={this.submitAddGroupForm}>
                   <div className="form-group">
                     <Header animate>
@@ -237,11 +285,15 @@ export default class Bots extends React.Component {
                         <Button type="submit">Create</Button>
                       </div>
                     </div>
-
+                    {this.state.createGroupError && (
+                      <div>
+                        <p>{this.state.createGroupError}</p>
+                      </div>
+                    )}
 
                   </div>
                 </form>
-              </Frame>
+              </Frame>}
 
               <Frame className="mb-2" show animate level={3} corners={4} layer='primary'>
                 <form onSubmit={this.submitJoinGroupForm}>
@@ -260,6 +312,12 @@ export default class Bots extends React.Component {
                         <Button type="submit">Join</Button>
                       </div>
                     </div>
+
+                    {this.state.joinGroupError && (
+                      <div>
+                        <p>{this.state.joinGroupError}</p>
+                      </div>
+                    )}
                   </div>
                 </form>
               </Frame>

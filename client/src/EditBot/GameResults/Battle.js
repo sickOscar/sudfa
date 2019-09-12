@@ -184,7 +184,7 @@ export default class Battle extends React.Component {
               </div>
               <div className="col-sm-8">
                 <p>The winner is</p>
-                <h2>{this.props.results.exit.winnerName}</h2>
+                <h2 className="winner-name">{this.props.results.exit.winnerName}</h2>
               </div>
             </div>
           )}

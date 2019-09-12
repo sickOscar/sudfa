@@ -52,7 +52,12 @@ const FightModel = {
     }
 
     const sanitizedColumns = _.omitBy(fights[0], _.isNil);
-    const columns = Object.keys(sanitizedColumns);
+    const columns = Object.keys(sanitizedColumns).map(col => {
+      if (col === 'group') {
+        return `"group"`;
+      }
+      return col;
+    });
 
     let index = 0;
     const insertKeys = fights
@@ -110,6 +115,8 @@ const FightModel = {
 
     let text = '';
     let values = [];
+
+    console.log('compute leaderboard for', group);
 
     if (!group) {
       text = `
@@ -183,9 +190,11 @@ const FightModel = {
 
     return clientConnected
       .then(() => client.query(query))
-      .then(results => results.rows)
+      .then(results => {
+        console.log(results.rows);
+        return results.rows
+      } )
 
-    return [];
   }
 
 };

@@ -15,7 +15,7 @@ export default class EditorActions extends React.Component {
       tickInterval: 0,
       actionJoyride: {
         showProgress: true,
-        debug: true,
+        // debug: true,
         continuous: true,
         run: false,
         steps: [
@@ -156,23 +156,27 @@ export default class EditorActions extends React.Component {
                 <Heading node="h4">Challenge a Bot</Heading>
               </Header>
 
-              <Words animate>
-                Test your bot's skills sgaint one of our bots!
-              </Words>
+              <div className="choice-content">
 
-              <div className="d-flex">
-                <div style={{'flex': 1}}>
-                  <select className="form-control" onChange={this.props.onLevelChange}>
-                    {this.levels.map(level => {
-                      return <option key={level.label} value={level.value}>{level.label}</option>
-                    })}
-                  </select>
+                <Words animate>
+                  Test your bot's skills against one of our bots!
+                </Words>
+
+                <div>
+                  <div>
+                    <select className="form-control" onChange={this.props.onLevelChange}>
+                      {this.levels.map(level => {
+                        return <option key={level.label} value={level.value}>{level.label}</option>
+                      })}
+                    </select>
+                  </div>
+                  <div className="text-center">
+                    <Button animate onClick={this.closePane.bind(this, this.props.onTestCode)}>
+                      Fight!
+                    </Button>
+                  </div>
                 </div>
-                <div style={{'flex': 1}}>
-                  <Button animate onClick={this.closePane.bind(this, this.props.onTestCode)}>
-                    Fight!
-                  </Button>
-                </div>
+
               </div>
 
             </div>
@@ -183,40 +187,57 @@ export default class EditorActions extends React.Component {
                 <Heading node="h4">Challenge another team</Heading>
               </Header>
 
-              <div className="d-flex">
-                <div style={{'flex': 1}}>
-                  <Select classNamePrefix="select"
-                          onChange={this.props.onChallengeTeamSelection}
-                          value={this.props.enemyBot && {
-                            value: this.props.enemyBot.botid,
-                            label: this.props.enemyBot.name
-                          }}
-                          options={
-                            this.props.bots.map(bot => ({value: bot.botid, label: bot.name}))
-                          }/>
-                </div>
-                <div style={{'flex': 1}}>
-                  <Button animate className="btn btn-primary" disabled={!this.props.enemyBot}
-                          onClick={this.closePane.bind(this, this.props.challenge)}>Fight!
-                  </Button>
+              <div className="choice-content">
+                <Words animate>
+                  Test your bot against another player's bot!
+                </Words>
+
+                <div>
+                  <div>
+                    <Select classNamePrefix="select"
+                            onChange={this.props.onChallengeTeamSelection}
+                            value={this.props.enemyBot && {
+                              value: this.props.enemyBot.botid,
+                              label: this.props.enemyBot.name
+                            }}
+                            options={
+                              this.props.bots.map(bot => ({value: bot.botid, label: bot.name}))
+                            }/>
+                  </div>
+                  <div className="text-center">
+                    <Button animate disabled={!this.props.enemyBot}
+                            onClick={this.closePane.bind(this, this.props.challenge)}>Fight!
+                    </Button>
+                  </div>
                 </div>
               </div>
+
             </div>
 
             <div className="send-to-arena-container">
 
               <Header animate className="mb-2">
-                <Heading node="h4">Send to arena</Heading>
+                <Heading node="h4">
+                  Fight in {this.props.group ? this.props.group.name : 'main league'}
+                </Heading>
               </Header>
 
-              <div className="d-flex">
-                <div style={{'flex': 1}}>
-                  {this.canSendToArena()
-                    ? <Button animate
-                              onClick={this.closePane.bind(this, this.props.sendToLeague)}>Fight!
-                    </Button>
-                    : <p>wait {this.formatTime(this.state.timeToSendToLeague)}</p>
-                  }
+
+              <div className="choice-content">
+                <div>
+                  <div>
+                    <Words animate>
+                      Send your bot down to fight in the arena!
+                    </Words>
+                  </div>
+                  <div className="text-center">
+                    {this.canSendToArena()
+                      ? <Button animate
+                                onClick={this.closePane.bind(this, this.props.sendToLeague)}>Fight!
+                      </Button>
+                      : <p>wait {this.formatTime(this.state.timeToSendToLeague)}</p>
+                    }
+                  </div>
                 </div>
               </div>
 

@@ -73,7 +73,7 @@ export default class Auth {
 
         history.replace('/');
         console.log(err);
-        alert(`Error: ${err.error}. Check the console for further details.`);
+        // alert(`Error: ${err.error}. Check the console for further details.`);
 
       }
 

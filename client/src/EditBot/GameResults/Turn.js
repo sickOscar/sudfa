@@ -189,7 +189,7 @@ const Turn = (props) => {
   return (
     <div className="turn">
 
-      <p className="player-name">{team.name}</p>
+      <p className="player-name">{team.name} turn</p>
 
       <div className="turn-base">
 
@@ -226,7 +226,7 @@ const Turn = (props) => {
                 return (
                   <div key={i} className="team-container">
 
-                    {i === 0 && <h4>{players[i].name}</h4>}
+                    {i === 0 && <h5>{players[i].name}</h5>}
 
                     <div className="soldier-box-container">
                       {
@@ -271,7 +271,7 @@ const Turn = (props) => {
                       }
                     </div>
 
-                    {i === 1 && <h4>{players[i].name}</h4>}
+                    {i === 1 && <h5>{players[i].name}</h5>}
                   </div>
                 )
               })}

@@ -66,9 +66,17 @@
       }
 
     }
+  }
 
+  .choice-content {
+    padding-left: 1em;
 
-
+    &>div {
+      display: flex;
+      &>div {
+        flex: 1;
+      }
+    }
   }
 
 }

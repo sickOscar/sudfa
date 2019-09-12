@@ -28,7 +28,14 @@ export default class Queue extends React.Component {
       .then(results => {
 
         if (results.exit === 'OK') {
-          history.replace(`/league/${this.props.match.params.botid}`)
+
+          if (this.props.match.params.groupid) {
+            history.replace(`/league/${this.props.match.params.botid}/${this.props.match.params.groupid}`)
+          } else {
+            history.replace(`/league/${this.props.match.params.botid}`)
+          }
+
+
         } else {
 
           if (results.exit === 'KO') {

@@ -60,6 +60,7 @@ export default class Home extends Component {
 
     this.state = {
       bot: null,
+      group: {},
       code: exampleCode.replace('__TEAM_NAME__', `${user.name}'s team`),
       results: null,
       selectedLevel: 'junior',
@@ -192,7 +193,12 @@ export default class Home extends Component {
           this.setState({
             loading: false
           });
-          history.replace(`/queue/${this.props.match.params.botid}`)
+          if (this.props.match.params.groupid) {
+            history.replace(`/queue/${this.props.match.params.botid}/${this.props.match.params.groupid}`)
+          } else {
+            history.replace(`/queue/${this.props.match.params.botid}`)
+          }
+
         }
       })
       .catch(err => this.props.auth.logout())
@@ -248,7 +254,29 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
+    this.getBot();
+    this.getApi();
+    this.getLeagueBots();
 
+    // EVENTUALLY GET GROUP
+    if (this.props.match.params.groupid) {
+      this.getGroup(this.props.match.params.groupid);
+    }
+
+    // RUN JOYRIDE IF FIRST ACCESS
+    const mainJoyrideDone = localStorage.getItem('mainJoyrideDone');
+    if (!mainJoyrideDone || mainJoyrideDone === 'false') {
+      this.setState({
+        mainJoyride: {
+          ...this.state.mainJoyride,
+          run: true
+        }
+      })
+    }
+
+  }
+
+  getBot() {
     fetch(`${Env.API_HOST}/bot/${this.props.match.params.botid}`, {
       method: 'GET',
       headers: {
@@ -268,7 +296,9 @@ export default class Home extends Component {
         console.error(err);
         this.props.auth.logout()
       });
+  }
 
+  getApi() {
     fetch(`${Env.API_HOST}/API`, {
       method: 'GET',
       headers: {
@@ -285,7 +315,10 @@ export default class Home extends Component {
       .catch(err => {
         console.error(err)
       });
+  }
 
+
+  getLeagueBots() {
     fetch(`${Env.API_HOST}/league_bots`, {
       method: 'GET',
       headers: {
@@ -303,19 +336,26 @@ export default class Home extends Component {
       .catch(err => {
         console.error(err)
       });
+  }
 
-    // RUN JOYRIDE IF FIRST ACCESS
-    const mainJoyrideDone = localStorage.getItem('mainJoyrideDone');
-    if (!mainJoyrideDone || mainJoyrideDone === 'false') {
-      this.setState({
-        mainJoyride: {
-          ...this.state.mainJoyride,
-          run: true
-        }
+  getGroup(groupId) {
+    fetch(`${Env.API_HOST}/group/${groupId}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'text/plain',
+        'Content-Type': 'text/plain',
+        'Authorization': `Bearer ${this.props.auth.getToken()}`
+      }
+    })
+      .then(response => response.json())
+      .then(group => {
+        this.setState({
+          group
+        })
       })
-    }
-
-
+      .catch(err => {
+        console.error(err)
+      });
   }
 
   onChallengeTeamSelection(selection) {
@@ -345,7 +385,7 @@ export default class Home extends Component {
         bot: this.props.match.params.botid,
         source: this.state.code,
         challenge: this.state.enemyBot.botid,
-        group: this.props.match.params.groupId
+        group: this.props.match.params.groupid
       })
     })
       .then(response => response.json())
@@ -437,6 +477,7 @@ export default class Home extends Component {
                   loading={this.state.loading}
                   saveBot={this.saveBot.bind(this)}
                   bot={this.state.bot}
+                  group={this.state.group}
                   onChange={this.onCodeChange.bind(this)}/>
 
           <SplitPane split="horizontal" defaultSize={'50%'}

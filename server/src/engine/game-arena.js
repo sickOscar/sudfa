@@ -405,8 +405,10 @@ const GameArena = {
 
       const [homeRun, awayRun] = await Promise.all([homeRunPromise, awayRunPromise]);
 
+      console.log("____________________________");
+
       if (homeRun.error || awayRun.error) {
-        console.log('""""""""""""""""""""""""""""""""""""""""""""""""');
+        console.log('***********************************');
         console.error(homeRun.error || awayRun.error);
         throw new Error(homeRun.error || awayRun.error);
       }
@@ -495,6 +497,7 @@ const GameArena = {
             source: bot.source,
             name: 'firstBot',
             team: [],
+            group: bot.group,
             timestamp: Math.round((+new Date()) / 1000)
           },
           LEAGUE_BOTS_TABLE
@@ -517,7 +520,8 @@ const GameArena = {
         source: bot.source,
         name: botName,
         user: bot.user,
-        team: botTeam
+        team: botTeam,
+        group: bot.group
       })
     } else {
       baseBot = await Bots.update(
@@ -528,7 +532,8 @@ const GameArena = {
         {
           source: bot.source,
           name: botName,
-          team: botTeam
+          team: botTeam,
+          group: bot.group
         }
       );
     }
@@ -546,6 +551,7 @@ const GameArena = {
         {
           source: baseBot.source,
           name: botName,
+          group: baseBot.group,
           team: botTeam,
           timestamp: Math.round((+new Date()) / 1000)
         },
@@ -559,6 +565,7 @@ const GameArena = {
         // prendo il nome dal primo combattimento,
         // il bot corrente combatte per primo in casa
         name: botName,
+        group: baseBot.group,
         user: baseBot.user,
         team: botTeam
       }, LEAGUE_BOTS_TABLE)

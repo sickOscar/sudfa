@@ -7,9 +7,12 @@
   border-top: 1px solid lighten(map_get($theme-colors, 'primary'), 10%);
 
   .player-name {
-    font-family: 'Titillium Web', sans-serif;
+    font-family: 'Electrolize', sans-serif;
+    text-transform: uppercase;
     padding: 5px;
-    color: #fff;
+    color: #a1ecfb;
+    transition: color 250ms ease-out;
+    text-shadow: 0 0 4px rgba(161,236,251,0.65);
     background-color: map_get($theme-colors, 'primary');
     margin-bottom: 0px;
   }
@@ -57,8 +60,12 @@
 
 
 
-    h4 {
+    h5 {
+      font-family: 'Electrolize', sans-serif;
+      text-transform: uppercase;
       margin: 0;
+      transition: color 250ms ease-out;
+      text-shadow: 0 0 4px rgba(161,236,251,0.65);
     }
 
     .soldier-box-container {
@@ -90,16 +97,16 @@
         }
 
         &.actor {
-          background-color: #fff;
-          border: 1px solid map_get($theme-colors, 'primary');
+          background-color: rgba(255,255,255,0.3);
+          border: 3px solid map_get($theme-colors, 'theme-clear');
           .soldier-status {
             font-weight: bold;
           }
         }
 
         &.target {
-          background-color: #fff;
-          border: 1px solid rgba(255, 0, 0,1);
+          background-color: rgba(255,255,255,0.3);
+          border: 3px solid rgba(255, 0, 0,1);
           .soldier-status {
             font-weight: bold;
           }

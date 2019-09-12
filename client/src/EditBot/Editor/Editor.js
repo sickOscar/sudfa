@@ -12,7 +12,19 @@ export class Editor extends Component {
     super(props);
     this.state = {}
 
+    this.saveTimeout = 0;
+  }
 
+  changeCode(code) {
+    clearInterval(this.saveTimeout);
+    this.saveTimeout = setInterval(() => {
+      console.log('saving code');
+      this.props.onChange(code)
+    }, 2000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.saveTimeout);
   }
 
   render() {
@@ -25,12 +37,13 @@ export class Editor extends Component {
           value={this.props.code}
           mode="javascript"
           theme="solarized_dark"
-          onChange={this.props.onChange}
+          onChange={this.changeCode.bind(this)}
           name="the-editor"
           editorProps={{$blockScrolling: true}}
         />
         <EditorActions bots={this.props.bots}
                        bot={this.props.bot}
+                       group={this.props.group}
                        loading={this.props.loading}
                        onTestCode={this.props.onTestCode}
                        onLevelChange={this.props.onLevelChange}
