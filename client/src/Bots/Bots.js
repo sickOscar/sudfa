@@ -201,7 +201,7 @@ export default class Bots extends React.Component {
     if ((this.state.openLeague !== 'main')) {
       const currentGroup = this.state.groups.find(g => g.id === this.state.openLeague)
       const userBotForThisGroup = this.botSubmitted(currentGroup);
-      const newBotId = window.encodeURIComponent(this.state.user.name) + '_' + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
+      const newBotId = window.encodeURIComponent(this.state.user.id) + '_' + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
       return ((
         <CustomLeagueBots group={currentGroup}
                           user={this.state.user}
@@ -216,7 +216,7 @@ export default class Bots extends React.Component {
 
   render() {
 
-    const newBotId = window.encodeURIComponent(this.state.user.name) + '_' + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
+    const newBotId = window.encodeURIComponent(this.state.user.id) + '_' + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
     const newBotLink = `edit/${newBotId}`;
 
     return (
