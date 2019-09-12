@@ -405,8 +405,6 @@ const GameArena = {
 
       const [homeRun, awayRun] = await Promise.all([homeRunPromise, awayRunPromise]);
 
-      console.log("____________________________");
-
       if (homeRun.error || awayRun.error) {
         console.log('***********************************');
         console.error(homeRun.error || awayRun.error);

@@ -191,7 +191,6 @@ const FightModel = {
     return clientConnected
       .then(() => client.query(query))
       .then(results => {
-        console.log(results.rows);
         return results.rows
       } )
 
