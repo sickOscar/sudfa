@@ -139,7 +139,7 @@ export default class League extends React.Component {
 
   render() {
 
-    const moreInfoBaseClassList = 'more-info d-sm-flex justify-content-between';
+    // const moreInfoBaseClassList = 'more-info d-sm-flex justify-content-between';
 
     return (
 

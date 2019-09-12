@@ -1,6 +1,6 @@
 import React from 'react';
 import './Apis.scss';
-import {Header, Heading, Button, Frame, Words} from "arwes";
+import {Header, Heading, Button, Words, Code} from "arwes";
 
 
 export default class Apis extends React.Component {
@@ -59,6 +59,9 @@ export default class Apis extends React.Component {
             <li className={this.state.openApi === 'soldier' && 'active'}>
               <Button onClick={() => this.setState({openApi: 'soldier'})}>Soldier</Button>
             </li>
+            <li className={this.state.openApi === 'examples' && 'active'}>
+              <Button onClick={() => this.setState({openApi: 'examples'})}>Examples</Button>
+            </li>
           </ul>
         </div>
 
@@ -74,21 +77,22 @@ export default class Apis extends React.Component {
 
             <div className="col-sm-12 text-center">
               <p>
-                <Words animate animation={{timeout:1000}}>You got this far, that's great!</Words>
+                <Words animate animation={{timeout: 1000}}>You got this far, that's great!</Words>
               </p>
 
               <p>
-                <Words animate animation={{timeout:1000}} show={this.state.showPar2}>Now it's time to write some code.</Words>
+                <Words animate animation={{timeout: 1000}} show={this.state.showPar2}>Now it's time to write some
+                  code.</Words>
               </p>
               <p>
-                <Words animate animation={{timeout:2000}} show={this.state.showPar3}>
+                <Words animate animation={{timeout: 2000}} show={this.state.showPar3}>
                   Write your bot's AI, test it first against one of our bots. When you're satisfied, get him on the
                   battlefield to join the league!
                 </Words>
               </p>
 
               <p>
-                <Words animate animation={{timeout:2000}} show={this.state.showPar4}>
+                <Words animate animation={{timeout: 2000}} show={this.state.showPar4}>
                   Each box here has its own purpose, we recommend that you follow the short tutorial by pressing the red
                   circle.
                 </Words>
@@ -224,11 +228,70 @@ export default class Apis extends React.Component {
             </ul>
           </div>}
 
+
+          {this.state.openApi === 'examples' && <div>
+
+            <p>Here are some code sample for some common strategies you can apply. </p>
+
+            <div className='code-sample'>
+              <Header>
+                <Heading node="h4">Hit the weak spot</Heading>
+              </Header>
+              <p>Your current soldier will hit physically the enemy's most damaged soldier</p>
+
+              <Code type="pre">
+                {`
+// Your current soldier, which is acting in this turn
+const soldier = this.game.getCurrentSoldier();
+// Reference to the enemy team
+const enemyTeam = this.game.getEnemyTeam();
+
+const target = enemyTeam.getMostDamagedSoldier();
+soldier.hit(target);
+`}
+              </Code>
+
+            </div>
+
+            <div className='code-sample'>
+              <Header>
+                <Heading node="h4">Heal me if you can</Heading>
+              </Header>
+              <p>You should have a Pm in your team. The soldier will heal the most damaged soldier of your team if his
+                health is not maxed. Otherwise it will attack the enemy's most damaged soldier.</p>
+
+              <Code type="pre">
+                {`
+// Your current soldier, which is acting in this turn
+const soldier = this.game.getCurrentSoldier();
+// Reference to the enemy team
+const enemyTeam = this.game.getEnemyTeam();
+// Reference to your team
+const myTeam = this.game.getMyTeam();
+
+// Simple AI
+
+if (soldier.canHeal()) {  
+  const target = myTeam.getMostDamagedSoldier();
+  soldier.heal(target);        
+} else {
+  const target = enemyTeam.getMostDamagedSoldier();
+  soldier.hit(target);   
+   
+}
+`}
+              </Code>
+
+            </div>
+
+
+          </div>
+          }
+
         </div>
 
 
       </div>
     )
   }
-
 }
