@@ -37,8 +37,6 @@ export default class League extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log("prevProps", prevProps);
-    console.log("this.props.group", this.props.match.params.groupid);
     if (
       (!prevProps.match.params.groupid && this.props.match.params.groupid)
       || (prevProps.match.params.groupid && !this.props.match.params.groupid)

@@ -21,7 +21,7 @@ import WhoWeAre from './Who/Who';
 import background from './images/background.jpg';
 import glow from './images/glow.png';
 
-import { ThemeProvider, createTheme, Arwes } from 'arwes';
+import {ThemeProvider, createTheme, Arwes} from 'arwes';
 
 const auth = new Auth();
 
@@ -46,39 +46,41 @@ function PrivateRoute({component: Component, ...rest}) {
 export const makeMainRoutes = () => {
   return (
     <ThemeProvider theme={createTheme()}>
-      <Arwes animate show background={background} pattern={glow} className="lololololo">
+      <Arwes animate show background={background} pattern={glow}>
 
         <Router history={history}>
+          <div className="global-container">
+            <Route path="/" render={(props) => <App {...props} auth={auth}/>}/>
 
-          <Route path="/" render={(props) => <App {...props} auth={auth}/>}/>
+            <div className="container-fluid">
 
-          <div className="container-fluid">
+              <Route path="/" exact render={(props) => <Homepage {...props} auth={auth}/>}/>
+              <Route path="/docs" exact component={Docs}/>
 
-            <Route path="/" exact render={(props) => <Homepage {...props} auth={auth}/>}/>
-            <Route path="/docs" exact component={Docs}/>
+              <Route path="/logout" component={Logout}/>
 
-            <Route path="/logout" component={Logout}/>
+              <PrivateRoute path="/bots" component={Bots}/>
+              <PrivateRoute path="/edit/:botid" component={EditBot}/>
+              <PrivateRoute path="/edit-group/:botid/:groupid" component={EditBot}/>
+              <PrivateRoute path="/profile" component={Profile}/>
 
-            <PrivateRoute path="/bots" component={Bots}/>
-            <PrivateRoute path="/edit/:botid" component={EditBot}/>
-            <PrivateRoute path="/edit-group/:botid/:groupid" component={EditBot}/>
-            <PrivateRoute path="/profile" component={Profile} />
+              {/*<Route path="/league/:botid?" render={(props) => <League {...props} auth={auth} />} />*/}
+              <Route path="/league/:botid?/:groupid?" render={(props) => <League {...props} auth={auth}/>}/>
+              <Route path="/queue/:botid" render={(props) => <Queue {...props} auth={auth}/>}/>
+              <Route path="/queue/:botid/:groupid" render={(props) => <Queue {...props} auth={auth}/>}/>
 
-            {/*<Route path="/league/:botid?" render={(props) => <League {...props} auth={auth} />} />*/}
-            <Route path="/league/:botid?/:groupid?" render={(props) => <League {...props} auth={auth} />} />
-            <Route path="/queue/:botid" render={(props) => <Queue {...props} auth={auth} />} />
-            <Route path="/queue/:botid/:groupid" render={(props) => <Queue {...props} auth={auth} />} />
+              <Route path="/fight/:bot1/:bot2" component={Fight}/>
 
-            <Route path="/fight/:bot1/:bot2" component={Fight}/>
+              <Route path="/who" component={WhoWeAre}/>
 
-            <Route path="/who" component={WhoWeAre}/>
+              <Route path="/callback" render={(props) => {
+                handleAuthentication(props);
+                return <Callback {...props} />
+              }}/>
+            </div>
+            <GoogleAnalytics/>
 
-            <Route path="/callback" render={(props) => {
-              handleAuthentication(props);
-              return <Callback {...props} />
-            }}/>
           </div>
-          <GoogleAnalytics />
         </Router>
 
       </Arwes>

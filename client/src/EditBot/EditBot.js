@@ -275,8 +275,8 @@ export default class Home extends Component {
       })
     }
 
-    const mainContainer = ReactDOM.findDOMNode(this).parentNode.parentNode
-    mainContainer.classList.add('arwes-edit-bot');
+    // const mainContainer = ReactDOM.findDOMNode(this).parentNode.parentNode
+    // mainContainer.classList.add('arwes-edit-bot');
   }
 
   getBot() {

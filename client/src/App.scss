@@ -26,7 +26,8 @@ header {
 //  overflow-y: scroll !important;
 //}
 //
-.arwes-edit-bot {
+.global-container {
+  height: 100%;
   display: flex !important;
   flex-direction: column;
   // hack for react-joyride
