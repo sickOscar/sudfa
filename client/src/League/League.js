@@ -1,7 +1,6 @@
 import React from 'react';
 import './League.scss';
 // import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import MyBotsFights from './MyBotsFights';
 import Env from '../env';
 
 import dev_icon from '../images/dev_icon.jpeg';

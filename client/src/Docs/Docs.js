@@ -9,7 +9,7 @@ import hr from '../images/personaggi/hr.png';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {Helmet} from "react-helmet";
 
-import {Link, Frame, Code} from 'arwes';
+import {Link, Frame, Code, Heading} from 'arwes';
 
 const Docs = (props) => (
   <React.Fragment>
@@ -58,6 +58,9 @@ const Docs = (props) => (
                 <li>
                   <Link href="#classes">Classes</Link>
                 </li>
+                <li>
+                  <Link href="#leagues">Leagues</Link>
+                </li>
               </ul>
             </nav>
             </Frame>
@@ -77,8 +80,9 @@ const Docs = (props) => (
           <div className="card p-3">
 
             <div className="row">
+
               <div className="col-sm-12">
-                <h2 id="what-is-it">What is it?</h2>
+                <Heading node="h2" id="what-is-it">What is it?</Heading>
               </div>
               <div className="col-sm-12">
                 <p>
@@ -94,7 +98,7 @@ const Docs = (props) => (
 
             <div className="row">
               <div className="col-sm-12">
-                <h2 id="how-does-it-work">How does it work?</h2>
+                <Heading node="h2"  id="how-does-it-work">How does it work?</Heading>
               </div>
               <div className="col-sm-12">
                 <p>
@@ -110,7 +114,7 @@ const Docs = (props) => (
 
             <div className="row">
               <div className="col-sm-12">
-                <h2 id="how-does-a-fight-work">How does a fight work?</h2>
+                <Heading node="h2" id="how-does-a-fight-work">How does a fight work?</Heading>
               </div>
               <div className="col-sm-12">
                 <p>
@@ -141,7 +145,7 @@ const Docs = (props) => (
 
             <div className="row">
               <div className="col-sm-12">
-                <h2  id="the-code">The code</h2>
+                <Heading node="h2"  id="the-code">The code</Heading>
               </div>
               <div className="col-sm-12">
                 <p>
@@ -168,7 +172,7 @@ const Docs = (props) => (
 
             <div className="row">
               <div className="col-sm-12">
-                <h3>Create the team</h3>
+                <Heading node="h4">Create the team</Heading>
               </div>
               <div className="col-sm-12">
                 <p>
@@ -222,7 +226,7 @@ const Docs = (props) => (
 
             <div className="row">
               <div className="col-sm-12">
-                <h3>Turn Execution</h3>
+                <Heading node="h4">Turn Execution</Heading>
               </div>
               <div className="col-sm-12">
                 <p>
@@ -244,7 +248,7 @@ const Docs = (props) => (
 
             <div className="row">
               <div className="col-sm-12">
-                <h3>Test the code</h3>
+                <Heading node="h4">Test the code</Heading>
               </div>
               <div className="col-sm-12">
                 <p>
@@ -276,7 +280,7 @@ const Docs = (props) => (
 
             <div className="row">
               <div className="col-sm-12">
-                <h2 id="classes">Classes</h2>
+                <Heading node="h2" id="classes">Classes</Heading>
               </div>
               <div className="col-sm-12">
                 <p>
@@ -288,7 +292,7 @@ const Docs = (props) => (
 
             <div className="row mt-3">
               <div className="col-sm-12">
-                <h3>Developer</h3>
+                <Heading node="h4">Developer</Heading>
               </div>
               <div className="col-sm-12">
                 <img className="class-image" src={developer} alt="The Developer"/>
@@ -312,7 +316,7 @@ const Docs = (props) => (
 
             <div className="row mt-3">
               <div className="col-sm-12">
-                <h3>Project Manager</h3>
+                <Heading node="h4">Project Manager</Heading>
               </div>
               <div className="col-sm-12">
 
@@ -344,7 +348,7 @@ const Docs = (props) => (
 
             <div className="row mt-3">
               <div className="col-sm-12">
-                <h3>Marketer</h3>
+                <Heading node="h4">Marketer</Heading>
               </div>
               <div className="col-sm-12">
 
@@ -373,7 +377,7 @@ const Docs = (props) => (
 
             <div className="row mt-3">
               <div className="col-sm-12">
-                <h3>Human Resources Officer</h3>
+                <Heading node="h4">Human Resources Officer</Heading>
               </div>
               <div className="col-sm-12">
 
@@ -396,6 +400,20 @@ const Docs = (props) => (
                     it can be killed by physical damage and lasts for 2 rounds.
                   </li>
                 </ul>
+              </div>
+            </div>
+
+            <div className="row mt-3">
+              <div className="col-sm-12">
+                <Heading node="h2"  id="leagues">Leagues</Heading>
+              </div>
+              <div className="col-sm-12">
+                <p>
+                  In addition to the main league, it is possible for players to create up to 3 subleagues. All other players can join the subleagues, thus creating private groups of bots that will fight with each other, creating in fact a parallel ranking for each subleague with only the results of the clashes within the subleague.
+                </p>
+                <p>
+                  The team from sudfa will periodically organize special subleagues for themed events. Check our home page for all the news about the upcoming events!
+                </p>
               </div>
             </div>
 

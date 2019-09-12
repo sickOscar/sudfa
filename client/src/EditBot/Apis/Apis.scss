@@ -2,11 +2,12 @@
 
 .api-container {
   font-size: 16px;
-
+  width: 100%;
 
   .api-content {
     padding: 1em;
     background-color: rgba(0,0,0,0.5);
+    min-height: 100%;
   }
 
   code {
@@ -30,6 +31,25 @@
 
   h4 {
     font-size: 16px;
+  }
+
+  ul.apis-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+
+    li.active {
+      button {
+        background-color: map_get($theme_colors, 'theme_clear');
+        color: map_get($theme_colors, 'primary');
+      }
+    }
+
+  }
+
+  .welcome-content {
+    font-size: 20px;
   }
 
 }

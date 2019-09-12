@@ -5,7 +5,6 @@ import dev_icon from "../images/dev_icon.jpeg";
 import pm_icon from "../images/pm_icon.jpeg";
 import mktg_icon from "../images/mktg_icon.jpeg";
 import hr_icon from "../images/hr_icon.jpeg";
-import {Frame} from 'arwes';
 import './Leaderboard.scss';
 
 class Leaderboard extends React.Component {

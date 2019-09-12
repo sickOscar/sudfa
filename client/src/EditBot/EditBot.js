@@ -1,5 +1,4 @@
-import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
+import React, {Component} from 'react'
 import SplitPane from 'react-split-pane'
 import {Editor} from './Editor/Editor';
 import {GameResults} from './GameResults/GameResults';
@@ -256,7 +255,6 @@ export default class Home extends Component {
 
   componentDidMount() {
     this.getBot();
-    this.getApi();
     this.getLeagueBots();
 
     // EVENTUALLY GET GROUP
@@ -275,8 +273,6 @@ export default class Home extends Component {
       })
     }
 
-    // const mainContainer = ReactDOM.findDOMNode(this).parentNode.parentNode
-    // mainContainer.classList.add('arwes-edit-bot');
   }
 
   getBot() {
@@ -298,25 +294,6 @@ export default class Home extends Component {
       .catch(err => {
         console.error(err);
         this.props.auth.logout()
-      });
-  }
-
-  getApi() {
-    fetch(`${Env.API_HOST}/API`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'text/plain',
-        'Content-Type': 'text/plain'
-      }
-    })
-      .then(response => response.text())
-      .then(content => {
-        this.setState({
-          content
-        })
-      })
-      .catch(err => {
-        console.error(err)
       });
   }
 
@@ -486,7 +463,7 @@ export default class Home extends Component {
           <SplitPane split="horizontal" defaultSize={'50%'}
                      pane2Style={{overflow: 'hidden'}}>
 
-            <Apis content={this.state.content}/>
+            <Apis/>
 
             <div style={{overflow: 'hidden', height: '100%'}}>
               <GameResults results={this.state.results}
