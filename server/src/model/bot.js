@@ -92,9 +92,14 @@ module.exports = {
       return `"${key}" = $${i + 1}`;
     });
 
+    const nullWhereClause = Object.keys(_.pick(params, _.isNil))
+      .map((key, i) => {
+        return ` AND "${key}" IS NULL`
+      })
+
     let text = `SELECT * FROM ${table}`
     if (hasValidParams) {
-      text += ` WHERE ${whereClause.join(' AND ')}`;
+      text += ` WHERE ${whereClause.join(' AND ')} ${nullWhereClause}`;
     }
     const values = hasValidParams ? Object.values(params) : [];
 
