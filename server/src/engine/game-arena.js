@@ -245,7 +245,8 @@ const GameArena = {
   rerun: async function() {
 
     // recupera tutti i bot in gioco
-    const enemies = await Bots.all(LEAGUE_BOTS_TABLE);
+    const enemies = await Bots.all(LEAGUE_BOTS_TABLE, {group: null});
+    console.log(`Rerun for ${enemies.length} enemies`);
     const hrstart = process.hrtime();
 
     const fights = [];
@@ -305,7 +306,11 @@ const GameArena = {
 
         fights.push(home, away);
 
+        console.log(`done ${i}${j} bot`);
+
       }
+
+
 
     }
 

@@ -92,16 +92,33 @@ module.exports = {
       return `"${key}" = $${i + 1}`;
     });
 
-    const nullWhereClause = Object.keys(_.pick(params, _.isNil))
+    console.log("params", params);
+    console.log('NIL PARAMS', _.pickBy(params, _.isNil))
+
+    const nullWhereClause = Object.keys(_.pickBy(params, _.isNil))
       .map((key, i) => {
-        return ` AND "${key}" IS NULL`
+        return `"${key}" IS NULL`
       })
 
     let text = `SELECT * FROM ${table}`
-    if (hasValidParams) {
-      text += ` WHERE ${whereClause.join(' AND ')} ${nullWhereClause}`;
+    if (hasValidParams || nullWhereClause.length > 0) {
+      text += ` WHERE `;
+
+      if (hasValidParams) {
+        text += `${whereClause.join(' AND ')}`;
+      }
+
+      if (nullWhereClause.length > 0) {
+        text += `${nullWhereClause.join('AND')}`;
+      }
+
     }
+
+
     const values = hasValidParams ? Object.values(params) : [];
+
+    console.log('query all bots');
+    console.log(text);
 
     const query = {text, values}
 

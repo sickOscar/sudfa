@@ -103,9 +103,16 @@ const FightModel = {
       .then(() => client.query(query))
   },
 
-  truncate: () => {
+  truncate: (group) => {
+
+    let queryText = '';
+
+    if (!group) {
+      queryText = `DELETE FROM fights WHERE "group" IS NULL;`;
+    }
+
     const query = {
-      text: `TRUNCATE fights`,
+      text: queryText,
     }
     return clientConnected
       .then(() => client.query(query))

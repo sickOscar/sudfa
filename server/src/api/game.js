@@ -208,6 +208,7 @@ class GameApi {
     });
 
     app.get('/rerun', (req, res) => {
+      console.log("rerun");
       GameArena.rerun()
         .then(response => {
           res.json(response)
