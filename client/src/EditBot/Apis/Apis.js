@@ -284,6 +284,34 @@ if (soldier.canHeal()) {
 
             </div>
 
+            <div className='code-sample'>
+              <Header>
+                <Heading node="h4">Get the PM first!</Heading>
+              </Header>
+              <p>The PM is the most dangerous player. Attack him first, then the others!</p>
+
+              <Code type="pre">
+                {`
+// Your current soldier, which is acting in this turn
+const soldier = this.game.getCurrentSoldier();
+// Reference to the enemy team
+const enemyTeam = this.game.getEnemyTeam();
+// Reference to your team
+const myTeam = this.game.getMyTeam();
+
+// Simple AI
+const healer = enemyTeam.getHealer();
+if (healer) {
+    soldier.hit(healer);
+} else {
+    const mostDamaged = enemyTeam.getMostDamagedSoldier();
+    soldier.hit(mostDamaged)
+}
+`}
+              </Code>
+
+            </div>
+
 
           </div>
           }
